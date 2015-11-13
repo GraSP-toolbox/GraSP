@@ -60,6 +60,13 @@ function grasp_init_3rd_party
         mkdir(pwd, soft.name);
         unzip('tmp.zip', dir);
         delete('tmp.zip');
+        if numel(soft.patches) ~= 0
+            addpath('MyPatcher/');
+            for i = 1:2:numel(soft.patches)
+                mypatcher(soft.patches{1}, soft.patches{2}, soft.patches{1});
+            end
+            rmpath('MyPatcher/');
+        end
         if numel(soft.init_script) ~= 0
             path = [fileparts(mfilename('fullpath')), filesep, soft.name, soft.root_dir];
             addpath(path);

@@ -63,6 +63,7 @@ function graph = grasp_barabasi_albert(N, arg2)
     %% Initial graph
     graph.A(1:m0, 1:m0) = starting_graph.A;
     graph.A = (graph.A + graph.A') > 0;
+    graph.A = (graph.A + 1) - 1;
     
     %% Intial probability distribution
     cumul = (1:m0) / m0;

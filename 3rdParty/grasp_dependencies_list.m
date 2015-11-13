@@ -67,7 +67,11 @@ function list = grasp_dependencies_list
     list(5).name = 'MathBFL/';
     list(5).path_list = {'matlab_bgl', 'matlab_bgl/graphs'};
     
-    list(6).url = 'http://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/10548/versions/1/download/zip';
-    list(6).name = 'anneal/';
-    list(6).path_list = {'.'};
+    list(6).url = 'http://perso.ens-lyon.fr/benjamin.girault/files/mypatcher.zip';
+    list(6).name = 'MyPatcher/';
+    
+    list(7).url = 'http://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/10548/versions/1/download/zip';
+    list(7).name = 'anneal/';
+    list(7).path_list = {'.'};
+    list(7).patches = {'anneal/anneal.m', 'anneal.patch'};
 end
