@@ -1,0 +1,16 @@
+GraSP: Graph Signal Processing and Visualization Toolbox
+
+License:
+This toolbox is distributed under the terms of the CeCILL license (see 
+the LICENSE file for the english version of the license, and the LICENCE
+file for the french version).
+
+Requirements:
+ - GraphViz
+
+Installation (for third party Matlab toolboxes):
+ - run grasp_install
+
+Usage:
+ - run grasp_start
+ - use it
