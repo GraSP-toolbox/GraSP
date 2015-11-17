@@ -1,7 +1,7 @@
 %Constructs the adjacency matrix of a graph as a Gaussian kernel of its
 %distance matrix.
 %
-%   A = GRAPH_ADJACENCY_GAUSSIAN(graph, sigma) construct the adjacency
+%   A = GRASP_ADJACENCY_GAUSSIAN(graph, sigma) construct the adjacency
 %   matrix A such that a_ij = exp(-d_ij² / (2 * sigma²)).
 %
 % Authors:

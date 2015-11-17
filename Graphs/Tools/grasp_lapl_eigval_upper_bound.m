@@ -1,6 +1,6 @@
 %Laplacian eigenvalue upper bound. Uses Corollary 3.3 of [K. CH. Das '07].
 %
-%   T = GRAPH_LAPL_EIGVAL_UPPER_BOUND(graph) returns an upper bound of the
+%   T = GRASP_LAPL_EIGVAL_UPPER_BOUND(graph) returns an upper bound of the
 %   eigenvalues of the standard Laplacian.
 %
 % Authors:

@@ -1,9 +1,9 @@
 %Shows some eigenvectors on a graph
 %
-%   GRAPH_SHOW_FOURIERMODES(graph) show on separate subfigures the Fourier
+%   GRASP_SHOW_FOURIERMODES(graph) show on separate subfigures the Fourier
 %   modes on the graph.
 %
-%   GRAPH_SHOW_FOURIERMODES(..., options) optional parameters:
+%   GRASP_SHOW_FOURIERMODES(..., options) optional parameters:
 %
 %   options.modes: displays only the modes indices of the array modes.
 %

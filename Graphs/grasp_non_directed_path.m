@@ -1,6 +1,6 @@
 %Constructs a non directed path.
 %
-%   graph = GRAPH_NON_DIRECTED_PATH(N) returns a graph structure for the
+%   graph = GRASP_NON_DIRECTED_PATH(N) returns a graph structure for the
 %   non directed path of length N.
 %
 % Authors:

@@ -1,6 +1,6 @@
 %Construct a non directed grid.
 %
-%   graph = GRAPH_NON_DIRECTED_GRID(N) constructs a grid of NxN, with node
+%   graph = GRASP_NON_DIRECTED_GRID(N) constructs a grid of NxN, with node
 %   (i,j) having id 1 + N * i + j.
 %
 % Authors:

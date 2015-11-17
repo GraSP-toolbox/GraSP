@@ -1,6 +1,6 @@
 %Constructs a non directed torus.
 %
-%   graph = GRAPH_NON_DIRECTED_TORUS(N) constructs a torus of NxN, with
+%   graph = GRASP_NON_DIRECTED_TORUS(N) constructs a torus of NxN, with
 %   node (i,j) having id 1 + N * i + j.
 %
 % Authors:

@@ -1,10 +1,10 @@
 %Plots a matrix, with either regular square elements, or irregular ones.
 %IMSHOW is a faster alternative but requires extra work to scale the plot.
 %
-%   GRAPH_SHOW_MATRIX(axis_handle, M) Plots the matrix elements in the
+%   GRASP_SHOW_MATRIX(axis_handle, M) Plots the matrix elements in the
 %   plane.
 %
-%   GRAPH_SHOW_MATRIX(..., X, Y) uses X as the horizontal coordinates of
+%   GRASP_SHOW_MATRIX(..., X, Y) uses X as the horizontal coordinates of
 %   the vertical lines, and Y as the vertical coordinates of teh horizontal
 %   lines (there are one more coordinate for each than there are rows /
 %   columns).

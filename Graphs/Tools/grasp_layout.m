@@ -1,9 +1,9 @@
 %Computes a layout of a graph using GraphViz.
 %
-%   layout = GRAPH_LAYOUT(graph) given a graph, computes a layout
+%   layout = GRASP_LAYOUT(graph) given a graph, computes a layout
 %   (i.e. a n-by-2 matrix) of the nodes.
 %
-%   GRAPH_LAYOUT(..., options) extra options to control the process:
+%   GRASP_LAYOUT(..., options) extra options to control the process:
 %
 %   options.input_file: input file name
 %   options.output_file: output file name

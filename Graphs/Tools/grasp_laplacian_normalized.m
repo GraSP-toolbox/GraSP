@@ -3,11 +3,11 @@
 %Note: The graph provided can be directed, but then all weights must be
 %non-negative.
 %
-%   Gamma = GRAPH_LAPLACIAN_NORMALIZED(graph) returns the Laplacian of the
+%   Gamma = GRASP_LAPLACIAN_NORMALIZED(graph) returns the Laplacian of the
 %   graph provided using its adjacency matrix (see [Li & Zhang 2012:
 %   Digraph Laplacian and the Degree of Asymmetry])
 %
-%   [Gamma, Phi] = GRAPH_LAPLACIAN_NORMALIZED(...) returns also the
+%   [Gamma, Phi] = GRASP_LAPLACIAN_NORMALIZED(...) returns also the
 %   stationnary distribution Phi (diagonal matrix)
 %
 % Authors:

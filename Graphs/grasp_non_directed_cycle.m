@@ -1,6 +1,6 @@
 %Constructs a non directed cycle.
 %
-%   graph = GRAPH_NON_DIRECTED_CYCLE(N) returns a graph structure for the
+%   graph = GRASP_NON_DIRECTED_CYCLE(N) returns a graph structure for the
 %   non directed cycle of length N.
 %
 % Authors:

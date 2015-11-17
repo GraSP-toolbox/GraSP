@@ -1,7 +1,7 @@
 %Computes the empirical correlation from several samples of a stochastic
 %signal.
 %
-%   sigma = GRAPH_EMPIRICAL_CORRELATION(signal) considering several realizations
+%   sigma = GRASP_EMPIRICAL_CORRELATION(signal) considering several realizations
 %   of a stochastic signal (columns of signal), sigma is the empirical
 %   correlation matrix of the signal.
 %

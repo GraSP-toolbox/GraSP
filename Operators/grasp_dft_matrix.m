@@ -1,6 +1,6 @@
 %Computes the DFT matrix.
 %
-%   A = GRAPH_DFT(N) returns the DFT matrix A of order N.
+%   A = GRASP_DFT(N) returns the DFT matrix A of order N.
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>

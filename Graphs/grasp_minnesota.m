@@ -1,9 +1,9 @@
 %Construct the Minnesota transport graph.
 %
-%   graph = GRAPH_MINNESOTA returns the Minnesota transport graph of
+%   graph = GRASP_MINNESOTA returns the Minnesota transport graph of
 %   3rdParty/MathBFL.
 %
-%   GRAPH_MINNESOTA(options) optional parameters:
+%   GRASP_MINNESOTA(options) optional parameters:
 %
 %   options.shortest_path: whether or not to construct the edges and 
 %       weights from the shortest paths

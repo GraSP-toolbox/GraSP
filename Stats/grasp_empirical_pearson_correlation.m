@@ -1,7 +1,7 @@
 %Computes the empirical Pearson correlation coefficient from several
 %samples of a stochastic signal.
 %
-%   sigma = GRAPH_EMPIRICAL_PEARSON_CORRELATION(signal) considering several
+%   sigma = GRASP_EMPIRICAL_PEARSON_CORRELATION(signal) considering several
 %   realizations of a stochastic signal (columns of signal), sigma is the
 %   empirical Pearson correlation matrix of the signal.
 %

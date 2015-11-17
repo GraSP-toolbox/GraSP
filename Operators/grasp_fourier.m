@@ -1,6 +1,6 @@
 %Performs the Fourier transform with respect to a graph.
 %
-%   input_hat = GRAPH_FOURIER(graph, input) if input is a vector, then
+%   input_hat = GRASP_FOURIER(graph, input) if input is a vector, then
 %   returns the fourier transform of input. If input is matrix, then input
 %   is interpreted as an operator on signals on graph and input_hat is this
 %   operator in the Fourier domain.

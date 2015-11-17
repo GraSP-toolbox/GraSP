@@ -1,7 +1,7 @@
 %Constructs a thresholded adjacency matrix, assuming that the adjacency
 %matrix is a similarity matrix (bigger weights for closer nodes).
 %
-%   A = GRAPH_ADJACENCY_THRESH(graph, thresh) returns an adjacency matrix A
+%   A = GRASP_ADJACENCY_THRESH(graph, thresh) returns an adjacency matrix A
 %   thresholded using the minimum weight thresh.
 %
 % Authors:

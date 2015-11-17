@@ -1,7 +1,7 @@
 %Computes a isometric version of a convolutive operator [Girault et al.
 %2015, IEEE SPL].
 %
-%   H_iso = GRAPH_ISOMETRIZE_OPERATOR(graph, H) returns an isometric
+%   H_iso = GRASP_ISOMETRIZE_OPERATOR(graph, H) returns an isometric
 %   operator H_iso having as real part H on graph.
 %
 % Authors:

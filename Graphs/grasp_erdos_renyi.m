@@ -1,6 +1,6 @@
 %Constructs an Erdős-Renyi graph.
 %
-%   graph = GRAPH_ERDOS_RENYI(N, p) returns the adjacency matrix A of a
+%   graph = GRASP_ERDOS_RENYI(N, p) returns the adjacency matrix A of a
 %   Erdős-Renyi graph of N nodes with probability p on the edges. The graph
 %   is directed.
 %

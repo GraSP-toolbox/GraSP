@@ -1,12 +1,12 @@
 %Constructs a graph of k the nearest neighbors where nodes are sampled on
 %the 2D plane.
 %
-%   graph = GRAPH_PLANE_KNN(N, k) returns a graph constructed from nodes
+%   graph = GRASP_PLANE_KNN(N, k) returns a graph constructed from nodes
 %   uniformly sampled on the plane and connected using the k nearest
 %   neighbors method. The adjacency matrix is weighted by the Gaussian
 %   kernel of the distance.
 %
-%   GRAPH_PLANE_KNN(..., options) optional parameters:
+%   GRASP_PLANE_KNN(..., options) optional parameters:
 %
 %   options.directed: true if graph should stay directed (default: false)
 %   options.sigma: sigma^2 in the Gaussian kernel (default: 1)

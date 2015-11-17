@@ -1,11 +1,11 @@
 %Constructs a two moons graph with the k nearest neighbors.
 %
-%   graph = GRAPH_TWO_MOONS_KNN(N, sigma_noise, k) returns a graph
+%   graph = GRASP_TWO_MOONS_KNN(N, sigma_noise, k) returns a graph
 %   constructed from N nodes sampled around two moons. Uses a gaussian
 %   noise of standard deviation sigma_noise. The edges are drawn with the k
 %   nearest neighbors approach.
 %
-%   GRAPH_TWO_MOONS_KNN(..., options) optional parameters:
+%   GRASP_TWO_MOONS_KNN(..., options) optional parameters:
 %
 %   options.sigma: sigma^2 in the Gaussian kernel
 %

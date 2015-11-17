@@ -1,6 +1,6 @@
 %Defines and returns an empty graph structure.
 %
-%   GRAPH_STRUCT()
+%   GRASP_STRUCT()
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>

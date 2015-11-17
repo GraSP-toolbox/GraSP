@@ -1,6 +1,6 @@
 %Computes the degrees of a graph.
 %
-%   D = GRAPH_DEGREES(graph) computes degree matrix D of graph. If graph is
+%   D = GRASP_DEGREES(graph) computes degree matrix D of graph. If graph is
 %   directed, then D is the out-degree matrix.
 %
 % Authors:

@@ -1,6 +1,6 @@
 %Construct a delta on a graph.
 %
-%   delta = GRAPH_DELTA(graph, node) constructs the delta on node.
+%   delta = GRASP_DELTA(graph, node) constructs the delta on node.
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>

@@ -1,6 +1,6 @@
 %Export a graph structure in CSV files for LaTeX.
 %
-%   GRAPH_EXPORTCSV(graph, nodes_file, edges_file) creates the two files
+%   GRASP_EXPORTCSV(graph, nodes_file, edges_file) creates the two files
 %   nodes_file and edges_file that can be used by LaTeX package stemgraph.
 %
 % Authors:

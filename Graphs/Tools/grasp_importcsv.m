@@ -1,8 +1,8 @@
 %Import a graph structure from CSVs.
 %
-%   graph = GRAPH_IMPORTCSV(nodes_file, edges_file) reads the two files
+%   graph = GRASP_IMPORTCSV(nodes_file, edges_file) reads the two files
 %   nodes_file and edges_file and outputs the graph. This function is the
-%   inverse of GRAPH_EXPORTCSV.
+%   inverse of GRASP_EXPORTCSV.
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>

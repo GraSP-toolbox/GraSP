@@ -2,7 +2,7 @@
 %but using the distance matrix provided (Pasdeloup, Alami, Gripon, Rabbat,
 %EUSIPCO 2015).
 %
-%   T = GRAPH_SIGNAL_SPREAD_WEIGHTED(graph) computes the weighted graph
+%   T = GRASP_SIGNAL_SPREAD_WEIGHTED(graph) computes the weighted graph
 %   spread of signal on graph, using graph.distances (graph.distances(i,j)
 %   is the distance between nodes i and j).
 %

@@ -1,6 +1,6 @@
 %Sets the colormap of an axes to a blue-white-red mapping.
 %
-%   GRAPH_SET_BLUE_RED_COLORMAP(hax) sets the axes handle hax to use the
+%   GRASP_SET_BLUE_RED_COLORMAP(hax) sets the axes handle hax to use the
 %   blue-white-red colormapping for blueredcolormap.mat.
 %
 % Authors:

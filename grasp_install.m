@@ -1,7 +1,7 @@
 %Download and setup necessary third party tools into the directory
 %3rdParty/.
 %
-%   GRAPH_INSTALL()
+%   GRASP_INSTALL()
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>

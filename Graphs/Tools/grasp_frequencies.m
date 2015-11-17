@@ -1,7 +1,7 @@
 %Computes the reduced frequencies associated to each Fourier mode of a
 %graph. See [Girault et al. 2015, IEEE SPL].
 %
-%   freqs = GRAPH_FREQUENCIES(graph) returns the graph frequencies.
+%   freqs = GRASP_FREQUENCIES(graph) returns the graph frequencies.
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>

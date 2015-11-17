@@ -1,6 +1,6 @@
 %Constructs a graph from the Watts-Strogatz model.
 %
-%   graph = GRAPH_WATTS_STROGATZ(N, K, beta) constructs a watts-stogatz
+%   graph = GRASP_WATTS_STROGATZ(N, K, beta) constructs a watts-stogatz
 %   graph with N nodes, average degree K and with probability beta of
 %   rewiring.
 %

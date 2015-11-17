@@ -1,6 +1,6 @@
 %Returns the adjacency matrix of a graph
 %
-%   A = GRAPH_ADJACENCY_MATRIX(graph)
+%   A = GRASP_ADJACENCY_MATRIX(graph)
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>

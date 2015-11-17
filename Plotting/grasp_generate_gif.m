@@ -1,6 +1,6 @@
 %Generate a gif image file from a graph and several graph signals.
 %
-%   GRAPH_GENERATE_GIF(fh, filename, graph, signals, titles, show_graph_options)
+%   GRASP_GENERATE_GIF(fh, filename, graph, signals, titles, show_graph_options)
 %   generates the GIF file filename by iteratively plotting signals(:, i)
 %   using graph. titles{i} is used to give a title to the figure. The
 %   figure handle fh is used.

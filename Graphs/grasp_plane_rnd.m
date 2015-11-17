@@ -1,11 +1,11 @@
 %Constructs a complete graph where nodes are sampled on the 2D plane and
 %weighted by a Gaussian kernel.
 %
-%   graph = GRAPH_PLANE_RND(N) returns a graph constructed from N nodes
+%   graph = GRASP_PLANE_RND(N) returns a graph constructed from N nodes
 %   uniformly sampled on the plane. The adjacency matrix is weighted by a
 %   Gaussian kernel of the distance with parameter sigma = 1.
 %
-%   GRAPH_PLANE_RND(..., options) optional parameters:
+%   GRASP_PLANE_RND(..., options) optional parameters:
 %
 %   options.directed: true if graph should stay directed (default: false)
 %   options.sigma: sigma^2 in the Gaussian kernel (default: 1)

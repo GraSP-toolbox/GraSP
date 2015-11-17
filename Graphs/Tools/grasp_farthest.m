@@ -1,15 +1,15 @@
 %Determines the two farthest nodes of a graph.
 %
-%   [x,y] = GRAPH_FARTHEST(graph) returns the two farthest nodes of graph.
+%   [x,y] = GRASP_FARTHEST(graph) returns the two farthest nodes of graph.
 %
-%   GRAPH_FARTHEST(..., 'adjacency_matrix', am) type of the adjacency
+%   GRASP_FARTHEST(..., 'adjacency_matrix', am) type of the adjacency
 %   matrix of graph. Default is 'distance' (graph.A is a distance matrix).
 %   Other possible values are:
 %     * 'similarity' (the distance used is e^-A)
 %     * 'gaussian_kernel' (the kernel is inverted to get the distance)
 %     * 'dst_mat' (graph.distance will be used).
 %
-%   [x,y,distances] = GRAPH_FARTHEST(...) also returns the matrix of
+%   [x,y,distances] = GRASP_FARTHEST(...) also returns the matrix of
 %   distances between every couple of points.
 %
 % Authors:

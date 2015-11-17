@@ -1,6 +1,6 @@
 %Construct a comete
 %
-%   graph = GRAPH_COMETE(Nqueue, Nhead) returns a comete graph with a head
+%   graph = GRASP_COMETE(Nqueue, Nhead) returns a comete graph with a head
 %   of Nhead nodes in a clique connected to a non directed path of 
 %   Nqueue nodes.
 %

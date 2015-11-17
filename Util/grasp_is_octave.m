@@ -1,6 +1,6 @@
 %Check for Matlab or Octave.
 %
-%   retval = GRAPH_IS_OCTAVE() returns true if run from GNU Octave.
+%   retval = GRASP_IS_OCTAVE() returns true if run from GNU Octave.
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>

@@ -1,6 +1,6 @@
 %Construct a random regular graph.
 %
-%   graph = GRAPH_RANDOM_REGULAR(N, k) returns a random regular graph with
+%   graph = GRASP_RANDOM_REGULAR(N, k) returns a random regular graph with
 %   degree k and N nodes.
 %
 % Authors:

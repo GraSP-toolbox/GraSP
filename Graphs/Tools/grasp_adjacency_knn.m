@@ -2,7 +2,7 @@
 %that the adjacency matrix is a similarity matrix (bigger weights for closer
 %nodes).
 %
-%   A = GRAPH_ADJACENCY_KNN(graph, k) returns an adjacency matrix A
+%   A = GRASP_ADJACENCY_KNN(graph, k) returns an adjacency matrix A
 %   constructed from the adjacency matrix using KNN.
 %
 % Authors:

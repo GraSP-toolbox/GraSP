@@ -1,6 +1,6 @@
 %Performs the inverse Fourier transform with respect to a graph.
 %
-%   input_hat = GRAPH_FOURIER_INVERSE(graph, input_hat) if input_hat is
+%   input_hat = GRASP_FOURIER_INVERSE(graph, input_hat) if input_hat is
 %   a vector, then returns the inverse Fourier transform of input_hat. If
 %   input_hat is matrix, then input_hat is interpreted as an operator on
 %   signals on graph in the Fourier domain and input is this operator in

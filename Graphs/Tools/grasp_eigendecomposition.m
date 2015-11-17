@@ -1,9 +1,9 @@
 %Computes the eigendecomposition of a graph (Fourier operators).
 %
-%   graph = GRAPH_EIGENDECOMPOSITION(graph) computes the Laplacian matrix,
+%   graph = GRASP_EIGENDECOMPOSITION(graph) computes the Laplacian matrix,
 %   and its eigendecomposition.
 %
-%   GRAPH_EIGENDECOMPOSITION(..., options) optional parameters:
+%   GRASP_EIGENDECOMPOSITION(..., options) optional parameters:
 %
 %   options.matrix: Use ne of the following matrices:
 %       - 'std_lapl' (default): standard Laplacian eigendecomposition

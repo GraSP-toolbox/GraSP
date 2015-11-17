@@ -1,6 +1,6 @@
 %Opens a figure based on its name.
 %
-%   hfig = GRAPH_OPEN_FIGURE_NAME(name) opens the figure name closing all
+%   hfig = GRASP_OPEN_FIGURE_NAME(name) opens the figure name closing all
 %   other figures with the same name.
 %
 % Authors:

@@ -1,11 +1,11 @@
 %Creates a sub axis within a figure.
 %
-%   ah = GRAPH_SUBAXIS(nb_rows, nb_cols, cur_cell) creates the
+%   ah = GRASP_SUBAXIS(nb_rows, nb_cols, cur_cell) creates the
 %   (cur_cell)^th axes within an array of axes of size nb_rows x nb_cols.
 %
-%   ah = GRAPH_SUBAXIS(fh, ...) uses the provided figure handle.
+%   ah = GRASP_SUBAXIS(fh, ...) uses the provided figure handle.
 %
-%   ah = GRAPH_SUBAXIS(..., options)  optional parameters:
+%   ah = GRASP_SUBAXIS(..., options)  optional parameters:
 %
 %   options.Spacing: array [SH SV]
 %   options.SpacingXX:

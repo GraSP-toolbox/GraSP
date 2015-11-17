@@ -13,10 +13,10 @@
 %on its tip (for aestetic reasons), but is reduced by a quantity
 %tail_back_quantity.
 %
-%   GRAPH_SHOW_GRAPH(axis_handle, graph) plots the graph on the axis
+%   GRASP_SHOW_GRAPH(axis_handle, graph) plots the graph on the axis
 %   pointed by axis_handle.
 %
-%   GRAPH_SHOW_GRAPH(..., options) optional parameters:
+%   GRASP_SHOW_GRAPH(..., options) optional parameters:
 %
 %   options.background: plot over a background image.
 %
@@ -58,7 +58,7 @@
 %   options.head_proportion: use the provided peedge_color_scalercentage to
 %       compute the arrow's head length (default: 10%).
 %
-%   [nodes_handle, edges_handle] = GRAPH_SHOW_GRAPH(...) returns the handle
+%   [nodes_handle, edges_handle] = GRASP_SHOW_GRAPH(...) returns the handle
 %   to the nodes graphics objects (scatter), and edge graphics object. For
 %   the edges, it returns an array of 3 elements: the non directed edges
 %   (plot), the arrow heads (fill), and the arrow tails (plot)

@@ -1,6 +1,6 @@
 %Sets Matlab search path to use this toolbox.
 %
-%   GRAPH_START()
+%   GRASP_START()
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>

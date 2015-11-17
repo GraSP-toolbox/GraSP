@@ -1,6 +1,6 @@
 %Constructs the standard Laplacian of a non directed graph.
 %
-%   L = GRAPH_LAPLACIAN_STANDARD(graph) returns the Laplacian of the
+%   L = GRASP_LAPLACIAN_STANDARD(graph) returns the Laplacian of the
 %   graph provided using its adjacency matrix.
 %
 % Authors:

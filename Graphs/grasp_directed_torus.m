@@ -1,6 +1,6 @@
 %sConstruct a directed torus.
 %
-%   graph = GRAPH_DIRECTED_TORUS(N) constructs an directed torus of NxN,
+%   graph = GRASP_DIRECTED_TORUS(N) constructs an directed torus of NxN,
 %   with node (i,j) having id 1 + N * i + j.
 %
 % Authors:

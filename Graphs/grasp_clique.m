@@ -1,6 +1,6 @@
 %Constructs a complete graph.
 %
-%   graph = GRAPH_CLIQUE(N) returns a complete graph (clique) with N
+%   graph = GRASP_CLIQUE(N) returns a complete graph (clique) with N
 %   nodes.
 %
 % Authors:

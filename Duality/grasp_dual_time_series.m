@@ -1,15 +1,15 @@
 %Maps a graph to a time series using various approaches.
 %
-%   ts = GRAPH_DUAL_TIME_SERIES(graph) creates a random time_series ts
+%   ts = GRASP_DUAL_TIME_SERIES(graph) creates a random time_series ts
 %   using [Girault et al. 2014, IEEE ICASSP]
 %
-%   [ts, P, bins_center, bins_bounds, final_loss, ssl_centroids] = GRAPH_DUAL_TIME_SERIES(...)
+%   [ts, P, bins_center, bins_bounds, final_loss, ssl_centroids] = GRASP_DUAL_TIME_SERIES(...)
 %   returns also the random walk matrix P, the center of bins for
 %   amplitudes bins_center and their bounds bins_bounds. final_loss is the
 %   cost value of the simulated annealing solution, and ssl_centroids are
 %   the two centroids used for GSSL.
 %
-%   GRAPH_DUAL_TIME_SERIES(..., options)  optional parameters:
+%   GRASP_DUAL_TIME_SERIES(..., options)  optional parameters:
 %
 %   options.nb_timesteps: number of samples of the time series (default:
 %       1000).
@@ -19,7 +19,7 @@
 %
 %       GSSL method
 %   options.adjacency_matrix: type of adjacency matrix (see
-%       GRAPH_FARTHEST). (default: 'distance').
+%       GRASP_FARTHEST). (default: 'distance').
 %   options.sigma_ssl: value of paramter sigma
 %   options.alpha_ssl: value of paramter alpha
 %

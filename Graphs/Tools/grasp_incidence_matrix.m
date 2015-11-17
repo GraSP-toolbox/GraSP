@@ -1,6 +1,6 @@
 %Builds the incidence matrix of a graph
 %
-%   E = GRAPH_INCIDENCE_MATRIX(graph) builds the m-by-3 incidence matrix E
+%   E = GRASP_INCIDENCE_MATRIX(graph) builds the m-by-3 incidence matrix E
 %   from graph. E(1,:) and E(2,:) are the nodes and E(3,:) the weight. If
 %   graph is non directed, edges appear only once in E.
 %

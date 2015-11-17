@@ -1,10 +1,10 @@
 %Computes the coherence of the graph (see Vertex-Frequency Analysis on
 %Graphs, Shuman et al. 2015).
 %
-%   coherence = GRAPH_COHERENCE(graph) returns the coherence of the Fourier
+%   coherence = GRASP_COHERENCE(graph) returns the coherence of the Fourier
 %   basis with respect to the canonical basis.
 %
-%   [coherence, localisation] = GRAPH_COHERENCE(graph) returns also the
+%   [coherence, localisation] = GRASP_COHERENCE(graph) returns also the
 %   vector localisation such that coherence = max(localisation) and
 %   localisation(i) = max_l |<chi_l,delta_i>|.
 %

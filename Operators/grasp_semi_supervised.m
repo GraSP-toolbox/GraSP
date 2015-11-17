@@ -7,13 +7,13 @@
 %NOTE: This function is faster if the normalized Laplacian
 %eigendecomposition has been performed.
 %
-%   H_SSL = GRAPH_SEMI_SUPERVISED(g, sigma, mu) computes the SSL kernel of
+%   H_SSL = GRASP_SEMI_SUPERVISED(g, sigma, mu) computes the SSL kernel of
 %   the graph g with parameters sigma and mu.
 %
-%   [H_SSL, H_SSL_hat] = GRAPH_SEMI_SUPERVISED(...) also returns the
+%   [H_SSL, H_SSL_hat] = GRASP_SEMI_SUPERVISED(...) also returns the
 %   operator in the spectral domain.
 %
-%   output = GRAPH_SEMI_SUPERVISED(..., input) applies SSL to input
+%   output = GRASP_SEMI_SUPERVISED(..., input) applies SSL to input
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>

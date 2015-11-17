@@ -1,10 +1,10 @@
 %Selects the subgraph associated to the biggest connected component of a
 %graph.
 %
-%   graph = GRAPH_BIGGEST_CONNECTED_COMPONENT(graph) find the biggest
+%   graph = GRASP_BIGGEST_CONNECTED_COMPONENT(graph) find the biggest
 %   connected component and returns it.
 %
-%   [..., nodes] = GRAPH_BIGGEST_CONNECTED_COMPONENT(...) also returns
+%   [..., nodes] = GRASP_BIGGEST_CONNECTED_COMPONENT(...) also returns
 %   the set of selected nodes.
 %
 % Authors:

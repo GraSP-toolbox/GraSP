@@ -1,10 +1,10 @@
 %Computes the translation operators as defined by [Shuman et al. 2013]. The
 %resulting matrix operator T_i is such that T_i f = sqrt(N) delta_i * f.
 %
-%   Ti = GRAPH_GENERALIZED_TRANSLATION(graph, i) computes the i^th
+%   Ti = GRASP_GENERALIZED_TRANSLATION(graph, i) computes the i^th
 %   translation operator Ti, using the Fourier transform of graph.
 %
-%   S = GRAPH_GENERALIZED_TRANSLATION(..., f) applies the operator to f and
+%   S = GRASP_GENERALIZED_TRANSLATION(..., f) applies the operator to f and
 %   returns the translated signal.
 %
 % Authors:

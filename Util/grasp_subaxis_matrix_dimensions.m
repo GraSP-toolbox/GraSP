@@ -1,14 +1,14 @@
 %Spreads elements in an array such that the number of empty cells is
 %minimized.
 %
-%   [L, C] = GRAPH_SUBAXIS_MATRIX_DIMENSIONS(nb_cells) returns the number
+%   [L, C] = GRASP_SUBAXIS_MATRIX_DIMENSIONS(nb_cells) returns the number
 %   of lines and the number of columns to display nb_cells elements. gcf is
 %   used to get the size of the current figure window.
 %
-%   [L, C] = GRAPH_SUBAXIS_MATRIX_DIMENSIONS(figure_handle, nb_cells) idem
+%   [L, C] = GRASP_SUBAXIS_MATRIX_DIMENSIONS(figure_handle, nb_cells) idem
 %   using the provided figure handle.
 %
-%   GRAPH_SUBAXIS_MATRIX_DIMENSIONS(..., background) uses a background
+%   GRASP_SUBAXIS_MATRIX_DIMENSIONS(..., background) uses a background
 %   image to obtain the relation between width and height instead of the
 %   window.
 %

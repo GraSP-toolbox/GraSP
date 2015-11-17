@@ -1,6 +1,6 @@
 %Computes the graph spread of a signal (Agaskar & Lu, IEEE Info. Th. 2015)
 %
-%   T = GRAPH_SIGNAL_SPREAD(graph, signal) computes the graph spread of
+%   T = GRASP_SIGNAL_SPREAD(graph, signal) computes the graph spread of
 %   signal on graph.
 %
 % Authors:

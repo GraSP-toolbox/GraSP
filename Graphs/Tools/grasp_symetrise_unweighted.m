@@ -1,6 +1,6 @@
 %Symetrises an unweighted graph.
 %
-%   graph = GRAPH_SYMETRISE_UNWEIGHTED(graph) symetrises the unweighted
+%   graph = GRASP_SYMETRISE_UNWEIGHTED(graph) symetrises the unweighted
 %   graph so as to keep the graph unweighted.
 %
 % Authors:

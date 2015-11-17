@@ -1,7 +1,7 @@
 %Update the data associated to a scatter plot. When the scatter plot
 %represents nodes of a graph, this data is a graph signal.
 %
-%   GRAPH_SCATTER_UPDATE(ax, data) updates the axes ax corresponding to a
+%   GRASP_SCATTER_UPDATE(ax, data) updates the axes ax corresponding to a
 %   scatter plot and changes the 'CData' field.
 %
 % Authors:

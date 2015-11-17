@@ -1,7 +1,7 @@
 %Constructs the heat kernel as defined in [Vertex-Frequency Analysis on
 %Graphs, Shuman et al.]
 %
-%   heat = GRAPH_HEAT_KERNEL(graph, decay) returns the heat kernel with the
+%   heat = GRASP_HEAT_KERNEL(graph, decay) returns the heat kernel with the
 %   prescribed decay.
 %
 % Authors:

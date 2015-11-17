@@ -1,6 +1,6 @@
 %Maps a graph to a time series using various approaches.
 %
-%   graph = GRAPH_DUAL_GRAPH(ts) creates a graph from a time_series using
+%   graph = GRASP_DUAL_GRAPH(ts) creates a graph from a time_series using
 %   [Campanharo et al. 2011, PLOS]
 %
 % Authors:

@@ -1,9 +1,9 @@
 %Parses function parameters given either as key / value parameters or as
 %one structure, considering default values.
 %
-%   options = GRAPH_PARSE_VARARGIN(default_param) returns default_param.
+%   options = GRASP_PARSE_VARARGIN(default_param) returns default_param.
 %
-%   options = GRAPH_PARSE_VARARGIN(default_param, options) if options is a
+%   options = GRASP_PARSE_VARARGIN(default_param, options) if options is a
 %   cell array, it is interpreted as {key1,value1,key2,value2,...} to
 %   construct the corresponding structure. This structure is given default
 %   values according to default_param.

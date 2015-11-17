@@ -1,6 +1,6 @@
 %Helper function to compute bin boundaries from their centers.
 %
-%   bounds = GRAPH_DUALITY_BINS_BOUNDS(centers, min_value, max_value)
+%   bounds = GRASP_DUALITY_BINS_BOUNDS(centers, min_value, max_value)
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>

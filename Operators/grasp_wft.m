@@ -1,12 +1,12 @@
 %Computes the windowed Fourier transform as defined by [Shuman et al.
 %2015].
 %
-%   wft = GRAPH_WFT(graph, f) computes the wft matrix such that
+%   wft = GRASP_WFT(graph, f) computes the wft matrix such that
 %   wft(i, k) = <f,g_{i,k}> with g_{i,k} the atom centered around node i
 %   and at frequency lambda_k. The function g used to define the window is
 %   a gaussian kernel of decay 3.
 %
-%   GRAPH_WFT(..., kernel_decay) use a gaussian window of prescribed decay.
+%   GRASP_WFT(..., kernel_decay) use a gaussian window of prescribed decay.
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>

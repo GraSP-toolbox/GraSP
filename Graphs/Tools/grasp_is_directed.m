@@ -1,6 +1,6 @@
 %Check if a graph has directed edges.
 %
-%   isdir = GRAPH_IS_DIRECTED(graph) returns true if graph has directed
+%   isdir = GRASP_IS_DIRECTED(graph) returns true if graph has directed
 %   edges, false otherwise.
 %
 % Authors:

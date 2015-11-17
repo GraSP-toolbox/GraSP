@@ -1,6 +1,6 @@
 %Number of nodes in a graph.
 %
-%   N = GRAPH_NB_NODES(graph) returns N = |V| for the provided graph.
+%   N = GRASP_NB_NODES(graph) returns N = |V| for the provided graph.
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>

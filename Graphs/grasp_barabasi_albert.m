@@ -1,10 +1,10 @@
 %Constructs a graph from the Barabási–Albert model. The graph is non
 %directed.
 %
-%   graph = GRAPH_BARABASI_ALBERT(N, m0) constructs a Barabási–Albert graph
+%   graph = GRASP_BARABASI_ALBERT(N, m0) constructs a Barabási–Albert graph
 %   with N nodes, and initial degree m0.
 %
-%   graph = GRAPH_BARABASI_ALBERT(N, starting_graph) constructs a
+%   graph = GRASP_BARABASI_ALBERT(N, starting_graph) constructs a
 %   Barabási–Albert graph with N nodes, and initialized with
 %   starting_graph, and with initial degree equal to the number of nodes of
 %   starting_graph.

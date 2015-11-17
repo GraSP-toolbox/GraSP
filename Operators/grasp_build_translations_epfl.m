@@ -1,7 +1,7 @@
 %Builds all epfl translation for a given graph and stores them in the
 %field Tepfl.
 %
-%   graph = GRAPH_BUILD_TRANSLATIONS_EPFL(graph) adds to graph the field
+%   graph = GRASP_BUILD_TRANSLATIONS_EPFL(graph) adds to graph the field
 %   Tepfl which is a cell with all epfl translations.
 %
 % Authors:

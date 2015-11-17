@@ -1,6 +1,6 @@
 %Constructs a directed cycle
 %
-%   graph = GRAPH_DIRECTED_CYCLE(N) returns the graph structure of a
+%   graph = GRASP_DIRECTED_CYCLE(N) returns the graph structure of a
 %   directed cycle of length N
 %
 % Authors:

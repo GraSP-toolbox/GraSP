@@ -2,10 +2,10 @@
 %resulting matrix operator M_l is such that
 %(M_l f)(i) = sqrt(N) f(i) chi_l(i).
 %
-%   Ml = GRAPH_GENERALIZED_MODULATION(graph, i) computes the l^th
+%   Ml = GRASP_GENERALIZED_MODULATION(graph, i) computes the l^th
 %   modulation operator Ml, using the Fourier transform of graph.
 %
-%   S = GRAPH_GENERALIZED_MODULATION(..., f) applies the operator to f and
+%   S = GRASP_GENERALIZED_MODULATION(..., f) applies the operator to f and
 %   returns the modulated signal.
 %
 % Authors:

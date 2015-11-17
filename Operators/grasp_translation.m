@@ -1,6 +1,6 @@
 %Computes the graph translation [Girault et al. 2015, IEEE SPL].
 %
-%   T = GRAPH_TRANSLATION(graph) uses the graph structure to build its
+%   T = GRASP_TRANSLATION(graph) uses the graph structure to build its
 %   graph translation.
 %
 % Authors:

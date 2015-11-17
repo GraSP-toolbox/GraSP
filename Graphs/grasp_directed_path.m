@@ -1,6 +1,6 @@
 %Constructs an directed path.
 %
-%   graph = GRAPH_DIRECTED_PATH(N) returns the graph structure of a
+%   graph = GRASP_DIRECTED_PATH(N) returns the graph structure of a
 %   directed path of length N.
 %
 % Authors:

@@ -1,7 +1,7 @@
 %Builds a graph signal with prescribed spectral correlation matrix and mean
 %and normal distribution on each node.
 %
-%   signal = GRAPH_GAUSSIAN_SIGNAL_REALIZATION(graph, mean, S) using the 
+%   signal = GRASP_GAUSSIAN_SIGNAL_REALIZATION(graph, mean, S) using the 
 %   spectral correlation matrix S, constructs a realization of the graph
 %   signal normal variables. The signal has mean as its mean vector.
 %

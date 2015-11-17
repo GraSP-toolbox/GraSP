@@ -2,27 +2,27 @@ function varargout = grasp_animate_iterated_operator_gui(varargin)
 %MATLAB code for grasp_animate_iterated_operator_gui.fig. Iterates an 
 %operator on a signal and shows an animation of its output.
 %
-%   GRAPH_ANIMATE_ITERATED_OPERATOR_GUI(graph, operator, signal) creates
+%   GRASP_ANIMATE_ITERATED_OPERATOR_GUI(graph, operator, signal) creates
 %   the GUI for the given graph and signal. The operator is then iterated
 %   on the signal.
 %
-%   GRAPH_ANIMATE_ITERATED_OPERATOR_GUI(..., show_real_imag) boolean on
+%   GRASP_ANIMATE_ITERATED_OPERATOR_GUI(..., show_real_imag) boolean on
 %   whether to show the real and imaginary part of the output signal on
 %   separate axes.
 %
-% %   GRAPH_ANIMATE_ITERATED_OPERATOR_GUI(..., file_basename) base filename
+% %   GRASP_ANIMATE_ITERATED_OPERATOR_GUI(..., file_basename) base filename
 % %   for the snapshots.
 %
-%   H = GRAPH_ANIMATE_ITERATED_OPERATOR_GUI returns the handle to a new
-%   GRAPH_ANIMATE_ITERATED_OPERATOR_GUI or the handle to the existing
+%   H = GRASP_ANIMATE_ITERATED_OPERATOR_GUI returns the handle to a new
+%   GRASP_ANIMATE_ITERATED_OPERATOR_GUI or the handle to the existing
 %   singleton.
 %
-%   GRAPH_ANIMATE_ITERATED_OPERATOR_GUI('CALLBACK', hObject, eventData, handles,...)
+%   GRASP_ANIMATE_ITERATED_OPERATOR_GUI('CALLBACK', hObject, eventData, handles,...)
 %   calls the local function named CALLBACK in
-%   GRAPH_ANIMATE_ITERATED_OPERATOR_GUI.m with the given input arguments.
+%   GRASP_ANIMATE_ITERATED_OPERATOR_GUI.m with the given input arguments.
 %
-%   GRAPH_ANIMATE_ITERATED_OPERATOR_GUI('Property','Value',...) creates a
-%   new GRAPH_ANIMATE_ITERATED_OPERATOR_GUI or raises the existing
+%   GRASP_ANIMATE_ITERATED_OPERATOR_GUI('Property','Value',...) creates a
+%   new GRASP_ANIMATE_ITERATED_OPERATOR_GUI or raises the existing
 %   singleton.  Starting from the left, property value pairs are applied to
 %   the GUI before grasp_animate_iterated_operator_gui_OpeningFcn gets
 %   called.  An unrecognized property name or invalid value makes property

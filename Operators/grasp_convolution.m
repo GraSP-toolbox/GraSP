@@ -1,6 +1,6 @@
 %Computes the generalized convolution of two signals [Shuman et al. 2013].
 %
-%   fg = GRAPH_CONVOLUTION(graph, f, g) computes the convolution fg = f * g
+%   fg = GRASP_CONVOLUTION(graph, f, g) computes the convolution fg = f * g
 %   such that \widehat{f * g} = \widehat{f} x \widehat{g}, x being the
 %   pointwise multiplication.
 %

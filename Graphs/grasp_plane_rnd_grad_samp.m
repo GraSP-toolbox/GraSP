@@ -1,12 +1,12 @@
 %Constructs a complete graph where nodes are non uniformly sampled on the
 %2D plane and weighted by a Gaussian kernel.
 %
-%   graph = GRAPH_PLANE_RND_GRAD_SAMP(N) returns a graph constructed from N
+%   graph = GRASP_PLANE_RND_GRAD_SAMP(N) returns a graph constructed from N
 %   nodes non uniformly sampled on the plane, using a gradient. The
 %   adjacency matrix is weighted by a Gaussian kernel of the distance with
 %   parameter sigma = 1. Highest density is in the center.
 %
-%   GRAPH_PLANE_RND(..., options) optional parameters:
+%   GRASP_PLANE_RND(..., options) optional parameters:
 %
 %   options.directed: true if graph should stay directed (default: false)
 %   options.sigma: sigma^2 in the Gaussian kernel (default: 1)

@@ -1,6 +1,6 @@
 %Export a function of a nodes' graph structure in a CSV file for LaTeX.
 %
-%   GRAPH_EXPORTCSV_FUNCTION(graph, f, function_file) creates the file
+%   GRASP_EXPORTCSV_SIGNAL(graph, f, function_file) creates the file
 %   function_file holding the function f defined on the nodes of the graph
 %   graph.
 %
