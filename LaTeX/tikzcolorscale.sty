@@ -1,0 +1,222 @@
+% Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
+% Inria, FRANCE (2015-11-01)
+% 
+% benjamin.girault@ens-lyon.fr
+% 
+% This software is a computer program whose purpose is to provide a Matlab
+% / Octave toolbox for handling and displaying graph signals.
+% 
+% This software is governed by the CeCILL license under French law and
+% abiding by the rules of distribution of free software.  You can  use, 
+% modify and/ or redistribute the software under the terms of the CeCILL
+% license as circulated by CEA, CNRS and INRIA at the following URL
+% "http://www.cecill.info". 
+% 
+% As a counterpart to the access to the source code and  rights to copy,
+% modify and redistribute granted by the license, users are provided only
+% with a limited warranty  and the software's author,  the holder of the
+% economic rights,  and the successive licensors  have only  limited
+% liability. 
+% 
+% In this respect, the user's attention is drawn to the risks associated
+% with loading,  using,  modifying and/or developing or reproducing the
+% software by the user in light of its specific status of free software,
+% that may mean  that it is complicated to manipulate,  and  that  also
+% therefore means  that it is reserved for developers  and  experienced
+% professionals having in-depth computer knowledge. Users are therefore
+% encouraged to load and test the software's suitability as regards their
+% requirements in conditions enabling the security of their systems and/or 
+% data to be ensured and,  more generally, to use and operate it in the 
+% same conditions as regards security. 
+% 
+% The fact that you are presently reading this means that you have had
+% knowledge of the CeCILL license and that you accept its terms.
+
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{tikzcolorscale}[2015/11/01]
+
+\RequirePackage{xcolor}
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.11}
+\RequirePackage{tikz}
+
+\colorlet{hotyellow}{black!20!yellow}
+\pgfdeclareverticalshading{hot}{100bp}
+  {color(0bp)=(white); color(25bp)=(white); color(37bp)=(hotyellow);
+  color(45bp)=(orange); color(57bp)=(red);
+  color(75bp)=(black); color(100bp)=(black)}
+\pgfdeclareverticalshading{jet}{100bp}
+  {color(0bp)=(black!50!blue); color(25bp)=(black!50!blue);
+  color(32bp)=(blue); color(40bp)=(cyan);
+  color(48bp)=(green); color(52bp)=(yellow);
+  color(57bp)=(orange); color(65bp)=(red);
+  color(75bp)=(black!50!red); color(100bp)=(black!50!red)}
+\pgfdeclareverticalshading{hsv}{100bp}
+  {color(0bp)=(red); color(25bp)=(red);
+  color(33bp)=(yellow); color(41bp)=(green);
+  color(50bp)=(cyan); color(58bp)=(blue);
+  color(66bp)=(magenta);
+  color(75bp)=(red); color(100bp)=(red)}
+\pgfdeclareverticalshading{rainbow}{100bp}
+  {color(0bp)=(red); color(25bp)=(red); color(35bp)=(yellow);
+  color(45bp)=(green); color(55bp)=(cyan); color(65bp)=(blue);
+  color(75bp)=(violet); color(100bp)=(violet)}
+\def\defbicolorshading{%
+  \pgfdeclareverticalshading{bicolor}{100bp}
+    {color(0bp)=(mincol); color(25bp)=(mincol);
+    color(75bp)=(maxcol); color(100bp)=(maxcol)}
+}
+\pgfdeclareverticalshading{redblue}{100bp}
+  {color(0bp)=(blue); color(25bp)=(blue);
+  color(50bp)=(white);
+  color(75bp)=(red); color(100bp)=(red)}
+\colorlet{darkblue}{black!50!blue}
+\colorlet{darkred}{black!50!red}
+\colorlet{lightblue}{white!10!blue}
+\colorlet{lightred}{white!10!red}
+% \pgfdeclareverticalshading{redbluedark}{100bp}
+%   {color(0bp)=(darkblue); color(25bp)=(darkblue);
+%   color(50bp)=(white);
+%   color(75bp)=(darkred); color(100bp)=(darkred)}
+\pgfdeclareverticalshading{redbluedark}{100bp}
+  {color(0bp)=(darkblue); color(25bp)=(darkblue);
+  color(45bp)=(lightblue); color(50bp)=(white); color(55bp)=(lightred);
+  color(70bp)=(darkred); color(100bp)=(darkred)}
+  
+%% Returns a color based on a number in [0,1] and the hot color scale
+\def\hsvcolor#1{
+  \pgfmathparse{max(0, 6 * #1) < 1}
+  \ifthenelse{\equal{\pgfmathresult}{1}}{
+    \pgfmathtruncatemacro{\value}{600 * max(0, #1)}
+    \colorlet{curcol}{yellow!\value!red}
+  }{
+    \pgfmathparse{max(0, 6 * #1) < 2}
+    \ifthenelse{\equal{\pgfmathresult}{1}}{
+      \pgfmathtruncatemacro{\value}{100 * max(0, 6 * #1 - 1)}
+      \colorlet{curcol}{green!\value!yellow}
+    }{
+      \pgfmathparse{max(0, 6 * #1) < 3}
+      \ifthenelse{\equal{\pgfmathresult}{1}}{
+        \pgfmathtruncatemacro{\value}{100 * max(0, 6 * #1 - 2)}
+        \colorlet{curcol}{cyan!\value!green}
+      }{
+        \pgfmathparse{max(0, 6 * #1) < 4}
+        \ifthenelse{\equal{\pgfmathresult}{1}}{
+          \pgfmathtruncatemacro{\value}{100 * max(0, 6 * #1 - 3)}
+          \colorlet{curcol}{blue!\value!cyan}
+        }{
+          \pgfmathparse{max(0, 6 * #1) < 5}
+          \ifthenelse{\equal{\pgfmathresult}{1}}{
+            \pgfmathtruncatemacro{\value}{100 * max(0, 6 * #1 - 4)}
+            \colorlet{curcol}{magenta!\value!blue}
+          }{
+            \pgfmathtruncatemacro{\value}{100 * min(1, max(0, 6 * #1 - 5))}
+            \colorlet{curcol}{red!\value!magenta}
+          }
+        }
+      }
+    }
+  }
+}
+\def\jetcolor#1{
+  \pgfmathparse{max(0, #1) < 0.15}
+  \ifthenelse{\equal{\pgfmathresult}{1}}{
+    \pgfmathtruncatemacro{\value}{400 * max(0, #1)}
+    \colorlet{jetdarkblue}{black!50!blue}
+    \colorlet{curcol}{blue!\value!jetdarkblue}
+  }{
+    \pgfmathparse{#1 < 0.3}
+    \ifthenelse{\equal{\pgfmathresult}{1}}{
+    \pgfmathtruncatemacro{\value}{400 * (#1 - 0.15)}
+      \colorlet{curcol}{cyan!\value!blue}
+    }{
+      \pgfmathparse{#1 < 0.45}
+      \ifthenelse{\equal{\pgfmathresult}{1}}{
+        \pgfmathtruncatemacro{\value}{400 * (#1 - 0.3)}
+        \colorlet{curcol}{green!\value!cyan}
+      }{%
+        \pgfmathparse{#1 < 0.55}
+        \ifthenelse{\equal{\pgfmathresult}{1}}{
+          \pgfmathtruncatemacro{\value}{400 * (#1 - 0.45)}
+          \colorlet{curcol}{yellow!\value!green}
+        }{%
+          \pgfmathparse{#1 < 0.65}
+          \ifthenelse{\equal{\pgfmathresult}{1}}{
+            \pgfmathtruncatemacro{\value}{400 * (#1 - 0.54)}
+            \colorlet{curcol}{orange!\value!yellow}
+          }{%
+            \pgfmathparse{#1 < 0.8}
+            \ifthenelse{\equal{\pgfmathresult}{1}}{
+              \pgfmathtruncatemacro{\value}{400 * (#1 - 0.65)}
+              \colorlet{curcol}{red!\value!orange}
+            }{%
+              \pgfmathtruncatemacro{\value}{400 * (#1 - 0.8)}
+              \colorlet{jetdarkred}{black!50!red}
+              \colorlet{curcol}{jetdarkred!\value!red}
+            }
+          }
+        }
+      }
+    }
+  }
+}
+\def\hotcolor#1{
+  \pgfmathparse{max(0, #1) < 0.15}
+  \ifthenelse{\equal{\pgfmathresult}{1}}{
+    \pgfmathtruncatemacro{\value}{400 * max(0, #1)}
+    \colorlet{curcol}{hotyellow!\value!white}
+  }{
+    \pgfmathparse{#1 < 0.4}
+    \ifthenelse{\equal{\pgfmathresult}{1}}{
+    \pgfmathtruncatemacro{\value}{400 * (#1 - 0.15)}
+      \colorlet{curcol}{orange!\value!hotyellow}
+    }{
+      \pgfmathparse{#1 < 0.65}
+      \ifthenelse{\equal{\pgfmathresult}{1}}{
+        \pgfmathtruncatemacro{\value}{400 * (#1 - 0.4)}
+        \colorlet{curcol}{red!\value!orange}
+      }{%
+        \pgfmathtruncatemacro{\value}{400 * (#1 - 0.65)}
+        \colorlet{curcol}{black!\value!red}
+      }
+    }
+  }
+}
+\def\bicolor#1{
+  \pgfmathtruncatemacro{\value}{100 * (#1 + 0)}
+  \colorlet{curcol}{maxcol!\value!mincol}
+}
+
+\def\redblue#1{
+  \pgfmathparse{max(0, #1) < 0.5}
+  \ifthenelse{\equal{\pgfmathresult}{1}}{
+    \pgfmathtruncatemacro{\value}{200 * max(0, #1)}
+    \colorlet{curcol}{white!\value!blue}
+  }{
+    \pgfmathtruncatemacro{\value}{200 * (#1 - 0.5)}
+    \colorlet{curcol}{red!\value!white}
+  }
+}
+
+\def\redbluedark#1{
+  \pgfmathparse{max(0, #1) < 0.4}
+  \ifthenelse{\equal{\pgfmathresult}{1}}{
+    \pgfmathtruncatemacro{\value}{100 * max(0, #1) / 0.4}
+    \colorlet{curcol}{lightblue!\value!darkblue}
+  }{
+    \pgfmathparse{max(0, #1) < 0.5}
+    \ifthenelse{\equal{\pgfmathresult}{1}}{
+      \pgfmathtruncatemacro{\value}{100 * max(0, #1 - 0.4) / 0.1}
+      \colorlet{curcol}{white!\value!lightblue}
+    }{
+      \pgfmathparse{max(0, #1) < 0.6}
+      \ifthenelse{\equal{\pgfmathresult}{1}}{
+        \pgfmathtruncatemacro{\value}{100 * max(0, #1 - 0.5) / 0.1}
+        \colorlet{curcol}{lightred!\value!white}
+      }{
+        \pgfmathtruncatemacro{\value}{100 * min(0.4, #1 - 0.6) / 0.4}
+        \colorlet{curcol}{darkred!\value!lightred}
+      }
+    }
+  }
+}

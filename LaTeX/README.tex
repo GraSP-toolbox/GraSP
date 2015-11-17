@@ -1,0 +1,94 @@
+To use these packages, either copy them in your Latex source directory, or add this directory to 
+your TEXINPUTS environment variable.
+
+You will need the csvtools package (http://www.ctan.org/pkg/csvtools). A migration to datatool is 
+on the roadmap for a future release of GraSP.
+
+These packages are designed to work with the output of grasp_exportcsv and grasp_exportcsv_signal, 
+but any similar csv files will work.
+
+The packages here are compatible with babel and tikz/externalize (highly recommended).
+
+The packages tikzbabel and tikzcolorscale are automatically loaded by tikzgraph and tikzmatrix and 
+are merely helper packages.
+
+== tikzgraph ==
+
+To use this package simply add
+  \usepackage{tikzgraph}
+in the preamble.
+
+To plot a simple graph signal use the following code (default options are given):
+
+\begin{tikzpicture}
+  \flatgraph[%
+      maxcol=black,        % Color of the maximum value
+      mincol=white,        % Color of the minimum value
+      edgecol=gray,        % Color of the edges
+      nodeedgecol=black,   % Color of the edges of a vertex
+      maxvalue=1.0,        % Maximum value of samples of the signal
+      minvalue=0.0,        % Minimum value of samples of the signal
+      nodesize=1opt,       % Size of a vertex
+      nodelinewidth=0.2pt, % Thickness of the edges of a vertex
+      intprecision=2,      % Number digits after the floating point
+      textscale=1,         % Scale of the text in the figure (mostly the color scale boundaries)
+      xscale=1,            % Width / height ratio
+      colormap=hot,        % One of {hot, jet, bicolor, redblue, redbluedark, hsv}
+      showcolormap=false,  % Whether the color map LUT is shown
+      showedges=true]      % Whether edges are shown
+    {nodes.csv}%
+    {edges.csv}%
+    {signal.csv}
+\end{tikzpicture}
+
+To add a background image use:
+
+\begin{tikzpicture}
+  \backgroundflatgraph[%
+      <options of flatgraph>,%
+      backgroundwidth=10cm, % Width of the background
+      appendedcode={}]      % Code to append after the figure definition (such that it gets 
+scaled)
+    {nodes.csv}%
+    {edges.csv}%
+    {signal.csv}%
+    {backgroundimage}
+\end{tikzpicture}
+
+To put the graph on a slanted plane and plot the signal using stems, use:
+
+\begin{tikzpicture}
+  \stemgraph[%
+      <options of flatgraph>,%
+      zangle=0,    % How slanted is the plane supporting the graph
+      stemscale=1, % Scaling of stems (i.e. values of vertices)
+      poscol=red,  % Color of positive values
+      negcol=blue] % Color of negative values
+    {nodes.csv}%
+    {edges.csv}%
+    {signal.csv}
+\end{tikzpicture}
+
+== tikzmatrix ==
+
+To use this package simply add
+  \usepackage{tikzmatrix}
+in the preamble.
+
+To show a matrix with N columns, use:
+
+\begin{tikzpicture}
+  \tikzmatrix[%
+      maxcol=black,         % Color of the maximum value
+      mincol=white,         % Color of the minimum value
+      maxvalue=1.0,         % Maximum value of samples of the signal
+      minvalue=0.0,         % Minimum value of samples of the signal
+      intprecision=2,       % Number digits after the floating point
+      textscale=1,          % Scale of the text in the figure (mostly the color scale boundaries)
+      colormap=hot,         % One of {hot, jet, bicolor, redblue, redbluedark, hsv}
+      showcolormap=false,   % Whether the color map LUT is shown
+      showinnerlines=false] % Whether to show edges separating elements of the matrix
+    {matrix.csv}%
+    {N}
+\end{tikzpicture}
+

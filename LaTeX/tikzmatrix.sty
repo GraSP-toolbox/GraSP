@@ -1,0 +1,169 @@
+% Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
+% Inria, FRANCE (2015-11-01)
+% 
+% benjamin.girault@ens-lyon.fr
+% 
+% This software is a computer program whose purpose is to provide a Matlab
+% / Octave toolbox for handling and displaying graph signals.
+% 
+% This software is governed by the CeCILL license under French law and
+% abiding by the rules of distribution of free software.  You can  use, 
+% modify and/ or redistribute the software under the terms of the CeCILL
+% license as circulated by CEA, CNRS and INRIA at the following URL
+% "http://www.cecill.info". 
+% 
+% As a counterpart to the access to the source code and  rights to copy,
+% modify and redistribute granted by the license, users are provided only
+% with a limited warranty  and the software's author,  the holder of the
+% economic rights,  and the successive licensors  have only  limited
+% liability. 
+% 
+% In this respect, the user's attention is drawn to the risks associated
+% with loading,  using,  modifying and/or developing or reproducing the
+% software by the user in light of its specific status of free software,
+% that may mean  that it is complicated to manipulate,  and  that  also
+% therefore means  that it is reserved for developers  and  experienced
+% professionals having in-depth computer knowledge. Users are therefore
+% encouraged to load and test the software's suitability as regards their
+% requirements in conditions enabling the security of their systems and/or 
+% data to be ensured and,  more generally, to use and operate it in the 
+% same conditions as regards security. 
+% 
+% The fact that you are presently reading this means that you have had
+% knowledge of the CeCILL license and that you accept its terms.
+
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{tikzmatrix}[2015/11/01]
+
+\RequirePackage{etoolbox}
+\RequirePackage{xcolor}
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.11}
+\RequirePackage{tikz}
+\usetikzlibrary{arrows,calc,3d,positioning,shapes,backgrounds}
+\RequirePackage{csvtools}
+
+\RequirePackage{xkeyval}
+
+\RequirePackage{tikzbabel}
+\RequirePackage{tikzcolorscale}
+
+\define@cmdkeys{tikzmatrix}{maxcol,mincol,maxvalue,minvalue,intprecision,textscale}
+\presetkeys{tikzmatrix}{maxcol=black}{}
+\presetkeys{tikzmatrix}{mincol=white}{}
+\presetkeys{tikzmatrix}{maxvalue=1.0}{}
+\presetkeys{tikzmatrix}{minvalue=0.0}{}
+\presetkeys{tikzmatrix}{intprecision=2}{}
+\presetkeys{tikzmatrix}{textscale=1}{}
+\define@choicekey*{tikzmatrix}{colormap}[\val\nr]{hot,jet,bicolor,redblue,redbluedark,hsv}[hot]{
+  \ifcase\nr\relax
+    \let\colormap\hotcolor
+    \def\shadingname{hot}
+    \setbool{bicolorflag}{false}
+  \or
+    \let\colormap\jetcolor
+    \def\shadingname{jet}
+    \setbool{bicolorflag}{false}
+  \or
+    \let\colormap\bicolor
+    \setbool{bicolorflag}{true}
+  \or
+    \let\colormap\redblue
+    \def\shadingname{redblue}
+  \or
+    \let\colormap\redbluedark
+    \def\shadingname{redbluedark}
+  \or
+    \let\colormap\hsvcolor
+    \def\shadingname{hsv}
+    \setbool{bicolorflag}{false}
+  \fi
+}
+\presetkeys{tikzmatrix}{colormap=hot}{}
+% Show color map
+\define@boolkey{tikzmatrix}{showcolormap}[true]{}
+\presetkeys{tikzmatrix}{showcolormap=false}{}
+% Show inner lines
+\define@boolkey{tikzmatrix}{showinnerlines}[true]{}
+\presetkeys{tikzmatrix}{showinnerlines=false}{}
+
+\newcommand\tikzmatrix[3][]{
+  \newbool{bicolorflag}
+  \setkeys{tikzmatrix}{#1}
+  \IfFileExists{#2}{
+    \colorlet{maxcol}{\cmdKV@tikzmatrix@maxcol}
+    \colorlet{mincol}{\cmdKV@tikzmatrix@mincol}
+    \ifthenelse{\@babel@loaded=1}{\shorthandoff{:;!?}}{}
+    \tikzpicturedependsonfile{#2}
+    \applyCSVfile*{#2}{%
+      \pgfmathparse{(1 - \value{csvrownumber} / #3) * 10}
+      \edef\y{\pgfmathresult}
+      \foreach \colnum in {1,...,#3}{
+        \pgfmathparse{((\colnum - 1) / #3) * 10}
+        \edef\x{\pgfmathresult} 
+        \pgfmathparse{abs((\field{\colnum} - \cmdKV@tikzmatrix@minvalue) /
+                      (\cmdKV@tikzmatrix@maxvalue - \cmdKV@tikzmatrix@minvalue))}
+        \pgfmathparse{min(1, max(0, \pgfmathresult))}
+        \edef\data{\pgfmathresult}
+        \colormap{\data}
+        \coordinate (bl) at (\x,\y) {};
+        \coordinate (tr) at ($(\x,\y) + (10 / #3,10 / #3)$) {};
+        \ifKV@tikzmatrix@showinnerlines
+          \filldraw[fill=curcol,draw] (\x,\y) rectangle ($(\x,\y) + (10 / #3,10 / #3)$);
+        \else
+          \filldraw[fill=curcol,draw=none] (\x,\y) rectangle ($(\x,\y) + (10 / #3,10 / #3)$);
+  %         \node[draw=none,align=left,rectangle,below right,inner sep=0,outer sep=0]
+  %           at ($(\x,\y) + (0,10 / #3)$)
+  %           {\parbox{1cm}{\fontsize{0.2mm}{0.01em}\selectfont \x \newline \y}};
+        \fi
+        \coordinate (\colnum_\thecsvrownumber) at ($(bl)!0.5!(tr)$) {};
+      }
+    }
+    
+    % Color scale
+    \begin{scope}[every node/.style={draw=none,fill=none}]
+      \coordinate (nw) at (current bounding box.north west) {};
+      \coordinate (se) at (current bounding box.south east) {};
+      \coordinate (sw) at ($(0,0)!(nw)!(1,0)+(0,0)!(se)!(0,1)$) {};
+      \coordinate (ne) at ($(0,0)!(nw)!(0,1)+(0,0)!(se)!(1,0)$) {};
+
+      \coordinate (nwscale) at ($(ne)+(0.5,0)$) {};
+      \coordinate (nescale) at ($(ne)+(1,0)$) {};
+      \coordinate (swscale) at ($(se)+(0.5,0)$) {};
+      \coordinate (sescale) at ($(se)+(1,0)$) {};
+      \coordinate (mwscale) at ($(nwscale)!0.5!(swscale)$) {};
+      \coordinate (mescale) at ($(nescale)!0.5!(sescale)$) {};
+    \end{scope}
+    \draw (nw) rectangle (se);
+    
+    % Color scale
+    \ifKV@tikzmatrix@showcolormap
+      \ifbool{bicolorflag}{
+        \draw[top color=\cmdKV@tikzmatrix@maxcol,bottom color=\cmdKV@tikzmatrix@mincol]
+          ($(se)+(0.5,0)$) rectangle ($(ne)+(1,0)$);
+      }{
+        \draw[shading=\shadingname] ($(se)+(0.5,0)$) rectangle ($(ne)+(1,0)$);
+      }
+      \pgfkeys{/pgf/number format/.cd,std=-3,zerofill,precision=\cmdKV@tikzmatrix@intprecision}
+      \pgfmathparse{\cmdKV@tikzmatrix@minvalue + (\cmdKV@tikzmatrix@maxvalue - 
+        \cmdKV@tikzmatrix@minvalue) / 2}
+      \pgfmathprintnumberto{\pgfmathresult}{\midvalueprint}
+      \pgfmathprintnumberto{\cmdKV@tikzmatrix@minvalue}{\minvalueprint}
+      \pgfmathprintnumberto{\cmdKV@tikzmatrix@maxvalue}{\maxvalueprint}
+      \begin{scope}[every node/.style={inner sep=0pt,transform shape}]
+        \node[above right,draw=none,rectangle,scale=\cmdKV@tikzmatrix@textscale]
+          at ($(sescale)+(0.1,0)$) (minlabel){$\minvalueprint$};
+        \node[anchor=west,draw=none,rectangle,scale=\cmdKV@tikzmatrix@textscale]
+          at ($(mescale)+(0.1,0)$) (midlabel){$\midvalueprint$};
+        \node[below right,draw=none,rectangle,scale=\cmdKV@tikzmatrix@textscale]
+          at ($(nescale)+(0.1,0)$) (maxlabel){$\maxvalueprint$};
+      \end{scope}
+      \draw (mwscale) -- ($(mwscale)+(0.15,0)$) ($(mescale)-(0.15,0)$) -- (mescale);
+    \fi
+  %   \draw (-1,-1) rectangle ($(#3,#3) + (1,1)$);
+  }{
+    \node[draw,transform shape] (error) {Missing file: \detokenize{#2}};
+  }
+}
+
+\endinput
