@@ -1,8 +1,8 @@
-%Export a function of a nodes' graph structure in a CSV file for LaTeX.
+%Export a graph signal in a CSV file.
 %
-%   GRASP_EXPORTCSV_SIGNAL(graph, f, function_file) creates the file
-%   function_file holding the function f defined on the nodes of the graph
-%   graph.
+%   GRASP_EXPORTCSV_SIGNAL(graph, signal, signal_file) creates the CSV file
+%   signal_file with the first column as the vertex ID, and the subsequent
+%   columns as signal(i, :) for vertex i.
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
@@ -41,13 +41,21 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function grasp_exportcsv_signal(graph, f, function_file)
+function grasp_exportcsv_signal(graph, signal, signal_file)
     N = grasp_nb_nodes(graph);
     
-    fileID = fopen(function_file,'w');
-    fprintf(fileID,'n,value\n');
+    fileID = fopen(signal_file,'w');
+    fprintf(fileID, 'n');
+    for i = 1:size(signal, 2)
+        fprintf(fileID, ',value%d', i);
+    end
+    fprintf(fileID, '\n');
     for i = 1:N
-        fprintf(fileID, '%d,%f\n', i, f(i));
+        fprintf(fileID, '%d', i);
+        for j = 1:size(signal, 2)
+            fprintf(fileID, ',%f', signal(i, j));
+        end
+        fprintf(fileID, '\n');
     end
     fclose(fileID);
 end

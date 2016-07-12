@@ -1,7 +1,7 @@
 %Creates a distances matrix from a graph layout.
 %
 %   distances = GRASP_DISTANCES_LAYOUT(graph) Returns the distances matrix
-%   computed using Euclidean distances is the plane of the layout.
+%   computed using Euclidean distances in the plane of the layout.
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>

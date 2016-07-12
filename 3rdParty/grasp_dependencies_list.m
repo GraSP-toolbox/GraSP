@@ -1,6 +1,6 @@
 %Necessary information on third party Matlab libraries.
 %
-%   list = GRAPH_DEPENDENCIES_LIST() structure array of third party
+%   list = GRASP_DEPENDENCIES_LIST() structure array of third party
 %   dependencies with url, name, root_dir, init_script to run for
 %   install, and path_list.
 %

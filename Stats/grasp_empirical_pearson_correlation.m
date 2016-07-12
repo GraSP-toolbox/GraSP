@@ -42,6 +42,6 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function sigma = grasp_empirical_pearson_correlation(signal)
-    sigma = corrcoef(signal');
+function [sigma, Pval] = grasp_empirical_pearson_correlation(signal)
+    [sigma, Pval] = corrcoef(signal');
 end

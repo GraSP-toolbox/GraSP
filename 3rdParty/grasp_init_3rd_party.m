@@ -1,6 +1,6 @@
 %Setup third party Matlab libraries.
 %
-%   GRAPH_INIT_3RD_PARTY() downloads and install in this directory third
+%   GRASP_INIT_3RD_PARTY() downloads and install in this directory third
 %   party Matlab libraries.
 %
 % Authors:

@@ -28,7 +28,7 @@ To plot a simple graph signal use the following code (default options are given)
       nodeedgecol=black,   % Color of the edges of a vertex
       maxvalue=1.0,        % Maximum value of samples of the signal
       minvalue=0.0,        % Minimum value of samples of the signal
-      nodesize=1opt,       % Size of a vertex
+      nodesize=10pt,       % Size of a vertex
       nodelinewidth=0.2pt, % Thickness of the edges of a vertex
       intprecision=2,      % Number digits after the floating point
       textscale=1,         % Scale of the text in the figure (mostly the color scale boundaries)

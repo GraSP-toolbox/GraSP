@@ -101,8 +101,8 @@
       \foreach \colnum in {1,...,#3}{
         \pgfmathparse{((\colnum - 1) / #3) * 10}
         \edef\x{\pgfmathresult} 
-        \pgfmathparse{abs((\field{\colnum} - \cmdKV@tikzmatrix@minvalue) /
-                      (\cmdKV@tikzmatrix@maxvalue - \cmdKV@tikzmatrix@minvalue))}
+        \pgfmathparse{(\field{\colnum} - \cmdKV@tikzmatrix@minvalue) /
+                      (\cmdKV@tikzmatrix@maxvalue - \cmdKV@tikzmatrix@minvalue)}
         \pgfmathparse{min(1, max(0, \pgfmathresult))}
         \edef\data{\pgfmathresult}
         \colormap{\data}

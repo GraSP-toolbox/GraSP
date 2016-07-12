@@ -296,11 +296,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Scaling of stems
-\define@cmdkeys{stemgraph}{zangle,stemscale,poscol,negcol}
+\define@cmdkeys{stemgraph}{zangle,stemscale,poscol,negcol,appendedcode}
 \presetkeys{stemgraph}{zangle=0}{}
 \presetkeys{stemgraph}{stemscale=1}{}
 \presetkeys{stemgraph}{poscol=red}{}
 \presetkeys{stemgraph}{negcol=blue}{}
+\presetkeys{stemgraph}{appendedcode={}}{}
 
 
 \newcommand\stemgraph[4][]{
@@ -371,6 +372,8 @@
           \coordinate (\i_s) at (\i_c);
         }
       }
+
+      \cmdKV@stemgraph@appendedcode
     \end{scope}
   \end{scope}
   

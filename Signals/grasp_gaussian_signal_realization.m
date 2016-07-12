@@ -5,6 +5,9 @@
 %   spectral correlation matrix S, constructs a realization of the graph
 %   signal normal variables. The signal has mean as its mean vector.
 %
+%   signal = GRASP_GAUSSIAN_SIGNAL_REALIZATION(..., m) generate m
+%   realizations.
+%
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
 
@@ -42,14 +45,18 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function signal = grasp_gaussian_signal_realization(graph, mean, S)
+function signal = grasp_gaussian_signal_realization(graph, mean, S, m)
     %% Preprocessing
     N = grasp_nb_nodes(graph);
     mean_hat = grasp_fourier(graph, mean);
     Cov_hat = S - mean_hat * mean_hat';  % Covariance
     
+    if nargin == 3
+        m = 1;
+    end
+    
     %% X
-    X_hat = normrnd(0, 1, N, 1);
+    X_hat = normrnd(0, 1, N, m);
     
     %% Y = LX
     try
@@ -66,5 +73,5 @@ function signal = grasp_gaussian_signal_realization(graph, mean, S)
     Y_hat = L * X_hat;
     
     %% Z = Y + mean
-    signal = grasp_fourier_inverse(graph, Y_hat) + mean;
+    signal = graph.Finv * Y_hat + kron(ones(1, m), mean);
 end

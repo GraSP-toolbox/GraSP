@@ -1,9 +1,9 @@
 %Generate a gif image file from a graph and several graph signals.
 %
-%   GRASP_GENERATE_GIF(fh, filename, graph, signals, titles, show_graph_options)
+%   GRASP_GENERATE_GIF(fh, filename, graph, signals, titles, title_font_size, show_graph_options)
 %   generates the GIF file filename by iteratively plotting signals(:, i)
-%   using graph. titles{i} is used to give a title to the figure. The
-%   figure handle fh is used.
+%   using graph. titles{i} is used to give a title to the figure, with font
+%   size title_font_size. The figure handle fh is used.
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
@@ -42,7 +42,7 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function grasp_generate_gif(fh, filename, graph, signals, titles, show_graph_options)
+function grasp_generate_gif(fh, filename, graph, signals, titles, title_font_size, show_graph_options)
     ah = get(fh, 'CurrentAxes');
     nh = grasp_show_graph(ah, graph, show_graph_options);
     colorbar;
@@ -53,11 +53,11 @@ function grasp_generate_gif(fh, filename, graph, signals, titles, show_graph_opt
     N = size(signals, 2);
     im(1, 1, 1, N) = 0;
     for k = 1:N
-        title(ah, titles{k});
+        title(ah, titles{k}, 'interpreter', 'latex', 'fontsize', title_font_size);
         set(nh, 'CData', signals(:, k));
         drawnow;
         f = getframe(fh);
         im(:, :, 1, k) = rgb2ind(f.cdata, map, 'nodither');
     end
-    imwrite(im, map, filename, 'DelayTime', 0.25, 'LoopCount', inf);
+    imwrite(im, map, filename, 'DelayTime', 0.1, 'LoopCount', inf);
 end

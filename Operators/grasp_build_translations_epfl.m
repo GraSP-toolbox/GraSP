@@ -43,5 +43,5 @@
 
 function graph = grasp_build_translations_epfl(graph)
     N = grasp_nb_nodes(graph);
-    graph.Tepfl = cellfun(@(i) translation_epfl(graph, i), num2cell(1:N), 'UniformOutput', false);
+    graph.Tepfl = cellfun(@(i) grasp_generalized_translation(graph, i), num2cell(1:N), 'UniformOutput', false);
 end
