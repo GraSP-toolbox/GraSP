@@ -5,11 +5,15 @@
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
+% Inria, FRANCE (2015)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2016)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -47,32 +51,47 @@ function grasp_init_3rd_party
     %% Matlab version
     package_save = @(url, file) urlwrite(url, file);
     matlab_ver = ver('Matlab');
-    if numel(matlab_ver) > 1 && str2double(matlab_ver.Version) >= 8.4
+    if numel(matlab_ver) > 0 && str2double(matlab_ver.Version) >= 8.4
         package_save = @(url, file) websave(file, url);
     end
+    
+    %% MyPatcher path
+    path_mypatcher = [fileparts(mfilename('fullpath')), filesep, softwares(1).name, softwares(1).root_dir];
 
     %% Subaxis
     pwd = [fileparts(mfilename('fullpath')), filesep];
     for soft_id = 1:numel(softwares)
         soft = softwares(soft_id);
+        if soft.debug
+            continue;
+        end
         dir = [pwd, soft.name];
         package_save(soft.url, 'tmp.zip');
         mkdir(pwd, soft.name);
         unzip('tmp.zip', dir);
         delete('tmp.zip');
         if numel(soft.patches) ~= 0
-            addpath('MyPatcher/');
+            addpath(path_mypatcher);
             for i = 1:2:numel(soft.patches)
-                mypatcher(soft.patches{1}, soft.patches{2}, soft.patches{1});
+                mypatcher(soft.patches{i}, soft.patches{i + 1}, soft.patches{i});
             end
-            rmpath('MyPatcher/');
+            rmpath(path_mypatcher);
         end
         if numel(soft.init_script) ~= 0
-            path = [fileparts(mfilename('fullpath')), filesep, soft.name, soft.root_dir];
-            addpath(path);
+            old_path = path;
+            toolpath = [fileparts(mfilename('fullpath')), filesep, soft.name, soft.root_dir];
+            addpath(toolpath);
             init = str2func(soft.init_script);
             init();
-            rmpath(path);
+            path(old_path);
+        end
+        if isfield(soft, 'mexes') && numel(soft.mexes) ~= 0
+            curdir = pwd;
+            cd(soft.mex_dir);
+            for i = 1:numel(soft.mexes)
+                mex(soft.mexes{i});
+            end
+            cd(curdir);
         end
     end
 end

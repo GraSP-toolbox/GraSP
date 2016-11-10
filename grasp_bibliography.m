@@ -1,17 +1,15 @@
-%Sets Matlab search path to use this toolbox.
+%Lists bibliography references to cite, including those from optional
+%toolboxes.
 %
-%   GRASP_START()
+%   GRASP_BIBLIOGRAPHY() lists all optional toolboxes that have been
+%   started, along with URLs to the properly cite the work.
 %
 % Authors:
-%  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
 %  - Benjamin Girault <benjamin.girault@usc.edu>
 
-% Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015)
 % Copyright Benjamin Girault, University of Sourthern California, Los
 % Angeles, California, USA (2016)
 % 
-% benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
@@ -43,38 +41,14 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function grasp_start()
-    pwd = [fileparts(mfilename('fullpath')), filesep];
-    addpath(pwd);
-    
-    tmp_dir = '3rdParty';
-    addpath([pwd, tmp_dir]);
-    dep_list = grasp_dependencies_list;
-    rmpath([pwd, tmp_dir]);
-
-    dirs = {'Duality',...
-            'Graphs',...
-            'Graphs/Tools',...
-            'Operators',...
-            'Plotting',...
-            'Signals',...
-            'Stats',...
-            'Util'};
-    
-    for k = 1:numel(dep_list)
-        if numel(dep_list(k).optional) > 0 && dep_list(k).optional
-            continue;
-        end
-        root_path = [pwd, '3rdParty/', dep_list(k).name, dep_list(k).root_dir];
-        for p = 1:numel(dep_list(k).path_list)
-            addpath([root_path, dep_list(k).path_list{p}]);
-        end
-    end
-    
-    for k = 1:numel(dirs)
-        addpath([pwd, dirs{k}]);
-    end
-    
+function grasp_bibliography()
     global GRASP_OPT_TOOLS
-    GRASP_OPT_TOOLS = [];
+    fprintf('GraSP: https://gforge.inria.fr/projects/grasp/\n');
+    
+    opt_tools = grasp_start_opt_3rd_party(0);
+    for i = 1:numel(GRASP_OPT_TOOLS)
+        if GRASP_OPT_TOOLS(i)
+            fprintf('%s: %s\n', opt_tools(i).name, opt_tools(i).url);
+        end
+    end
 end

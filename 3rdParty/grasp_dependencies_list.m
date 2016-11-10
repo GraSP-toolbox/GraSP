@@ -6,11 +6,15 @@
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
+% Inria, FRANCE (2015)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2016)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -44,34 +48,60 @@
 function list = grasp_dependencies_list
     list = [];
     
-    list(1).url = 'http://perso.ens-lyon.fr/patrick.flandrin/pack_emd.zip';
-    list(1).name = 'EMD/';
-    list(1).root_dir = 'package_emd/';
-    list(1).init_script = 'install_emd';
-    list(1).path_list = {'.', 'EMDs', 'utils'};
+    cur_dep = 1;
     
-    list(2).url = 'https://codeload.github.com/altmany/export_fig/legacy.zip/master';
-    list(2).name = 'ExportFig/';
-    list(2).root_dir = 'altmany-export_fig-04ca93c/';
-    list(2).path_list = {'.'};
+    list(cur_dep).url = 'https://github.com/bgirault-usc/MyPatcher/archive/v1.1.1.zip';
+    list(cur_dep).name = 'MyPatcher/';
+    list(cur_dep).root_dir = 'MyPatcher-1.1.1/';
+    list(cur_dep).debug = 0;
     
-    list(3).url = 'http://www.mathworks.com/matlabcentral/fileexchange/submissions/39275/v/4/download/zip';
-    list(3).name = 'HistogramDistance/';
-    list(3).path_list = {'.'};
+    cur_dep = cur_dep + 1;
     
-    list(4).url = 'http://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/4266/versions/4/download/zip';
-    list(4).name = 'GrTheory/';
-    list(4).path_list = {'.'};
+    list(cur_dep).url = 'http://perso.ens-lyon.fr/patrick.flandrin/pack_emd.zip';
+    list(cur_dep).name = 'EMD/';
+    list(cur_dep).root_dir = 'package_emd/';
+    list(cur_dep).init_script = 'install_emd';
+    list(cur_dep).path_list = {'.', 'EMDs', 'utils'};
     
-    list(5).url = 'http://www.mathworks.com/matlabcentral/fileexchange/submissions/10922/v/2/download/zip';
-    list(5).name = 'MathBFL/';
-    list(5).path_list = {'matlab_bgl', 'matlab_bgl/graphs'};
+    cur_dep = cur_dep + 1;
     
-    list(6).url = 'http://perso.ens-lyon.fr/benjamin.girault/files/mypatcher.zip';
-    list(6).name = 'MyPatcher/';
+    list(cur_dep).url = 'http://github.com/altmany/export_fig/archive/f0af704d84608f5a69e3de82581869e7b6161d4f.zip';
+    list(cur_dep).name = 'ExportFig/';
+    list(cur_dep).root_dir = 'export_fig-f0af704d84608f5a69e3de82581869e7b6161d4f/';
+    list(cur_dep).path_list = {'.'};
     
-    list(7).url = 'http://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/10548/versions/1/download/zip';
-    list(7).name = 'anneal/';
-    list(7).path_list = {'.'};
-    list(7).patches = {'anneal/anneal.m', 'anneal.patch'};
+    cur_dep = cur_dep + 1;
+    
+    list(cur_dep).url = 'http://www.mathworks.com/matlabcentral/fileexchange/submissions/39275/v/4/download/zip';
+    list(cur_dep).name = 'HistogramDistance/';
+    list(cur_dep).path_list = {'.'};
+    
+    cur_dep = cur_dep + 1;
+    
+    list(cur_dep).url = 'http://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/4266/versions/4/download/zip';
+    list(cur_dep).name = 'GrTheory/';
+    list(cur_dep).path_list = {'.'};
+    
+    cur_dep = cur_dep + 1;
+    
+    list(cur_dep).url = 'http://www.mathworks.com/matlabcentral/fileexchange/submissions/10922/v/2/download/zip';
+    list(cur_dep).name = 'MathBFL/';
+    list(cur_dep).path_list = {'matlab_bgl', 'matlab_bgl/graphs'};
+    
+    cur_dep = cur_dep + 1;
+    
+    list(cur_dep).url = 'http://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/10548/versions/1/download/zip';
+    list(cur_dep).name = 'anneal/';
+    list(cur_dep).path_list = {'.'};
+    list(cur_dep).patches = {'anneal/anneal.m', 'anneal.patch'};
+    
+    cur_dep = cur_dep + 1;
+    
+    list(cur_dep).url = 'https://github.com/epfl-lts2/gspbox/releases/download/0.6.0/gspbox-0.6.0.zip';
+    list(cur_dep).name = 'gspbox/';
+    list(cur_dep).root_dir = 'gspbox/';
+    list(cur_dep).init_script = 'gsp_install';
+    list(cur_dep).start_script = 'gsp_start';
+    list(cur_dep).optional = 1;
+    list(cur_dep).ref_bib = 'https://arxiv.org/abs/1408.5781';
 end

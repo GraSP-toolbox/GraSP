@@ -1,17 +1,17 @@
-%Sets Matlab search path to use this toolbox.
+%Start an optional third party toolbox
 %
-%   GRASP_START()
+%   GRASP_START_OPT_3RD_PARTY() lists all optional toolboxes
+%
+%   opt_tools = GRASP_START_OPT_3RD_PARTY(toolbox_id) starts the given
+%   toolbox_id. If toolbox_id is zero, then returns opt_tools, the struct
+%   array with info on the toolboxes (useful only to grasp_bibliography)
 %
 % Authors:
-%  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
 %  - Benjamin Girault <benjamin.girault@usc.edu>
 
-% Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015)
 % Copyright Benjamin Girault, University of Sourthern California, Los
 % Angeles, California, USA (2016)
 % 
-% benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
@@ -43,38 +43,57 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function grasp_start()
+function opt_tools_ret = grasp_start_opt_3rd_party(toolbox_id)
+    %% Build the list
     pwd = [fileparts(mfilename('fullpath')), filesep];
-    addpath(pwd);
-    
-    tmp_dir = '3rdParty';
-    addpath([pwd, tmp_dir]);
+    tmp_dir = [pwd, '3rdParty'];
+    addpath(tmp_dir);
     dep_list = grasp_dependencies_list;
-    rmpath([pwd, tmp_dir]);
+    rmpath(tmp_dir);
+    
+    opt_tools = [];
+    cur_tool = 1;
+    for i = 1:numel(dep_list)
+        if numel(dep_list(i).optional) > 0 && dep_list(i).optional
+            opt_tools(cur_tool).name = dep_list(i).name(1:(end - 1)); % removing the trailing /
+            opt_tools(cur_tool).id = cur_tool;
+            opt_tools(cur_tool).dep_id = i;
+            opt_tools(cur_tool).url = dep_list(i).ref_bib;
+            cur_tool = cur_tool + 1;
+        end
+    end
 
-    dirs = {'Duality',...
-            'Graphs',...
-            'Graphs/Tools',...
-            'Operators',...
-            'Plotting',...
-            'Signals',...
-            'Stats',...
-            'Util'};
-    
-    for k = 1:numel(dep_list)
-        if numel(dep_list(k).optional) > 0 && dep_list(k).optional
-            continue;
+    %% Do we list or start?
+    if nargin == 0
+        for i = 1:numel(opt_tools)
+            fprintf('#%d\t%s\n', opt_tools(i).id, opt_tools(i).name);
         end
-        root_path = [pwd, '3rdParty/', dep_list(k).name, dep_list(k).root_dir];
-        for p = 1:numel(dep_list(k).path_list)
-            addpath([root_path, dep_list(k).path_list{p}]);
-        end
+        return
     end
     
-    for k = 1:numel(dirs)
-        addpath([pwd, dirs{k}]);
+    %% toolbox_id = 0: return the array
+    if toolbox_id == 0
+        opt_tools_ret = opt_tools;
+        return;
     end
     
+    %% Starting then...
     global GRASP_OPT_TOOLS
-    GRASP_OPT_TOOLS = [];
+    if numel(GRASP_OPT_TOOLS) == 0
+        GRASP_OPT_TOOLS = zeros(numel(opt_tools), 1);
+    end
+    if toolbox_id < 0 || toolbox_id > numel(opt_tools)
+        error('No such optional toolbox!');
+    end
+    soft = dep_list(opt_tools(toolbox_id).dep_id);
+    root_path = [pwd, '3rdParty/', soft.name, soft.root_dir];
+    if numel(soft.start_script) > 0
+        addpath(root_path);
+        start = str2func(soft.start_script);
+        start();
+    end
+    for p = 1:numel(soft.path_list)
+        addpath([root_path, soft.path_list{p}]);
+    end
+    GRASP_OPT_TOOLS(toolbox_id) = 1;
 end
