@@ -2,8 +2,8 @@
 
 ## Sources
 
-The main repository is located on [Inria's gForge][https://gforge.inria.fr/projects/grasp],
-while the repository on [GitHub.com][https://github.com/STAC-USC/GraSP] is only a mirror.
+The main repository is located on [Inria's gForge](https://gforge.inria.fr/projects/grasp),
+while the repository on [GitHub.com](https://github.com/STAC-USC/GraSP) is only a mirror.
 
 ## Author
 
@@ -23,7 +23,7 @@ This toolbox is distributed under the terms of the CeCILL license (see
 the LICENSE file for the english version of the license, and the LICENCE
 file for the french version).
 
-This license is GPL-compatible ([FSF][http://www.gnu.org/licenses/license-list.html]).
+This license is GPL-compatible ([FSF](http://www.gnu.org/licenses/license-list.html)).
 
 ## Requirements
 - GraphViz
