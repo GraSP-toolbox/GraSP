@@ -1,0 +1,56 @@
+== Installation ==
+
+Before being able to use the toolbox, several third party tools need to be downloaded and made available to Matlab. To do that, go to the grasp root folder and run the command:
+
+ grasp_install
+
+Then setup Matlab path to make the GraSP toolbox available to Matlab:
+
+ grasp_start
+
+You are know ready to use the toolbox.
+
+== Getting Started ==
+
+First, we need a graph to perform graph signal processing on. You can use the provided functions in [[Graphs]] or any structure you have (we will come back to that later). For example, a random sampling in 2D square, with edges weighted by a Gaussian kernel of the Euclidean distance, is obtained using [[grasp_plane_rnd]]:
+
+ g = grasp_plane_rnd(100);
+
+The structure <code>g</code> contains now several fields describing this graph. To show this graph, use the [[grasp_show_graph]] function:
+
+ grasp_show_graph(gca, g);
+
+The first signal we use in this tutorial is a delta signal obtained by [[grasp_delta]]:
+
+ delta_1 = grasp_delta(g, 1);
+
+We can show it on the previous figure using:
+
+ grasp_show_graph(gca, g, 'node_values', delta_1);
+
+We observe in the command above a first way of giving optional parameters to functions in the toolbox, using pairs of name and value. The other way of achieving the same goal is through a Matlab structure:
+
+ options = { 'node_values', delta_1 };
+ grasp_show_graph(gca, g, options);
+
+We will use the first form in this tutorial, but sometime the second form is more efficient.
+
+The next step is to construct the graph Fourier transform. This is done by computing the eigendecomposition of a matrix, and performed by [[grasp_eigendecomposition]]:
+
+ g = grasp_eigendecomposition(g);
+
+This completes the data structure <code>g </code>with the graph Fourier transform. To perform the GFT on the delta signal we defined, we can use the [[grasp_fourier]] function:
+
+ delta_1_hat = grasp_fourier(g, delta_1);
+
+Components of <code>delta_1_hat</code> are the Fourier components of the signal <code>delta_1</code> ordered by increasing frequency.
+
+Now that the GFT is defined, we can compute a more complex signal using [[grasp_heat_kernel]]:
+
+ heat = grasp_heat_kernel(g);
+
+This signal is a low pass signal. We can then convolve the two signals using:
+
+ conv_sig = grasp_convolution(heat, delta_1);
+
+You can find more operators in the [[Operators]] folder.
