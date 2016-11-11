@@ -73,7 +73,11 @@ function graph = grasp_eigendecomposition(graph, varargin)
     
     %% Checks
     if grasp_is_directed(graph)
-        error('Error: directed graph not (yet) supported!');
+        if ~strcmp(options.matrix, 'adja')
+            error('Error: directed graph not (yet) supported!');
+        else
+            warning('The Fourier transform is most certainly not a unitary trasnform!');
+        end
     end
     
     %% Laplacian
@@ -94,16 +98,45 @@ function graph = grasp_eigendecomposition(graph, varargin)
             error(['Unknown matrix parameter (' options.matrix ')!']);
     end
     
-    %% Common part
-    [graph.Finv, D] = eig(full(matrix));
-    graph.eigvals = diag(D);
+    %% Core
+    if grasp_is_directed(graph)
+        % Only the adjacency matrix is used here
+        % We perform the Schur Block Diagonalization, more stable than the 
+        % Jordan Normal Form [Girault, PhD Thesis, 2015]
+        % The call to schur ensures a block trigonal matrix Tschur
+        [V, T] = bdschur(graph.L);
+        [Y, Tblk] = schur(T, 'complex');
+        graph.Finv = V * Y;
+        graph.Tschur = Tblk;
+        graph.eigvals = diag(graph.Tschur);
+    else
+        % Unitarily diagonalizable case
+        [graph.Finv, D] = eig(full(matrix));
+        graph.eigvals = diag(D);
+    end
     
-    % sorting...
+    % Sorting...
     if strcmp(options.matrix, 'adja')
-        [graph.eigvals, IX] = sort(graph.eigvals, 'descend');
+        if grasp_is_directed(graph)
+            % Some rounding operation (we keep only 6 digits) to perform
+            % sorting (otherwise equal eigvals may be swapped, and Tschur
+            % does not remain upper triangular)
+            [~, IX] = sort(round(abs(graph.eigvals), 5 + floor(log10(max(abs(graph.eigvals))))), 'descend');
+            graph.eigvals = graph.eigvals(IX);
+        else
+            [graph.eigvals, IX] = sort(graph.eigvals, 'descend');
+        end
     else
         [graph.eigvals, IX] = sort(graph.eigvals);
     end
     graph.Finv = graph.Finv(:, IX);
-    graph.F = graph.Finv';  % graph.F is a unitary matrix
+    if isfield(graph, 'Tschur')
+        graph.Tschur = graph.Tschur(IX, IX);
+    end
+    if grasp_is_directed(graph)
+        graph.F = graph.Finv ^ (-1);
+    else
+        % graph.Finv is a unitary matrix
+        graph.F = graph.Finv';
+    end
 end
