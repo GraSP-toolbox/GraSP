@@ -3,13 +3,21 @@
 %   T = GRASP_TRANSLATION(graph) uses the graph structure to build its
 %   graph translation.
 %
+%   T = GRASP_TRANSLATION(..., freqs) use the given frequencies instead of
+%   the ones from [Girault et al. 2015, IEEE SPL]. The resulting operator
+%   verifies T\chi_l=exp(-i * 2 * pi * freqs(l)) \chi_l.
+%
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
+% Inria, FRANCE (2015)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2016)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -40,7 +48,13 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function T = grasp_translation(graph)
+function T = grasp_translation(graph, freqs)
+    %% Use the provided freqs if given
+    if nargin == 2
+        T = grasp_fourier_inverse(graph, diag(exp(-1i * 2 * pi * freqs)));
+        return;
+    end
+    
     %% Intialization
     if ~strcmp(graph.fourier_version, 'standard laplacian') && ~strcmp(graph.fourier_version, 'normalized laplacian')
         error('Error: The Fourier transform should be the result of the decomposition of a Laplacian matrix!');
