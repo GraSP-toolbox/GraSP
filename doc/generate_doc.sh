@@ -38,11 +38,16 @@ do
     done
     echo "== Files ==" > output_mwk/$d/index.mwk
     echo "" >> output_mwk/$d/index.mwk
+    echo "Files" > output_github_md/$d/index.md
+    echo "-----" >> output_github_md/$d/index.md
+    echo "" >> output_github_md/$d/index.md
     for f in $FILE_LIST
     do
-        echo "* [[$(echo $f | sed -e 's/\.m$//')]]" >> output_mwk/$d/index.mwk
+        CUR_FILENAME=$(echo $f | sed -e 's/\.m$//')
+        echo "* [[$CUR_FILENAME]]" >> output_mwk/$d/index.mwk
+        echo "- [$(echo $CUR_FILENAME | sed -e 's@_@\_@')](/$d/$CUR_FILENAME.m.md)" >> output_github_md/$d/index.md
     done
-    pandoc -f mediawiki -t markdown_github output_mwk/$d/index.mwk -o output_github_md/$d/index.md
+#    pandoc -f mediawiki -t markdown_github output_mwk/$d/index.mwk -o output_github_md/$d/index.md
 done
 
 
@@ -57,9 +62,14 @@ do
     echo "" >> output_mwk/$d/index.mwk
     echo "== Directories ==" >> output_mwk/$d/index.mwk
     echo "" >> output_mwk/$d/index.mwk
+    echo "Directories" > output_github_md/$d/index.md
+    echo "-----------" >> output_github_md/$d/index.md
+    echo "" >> output_github_md/$d/index.md
     for sd in $DIR_LIST
     do
-        echo "* [[$(echo $sd | sed -e 's@/$@@' | sed -e 's@.*/@@g')]]" >> output_mwk/$d/index.mwk
+        CUR_DIRNAME=$(echo $sd | sed -e 's@/$@@' | sed -e 's@.*/@@g')
+        echo "* [[$CUR_DIRNAME]]" >> output_mwk/$d/index.mwk
+        echo "- [$(echo $CUR_DIRNAME | sed -e 's@_@\_@')](/$d/$CUR_DIRNAME/index.md)" >> output_github_md/$d/index.md
     done
-    pandoc -f mediawiki -t markdown_github output_mwk/$d/index.mwk -o output_github_md/$d/index.md
+#    pandoc -f mediawiki -t markdown_github output_mwk/$d/index.mwk -o output_github_md/$d/index.md
 done
