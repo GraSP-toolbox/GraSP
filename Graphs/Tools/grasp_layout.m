@@ -6,21 +6,28 @@
 %   GRASP_LAYOUT(..., options) extra options to control the process:
 %
 %   options.input_file: input file name
+%
 %   options.output_file: output file name
+%
 %   options.remove_files: boolean set to true if input_file and output_file
 %       should be deleted at the end
+%
 %   options.algo: GraphViz algorithm (possible values are 'spring_basic'
 %       (default), 'spring_force', 'spring_force_multiscale', 'tree',
 %       'circular' and 'radial')
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 %  - Inspired by GraphViz4Matlab <https://code.google.com/p/graphviz4matlab/>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
+% Inria, FRANCE (2015)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2016)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.

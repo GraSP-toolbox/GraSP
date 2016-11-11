@@ -13,31 +13,43 @@
 %
 %   options.nb_timesteps: number of samples of the time series (default:
 %       1000).
+%
 %   options.method: either 'ssl' [Girault et al. 2014, IEEE ICASSP] or
 %       'anneal' [Campanharo et al. 2011, PLOS], or 'custom' (with custom
 %       bins definitions). (default: 'ssl').
 %
 %       GSSL method
+%
 %   options.adjacency_matrix: type of adjacency matrix (see
 %       GRASP_FARTHEST). (default: 'distance').
+%
 %   options.sigma_ssl: value of paramter sigma
+%
 %   options.alpha_ssl: value of paramter alpha
 %
 %       Simulated annealing method
+%
 %   options.init_temp: inital temperature (default: 20).
+%
 %   options.stop_temp: stopping temperature (default: 1).
 %
 %       Custom method
+%
 %   options.bins_center: bins centers for amplitudes
+%
 %   options.bins_bounds: bins bounds for amplitudes
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
+% Inria, FRANCE (2015)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2016)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.

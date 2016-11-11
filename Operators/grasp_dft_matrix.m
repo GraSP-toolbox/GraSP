@@ -1,14 +1,18 @@
 %Computes the DFT matrix.
 %
-%   A = GRASP_DFT(N) returns the DFT matrix A of order N.
+%   A = GRASP_DFT_MATRIX(N) returns the DFT matrix A of order N.
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
+% Inria, FRANCE (2015)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2016)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.

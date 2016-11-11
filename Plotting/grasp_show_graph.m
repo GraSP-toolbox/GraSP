@@ -42,11 +42,16 @@
 %   options.edge_color: use the provided color for the edges (default:
 %       [0 0 0] ; use [0.9 0.9 0.9] for a light gray not visible on a
 %       print).
+%
 %   options.edge_colormap: use a colormap to draw the edges instead of a
 %       fixed color (edge_color becomes then ineffective). An empty string
-%       disables this feature.
+%       disables this feature. Values associated to each edges are obtained
+%       through the matrix graph.A_layout, such that the color may
+%       correspond to something different than the edge weight.
+%
 %   options.edge_color_scale: together with edge_colormap, set the
 %       weight boundaries in the colormap.
+%
 %   options.edge_thickness: use the thickness provided to draw edges or
 %       directed edges (default: 0.5).
 %
@@ -65,11 +70,15 @@
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
+% Inria, FRANCE (2015)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2016)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.

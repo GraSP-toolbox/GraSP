@@ -1,4 +1,3 @@
-function varargout = grasp_animate_iterated_operator_gui(varargin)
 %MATLAB code for grasp_animate_iterated_operator_gui.fig. Iterates an 
 %operator on a signal and shows an animation of its output.
 %
@@ -10,10 +9,10 @@ function varargout = grasp_animate_iterated_operator_gui(varargin)
 %   whether to show the real and imaginary part of the output signal on
 %   separate axes.
 %
-% %   GRASP_ANIMATE_ITERATED_OPERATOR_GUI(..., file_basename) base filename
-% %   for the snapshots.
+%   GRASP_ANIMATE_ITERATED_OPERATOR_GUI(..., file_basename) base filename
+%   for the snapshots.
 %
-%   H = GRASP_ANIMATE_ITERATED_OPERATOR_GUI returns the handle to a new
+%   H = GRASP_ANIMATE_ITERATED_OPERATOR_GUI() returns the handle to a new
 %   GRASP_ANIMATE_ITERATED_OPERATOR_GUI or the handle to the existing
 %   singleton.
 %
@@ -31,11 +30,15 @@ function varargout = grasp_animate_iterated_operator_gui(varargin)
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
+% Inria, FRANCE (2015)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2016)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -66,6 +69,7 @@ function varargout = grasp_animate_iterated_operator_gui(varargin)
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
+function varargout = grasp_animate_iterated_operator_gui(varargin)
 
 
 % Begin initialization code - DO NOT EDIT
