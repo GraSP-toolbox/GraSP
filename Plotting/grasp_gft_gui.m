@@ -106,15 +106,13 @@ if handles.graph.Finv == 0
 end
 handles.orig_signal_hat = grasp_fourier(handles.graph, handles.orig_signal);
 
-% Flags
-handles.eventoSetado = 1;
+% Some data required within handles
 handles.redline1 = 0;
 handles.vertex_id = -1;
 handles.redlineflag1 = 0;
 handles.redline3 = 0;
 handles.freq_id = -1;
 handles.redlineflag3 = 0;
-handles.curMouseAxes = 1;
 
 % Some aliases
 handles.graph_ax = handles.axes2;
@@ -182,10 +180,8 @@ function figure1_WindowButtonDownFcn(hObject, ~, handles)
 
 if handles.redlineflag1
     set(handles.figure1, 'WindowButtonMotionFcn', @(hobj, evt) my_MouseMoveFcn1(hobj, evt, guidata(hobj)));
-    handles.curMouseAxes = 1;
 elseif handles.redlineflag3
     set(handles.figure1, 'WindowButtonMotionFcn', @(hobj, evt) my_MouseMoveFcn3(hobj, evt, guidata(hobj)));
-    handles.curMouseAxes = 3;
 end
 guidata(hObject,handles)
 
