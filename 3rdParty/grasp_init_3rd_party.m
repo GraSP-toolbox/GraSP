@@ -87,9 +87,9 @@ function grasp_init_3rd_party
         end
         if isfield(soft, 'mexes') && numel(soft.mexes) ~= 0
             curdir = pwd;
-            cd(soft.mex_dir);
+            cd([dir soft.root_dir soft.mex_dir]);
             for i = 1:numel(soft.mexes)
-                mex(soft.mexes{i});
+                eval(['mex(' sprintf('''%s'', ', soft.mexes{i}{1:end - 1}) '''' soft.mexes{i}{end} ''');'])
             end
             cd(curdir);
         end

@@ -104,4 +104,15 @@ function list = grasp_dependencies_list
     list(cur_dep).start_script = 'gsp_start';
     list(cur_dep).optional = 1;
     list(cur_dep).ref_bib = 'https://arxiv.org/abs/1408.5781';
+    
+    cur_dep = cur_dep + 1;
+    
+    list(cur_dep).url = 'http://wiki.epfl.ch/sgwt/documents/sgwt_toolbox-1.02.zip';
+    list(cur_dep).name = 'sgwt/';
+    list(cur_dep).root_dir = 'sgwt_toolbox/';
+    list(cur_dep).mex_dir = 'mex/';
+    list(cur_dep).mexes = {{'-largeArrayDims', 'cheby_op_adjoint_mex.cpp', 'cheby_op.cpp'}, {'-largeArrayDims', 'cheby_op_mex.cpp', 'cheby_op.cpp'}};
+    list(cur_dep).start_script = 'sgwt_setpath';
+    list(cur_dep).optional = 1;
+    list(cur_dep).ref_bib = 'http://dx.doi.org/10.1016/j.acha.2010.04.005';
 end
