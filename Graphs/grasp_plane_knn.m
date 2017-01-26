@@ -63,7 +63,7 @@ function graph = grasp_plane_knn(N, k, varargin)
     options = grasp_merge_structs(default_param, options);
 
     %% Intializations
-    graph = grapdistancesh_struct;
+    graph = grasp_struct;
     
     %% Random nodes on the plane
     graph.layout = 10 * rand(N, 2);
@@ -72,7 +72,7 @@ function graph = grasp_plane_knn(N, k, varargin)
     graph.distances = grasp_distances_layout(graph);
     
     %% Compute the k nearest neighbors
-    graph.A = grasp_adjacency_gaussian(graph);
+    graph.A = grasp_adjacency_gaussian(graph, options.sigma);
     graph.A = grasp_adjacency_knn(graph, k);
     
     %% Symetrise ?

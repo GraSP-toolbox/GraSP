@@ -76,7 +76,7 @@ function graph = grasp_torus_knn(N, k, varargin)
     graph.distances = sqrt(dx .^ 2 + dy .^ 2);
     
     %% Compute the k nearest neighbors
-    graph.A = grasp_adjacency_gaussian(graph);
+    graph.A = grasp_adjacency_gaussian(graph, options.sigma);
     graph.A = grasp_adjacency_knn(graph, k);
     
     %% Symetrise ?
