@@ -1,21 +1,29 @@
 %Construct the Minnesota transport graph.
 %
-%   graph = GRASP_MINNESOTA returns the Minnesota transport graph of
+%   graph = GRASP_MINNESOTA() returns the Minnesota transport graph of
 %   3rdParty/MathBFL.
 %
 %   GRASP_MINNESOTA(options) optional parameters:
 %
-%   options.shortest_path: whether or not to construct the edges and 
-%       weights from the shortest paths
+%   options.type: specify how to construct the edges, 'gauss_dist' for a
+%       Gaussian kernel of the distance (default), 'shortest_path' for an
+%       adjacency matrix based on a Gaussian kernel of the shortest path
+%       (road) distance, 'road_dist' for the each edge corresponding to a
+%       road and weighted by its length, 'road' for 0/1 edges corresponding
+%       to roads.
 %   options.sigma: sigma^2 in the Gaussian kernel
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
+% Inria, FRANCE (2015)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2016)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -49,7 +57,7 @@
 function graph = grasp_minnesota(varargin)
     %% Parameters
     default_param = struct(...
-        'shortest_path', false,...
+        'type', 'gauss_dist',...
         'sigma', 1);
     if nargin == 0
         options = struct;
@@ -80,13 +88,23 @@ function graph = grasp_minnesota(varargin)
     graph.distances = grasp_distances_layout(graph);
     
     %% Adjacency matrix
-    graph.A = graph.distances .* graph.A;
     graph.A_layout = graph.A;
-    if options.shortest_path
-        % Use of the shortest path distance
-        graph.distances = all_shortest_paths(graph.A);
-        graph.distances = (graph.distances + graph.distances') / 2;
-        graph.A = graph.distances;
+    switch options.type
+        case 'gauss_dist'
+            % nothing yet to do
+        case 'shortest_path'
+            % changing the distances
+            graph.distances = all_shortest_paths(graph.distances .* graph.A);
+            graph.distances = (graph.distances + graph.distances') / 2;
+        case 'road_dist'
+            % changing weights to distances, and we are done
+            graph.A = graph.distances .* graph.A;
+            return;
+        case 'road'
+            % nothing more to do
+            return;
+        otherwise
+            error('Unrecognized type of graph! Please read the documentation for valid types.');
     end
     graph.A = grasp_adjacency_gaussian(graph, options.sigma);
 end
