@@ -7,11 +7,15 @@
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015-11-01)
+% Copyright Benjamin Girault, University of Southern California, USA
+% (2017).
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -45,15 +49,34 @@
 function A = grasp_adjacency_knn(graph, k)
     %% Intializations
     N = grasp_nb_nodes(graph);
-    A(N, N) = 0;
+    directed = grasp_is_directed(graph);
     
     %% Compute the k nearest neighbors
+    I(2 * k * N) = 0;
+    J(2 * k * N) = 0;
+    W(2 * k * N) = 0;
+    nb_entries = 0;
+    vertex_marking = zeros(N);
     for i = 1:N
         mask = [1:(i-1) (i+1):N];
         [~, IX] = sort(graph.A(i, mask), 'descend');
         IX = mask(IX);
         for j = IX(1:k)
-            A(i, j) = graph.A(i, j);
+            if vertex_marking(i, j) == 0
+                I(nb_entries + 1) = i;
+                J(nb_entries + 1) = j;
+                W(nb_entries + 1) = graph.A(i, j);
+                vertex_marking(i, j) = 1;
+                nb_entries = nb_entries + 1;
+            end
+            if ~directed && vertex_marking(j, i) == 0
+                I(nb_entries + 1) = j;
+                J(nb_entries + 1) = i;
+                W(nb_entries + 1) = graph.A(j, i);
+                vertex_marking(j, i) = 1;
+                nb_entries = nb_entries + 1;
+            end
         end
     end
+    A = sparse(I(1:nb_entries), J(1:nb_entries), W(1:nb_entries), N, N);
 end
