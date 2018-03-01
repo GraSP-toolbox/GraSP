@@ -109,10 +109,10 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, graph, varargin)
+function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_graph, varargin)
     %% Parameters
     default_param = struct(...
-        'background', graph.background,...
+        'background', input_graph.background,...
         'node_values', 0,...
         'value_scale', 0,...
         'highlight_nodes', [],...
@@ -136,17 +136,17 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, graph, var
     options = grasp_merge_structs(default_param, options);
     
     %% Intialization
-    N = grasp_nb_nodes(graph);
-    A_layout = graph.A;
-    if isfield(graph, 'A_layout') && numel(graph.A_layout) == N ^ 2
-        A_layout = graph.A_layout;
+    N = grasp_nb_nodes(input_graph);
+    A_layout = input_graph.A;
+    if isfield(input_graph, 'A_layout') && numel(input_graph.A_layout) == N ^ 2
+        A_layout = input_graph.A_layout;
     end
     cla(axis_handle);
     hold(axis_handle, 'on');
     % Setting boundaries now for optimisation
     axis(axis_handle, [0 10 0 10]);
     set(axis_handle, 'XTick', [], 'YTick', []);
-    if size(graph.layout, 2) == 3  % 3D layout
+    if size(input_graph.layout, 2) == 3  % 3D layout
         zlim(axis_handle, [0 10]);
         view(axis_handle, [20 45]);
         set(axis_handle, 'ZTick', []);
@@ -182,8 +182,8 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, graph, var
     end
 
     %% Layout
-    if ~isfield(graph, 'layout') || size(graph.layout, 1) ~= N;
-        graph.layout = grasp_layout(graph);
+    if ~isfield(input_graph, 'layout') || size(input_graph.layout, 1) ~= N
+        input_graph.layout = grasp_layout(input_graph);
     end
     
     %% Color scale
@@ -210,18 +210,18 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, graph, var
         undir = adja + adja' > 1;
         [rows, cols] = find(undir); % non directed edges
         % Plot them
-        if size(graph.layout, 2) == 2
+        if size(input_graph.layout, 2) == 2
             edges_handle{1} = plot(axis_handle,...
-                                  [graph.layout(rows', 1)' ; graph.layout(cols', 1)'],...
-                                  [graph.layout(rows', 2)' ; graph.layout(cols', 2)'],...
+                                  [input_graph.layout(rows', 1)' ; input_graph.layout(cols', 1)'],...
+                                  [input_graph.layout(rows', 2)' ; input_graph.layout(cols', 2)'],...
                                   '-',...
                                   'linewidth', options.edge_thickness,...
                                   'Color', options.edge_color);
         else
             set(gcf,'CurrentAxes',axis_handle)
-            edges_handle{1} = plot3([graph.layout(rows', 1)' ; graph.layout(cols', 1)'],...
-                                    [graph.layout(rows', 2)' ; graph.layout(cols', 2)'],...
-                                    [graph.layout(rows', 3)' ; graph.layout(cols', 3)'],...
+            edges_handle{1} = plot3([input_graph.layout(rows', 1)' ; input_graph.layout(cols', 1)'],...
+                                    [input_graph.layout(rows', 2)' ; input_graph.layout(cols', 2)'],...
+                                    [input_graph.layout(rows', 3)' ; input_graph.layout(cols', 3)'],...
                                     '-',...
                                     'linewidth', options.edge_thickness,...
                                     'Color', options.edge_color);
@@ -248,10 +248,10 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, graph, var
         [rows, cols] = find(adja - undir); % directed edges
         if numel(rows) > 0
             % Arrows
-            x_orig = graph.layout(rows', 1)';
-            y_orig = graph.layout(rows', 2)';
-            x_targ = graph.layout(cols', 1)';
-            y_targ = graph.layout(cols', 2)';
+            x_orig = input_graph.layout(rows', 1)';
+            y_orig = input_graph.layout(rows', 2)';
+            x_targ = input_graph.layout(cols', 1)';
+            y_targ = input_graph.layout(cols', 2)';
             x = x_targ - x_orig;
             y = y_targ - y_orig;
             length_tail = sqrt(x .^ 2 + y .^ 2) * 10;
@@ -308,44 +308,44 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, graph, var
     end
 
     %% Nodes
-    if grasp_is_octave
-        options.node_display_size = options.node_display_size / 100;
-    end
-
     if numel(options.node_values) == N
 %        if grasp_is_octave
 %            node_values = fix (size(colormap, 1) / range (node_values) * (node_values - min (node_values)));
 %        end
-        if size(graph.layout, 2) == 2
-            nodes_handle = scatter(axis_handle, graph.layout(:, 1), graph.layout(:, 2), options.node_display_size, options.node_values, '.');
+        if size(input_graph.layout, 2) == 2
+            nodes_handle = scatter(axis_handle, input_graph.layout(:, 1), input_graph.layout(:, 2), options.node_display_size, options.node_values, '.');
         else
             set(gcf,'CurrentAxes', axis_handle)
-            nodes_handle = scatter3(graph.layout(:, 1), graph.layout(:, 2), graph.layout(:, 3), options.node_display_size, options.node_values, '.');
+            nodes_handle = scatter3(input_graph.layout(:, 1), input_graph.layout(:, 2), input_graph.layout(:, 3), options.node_display_size, options.node_values, '.');
         end
     else
-        if size(graph.layout, 2) == 2
-            nodes_handle = scatter(axis_handle, graph.layout(:, 1), graph.layout(:, 2), options.node_display_size, 'b', '.');
+        if size(input_graph.layout, 2) == 2
+            nodes_handle = scatter(axis_handle, input_graph.layout(:, 1), input_graph.layout(:, 2), options.node_display_size, 'b', '.');
         else
             set(gcf,'CurrentAxes', axis_handle)
-            nodes_handle = scatter3(graph.layout(:, 1), graph.layout(:, 2), graph.layout(:, 3), options.node_display_size, 'b', '.');
+            nodes_handle = scatter3(input_graph.layout(:, 1), input_graph.layout(:, 2), input_graph.layout(:, 3), options.node_display_size, 'b', '.');
         end
     end
     
     if numel(options.highlight_nodes) > 0
-        scatter(axis_handle, graph.layout(options.highlight_nodes, 1), graph.layout(options.highlight_nodes, 2), options.node_display_size, 'r', 'o');
+        scatter(axis_handle, input_graph.layout(options.highlight_nodes, 1), input_graph.layout(options.highlight_nodes, 2), options.node_display_size / 2, 'r', 'o');
     end
     
-    if numel(options.node_text) > 0 && numel(options.node_text) ~= grasp_nb_nodes(graph)
-        if isfield(graph, 'node_names')
-            options.node_text = graph.node_names;
+    if numel(options.node_text) > 0 && numel(options.node_text) ~= grasp_nb_nodes(input_graph)
+        if isfield(input_graph, 'node_names') && numel(input_graph.node_names) == grasp_nb_nodes(input_graph)
+            options.node_text = input_graph.node_names;
         else
             warning('Field ''node_names'' not set in the graph!');
             options.node_text = default_param.node_text;
         end
     end
     if numel(options.node_text) > 1
-        for i = 1:grasp_nb_nodes(graph)
-            text(graph.layout(i, 1), graph.layout(i, 2), options.node_text{i});
+        for i = 1:grasp_nb_nodes(input_graph)
+            if size(input_graph.layout, 2) == 2
+                text(input_graph.layout(i, 1), input_graph.layout(i, 2), options.node_text{i});
+            else
+                text(input_graph.layout(i, 1), input_graph.layout(i, 2), input_graph.layout(i, 3), options.node_text{i});
+            end
         end
     end
      
