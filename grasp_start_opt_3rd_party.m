@@ -2,15 +2,18 @@
 %
 %   GRASP_START_OPT_3RD_PARTY() lists all optional toolboxes
 %
-%   opt_tools = GRASP_START_OPT_3RD_PARTY(toolbox_id) starts the given
-%   toolbox_id. If toolbox_id is zero, then returns opt_tools, the struct
-%   array with info on the toolboxes (useful only to grasp_bibliography)
+%   GRASP_START_OPT_3RD_PARTY(toolbox_id) starts the given toolbox_id.
+%   toolbox_id can be either the id the toolbox or its name (as given by
+%   GRASP_START_OPT_3RD_PARTY()).
+%
+%   opt_tools = GRASP_START_OPT_3RD_PARTY(0) returns opt_tools, the struct
+%   array with info on the toolboxes (useful only to GRASP_BIBLIOGRAPHY).
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2016)
+% Angeles, California, USA (2016-2018)
 % 
 % benjamin.girault@usc.edu
 % 
@@ -79,13 +82,33 @@ function opt_tools_ret = grasp_start_opt_3rd_party(toolbox_id)
     
     %% Starting then...
     global GRASP_OPT_TOOLS
-    if numel(GRASP_OPT_TOOLS) == 0
+    if numel(GRASP_OPT_TOOLS) ~= numel(opt_tools)
         GRASP_OPT_TOOLS = zeros(numel(opt_tools), 1);
+    end
+    if ischar(toolbox_id)
+        actual_id = -1;
+        for i = 1:numel(opt_tools)
+            if strcmpi(opt_tools(i).name, toolbox_id)
+                actual_id = i;
+                break;
+            end
+        end
+        toolbox_id = actual_id;
     end
     if toolbox_id < 0 || toolbox_id > numel(opt_tools)
         error('No such optional toolbox!');
     end
+    if GRASP_OPT_TOOLS(toolbox_id)
+        % Already started
+        return;
+    end
+
     soft = dep_list(opt_tools(toolbox_id).dep_id);
+    
+    for d = 1:numel(soft.dependencies)
+        grasp_start_opt_3rd_party(soft.dependencies{d})
+    end
+    
     root_path = [pwd, '3rdParty/', soft.name, soft.root_dir];
     if numel(soft.start_script) > 0
         addpath(root_path);

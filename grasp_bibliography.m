@@ -8,7 +8,7 @@
 %  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2016)
+% Angeles, California, USA (2016-2018)
 % 
 % benjamin.girault@usc.edu
 % 
@@ -43,7 +43,7 @@
 
 function grasp_bibliography()
     global GRASP_OPT_TOOLS
-    fprintf('GraSP: https://gforge.inria.fr/projects/grasp/\n');
+    fprintf('GraSP: https://doi.org/10.1109/ICASSP.2017.8005300 -- https://gforge.inria.fr/projects/grasp/\n');
     
     opt_tools = grasp_start_opt_3rd_party(0);
     for i = 1:numel(GRASP_OPT_TOOLS)

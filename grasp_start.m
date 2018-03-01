@@ -9,7 +9,7 @@
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015)
 % Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2016)
+% Angeles, California, USA (2016-2018)
 % 
 % benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
@@ -65,7 +65,11 @@ function grasp_start()
         if numel(dep_list(k).optional) > 0 && dep_list(k).optional
             continue;
         end
-        root_path = [pwd, '3rdParty/', dep_list(k).name, dep_list(k).root_dir];
+        dir = dep_list(k).name;
+        if numel(dep_list(k).root_dir) > 0
+            dir = [dir, dep_list(k).root_dir];
+        end
+        root_path = [pwd, '3rdParty/', dir];
         for p = 1:numel(dep_list(k).path_list)
             addpath([root_path, dep_list(k).path_list{p}]);
         end

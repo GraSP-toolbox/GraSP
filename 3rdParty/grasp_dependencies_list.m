@@ -11,7 +11,7 @@
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015)
 % Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2016)
+% Angeles, California, USA (2016-2018)
 % 
 % benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
@@ -115,4 +115,44 @@ function list = grasp_dependencies_list
     list(cur_dep).start_script = 'sgwt_setpath';
     list(cur_dep).optional = 1;
     list(cur_dep).ref_bib = 'http://dx.doi.org/10.1016/j.acha.2010.04.005';
+    
+    cur_dep = cur_dep + 1;
+    
+    list(cur_dep).url = 'http://sipi.usc.edu/database/misc.zip';
+    list(cur_dep).name = 'usc_sipi_image_db_misc/';
+    list(cur_dep).root_dir = 'misc/';
+    list(cur_dep).ref_bib = 'TODO';
+    list(cur_dep).path_list = {'.'};
+    
+    cur_dep = cur_dep + 1;
+    
+    list(cur_dep).url = 'https://github.com/STAC-USC/Active_SSL_with_Sampling_Theory/archive/54fff129c0e1e41d109a104a500acd3172aa7ed4.zip';
+    list(cur_dep).name = 'usc_ssl_sampling/';
+    list(cur_dep).root_dir = 'Active_SSL_with_Sampling_Theory-54fff129c0e1e41d109a104a500acd3172aa7ed4/';
+    list(cur_dep).optional = 1;
+    list(cur_dep).ref_bib = 'https://doi.org/10.1145/2623330.2623760';
+    list(cur_dep).dependencies = {'sgwt'};
+    cur_dep = cur_dep + 1;
+    
+    list(cur_dep).url = 'https://github.com/STAC-USC/Graph_Learning/archive/master.zip';
+    list(cur_dep).name = 'usc_graph_learning/';
+    list(cur_dep).root_dir = 'Graph_Learning-master/';
+    list(cur_dep).ref_bib = 'https://doi.org/10.1109/JSTSP.2017.2726975';
+    list(cur_dep).path_list = {'.', 'functions', 'misc'};
+    
+    cur_dep = cur_dep + 1;
+    
+    list(cur_dep).url = 'https://github.com/STAC-USC/Disc-GLasso/archive/7d255cad9f2a73a58af2e92ece07e26358e1d143.zip';
+    list(cur_dep).name = 'usc_disc_glasso/';
+    list(cur_dep).root_dir = 'Disc-GLasso-7d255cad9f2a73a58af2e92ece07e26358e1d143/';
+    list(cur_dep).optional = 1;
+    list(cur_dep).ref_bib = 'https://doi.org/10.1109/ICASSP.2017.7952698';
+    
+    cur_dep = cur_dep + 1;
+    
+    list(cur_dep).url = 'https://github.com/STAC-USC/symmetric_grid/archive/d3150ee84e370e40ca5868d867f2bf744d846d80.zip';
+    list(cur_dep).name = 'usc_symmetric_grid/';
+    list(cur_dep).root_dir = 'symmetric_grid-d3150ee84e370e40ca5868d867f2bf744d846d80/';
+    list(cur_dep).optional = 1;
+    list(cur_dep).ref_bib = 'https://doi.org/10.1109/ICASSP.2017.7952929';
 end

@@ -1,11 +1,34 @@
 # GraSP: Graph Signal Processing and Visualization Toolbox
 
+This matlab toolbox is stable, but actively developped. Contributions are welcomed.
+
+## Reference
+
+If you use the GraSP toolbox, please use the reference below:
+
+Benjamin Girault, Shrikanth S. Narayanan, Antonio Ortega, Paulo Gonçalves and Eric Fleury,
+"Grasp: A matlab toolbox for graph signal processing", 
+2017 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP),
+Pages: 6574 - 6575
+
+DOI: [10.1109/ICASSP.2017.8005300](https://doi.org/10.1109/ICASSP.2017.8005300)
+
+### References for Additional Toolboxes
+
+A list of references for the active toolboxes (those activated by `grasp_start_opt_3rd_party`) are 
+given by the function `grasp_bibliography`.
+
 ## Sources
 
 The main repository is located on [Inria's gForge](https://gforge.inria.fr/projects/grasp),
 while the repository on [GitHub.com](https://github.com/STAC-USC/GraSP) is only a mirror.
 
-## Author
+## Additional Toolboxes / Third Party Tools
+
+Several third party toolboxes are installed when `grasp_install` is run. If you want your toolbox added, 
+please send me the URL of the toolbox, and the paper associated (if any). 
+
+## Author(s)
 
 The main author of GraSP is Benjamin Girault. The code has been developped
 during his PhD at École Normale Supérieure de Lyon, Lyon, FRANCE, with 
@@ -15,10 +38,11 @@ California*, Los Angeles, California, USA during his postdoctorate with
 Antonio Ortega and Shri Narayanan.
 
 To contact the author, please use the GitHub interface or
-<firstname>.<lastname><a>usc<dot>edu. The ens-lyon.fr email referenced in
+&lt;firstname&gt;.&lt;lastname&gt;&lt;a&gt;usc&lt;dot&gt;edu. The ens-lyon.fr email referenced in
 the code is not active anymore.
 
 ## License
+
 This toolbox is distributed under the terms of the CeCILL license (see 
 the LICENSE file for the english version of the license, and the LICENCE
 file for the french version).
@@ -29,8 +53,8 @@ This license is GPL-compatible ([FSF](http://www.gnu.org/licenses/license-list.h
 - GraphViz
 
 ## Installation (for third party Matlab toolboxes)
-- run grasp_install
+- run `grasp_install`
 
 ## Usage
-- run grasp_start
+- run `grasp_start`
 - use it
