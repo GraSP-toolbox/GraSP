@@ -6,11 +6,15 @@
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015-11-01)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2016-2018)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -42,7 +46,11 @@
 % knowledge of the CeCILL license and that you accept its terms.
 
 function fg = grasp_convolution(graph, f, g)
-    fhat = grasp_fourier(graph, f);
-    ghat = grasp_fourier(graph, g);
-    fg = grasp_fourier_inverse(graph, fhat .* ghat);
+    if nargin == 2
+        fg = grasp_fourier_inverse(graph, diag(grasp_fourier(graph, f)));
+    else
+        fhat = grasp_fourier(graph, f);
+        ghat = grasp_fourier(graph, g);
+        fg = grasp_fourier_inverse(graph, fhat .* ghat);
+    end
 end

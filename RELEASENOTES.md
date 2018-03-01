@@ -22,6 +22,7 @@
  * `grasp_translation`: custom definition of frequencies, or equivalently builds an isometric graph operator.
  * `grasp_minnesota`: more adjacency matrix construction schemes.
  * `grasp_translation`: new translation operator based a symmetric graph shift [3].
+ * `grasp_convolution`: convolutive operator output (matrix) if only two arguments.
 
 ### Bugfixes
 
