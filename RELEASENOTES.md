@@ -25,6 +25,7 @@
  * `grasp_convolution`: convolutive operator output (matrix) if only two arguments.
  * `grasp_plane_rnd`: options to control the threshold on weights of displayed edges.
  * `grasp_show_fouriermodes`: pass along options to `grasp_show_graph`.
+ * `grasp_adjacency_gaussian`: degree-normalized weights.
 
 ### Bugfixes
 

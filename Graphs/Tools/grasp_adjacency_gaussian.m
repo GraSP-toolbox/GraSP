@@ -4,13 +4,24 @@
 %   A = GRASP_ADJACENCY_GAUSSIAN(graph, sigma) construct the adjacency
 %   matrix A such that a_ij = exp(-d_ij² / (2 * sigma²)).
 %
+%   GRASP_ADJACENCY_GAUSSIAN(..., lambda) normalize weights with the power
+%   lambda of each degree prior to computing the Gaussian kernel, i.e.
+%   compute A=D^-lambda * A * D^-lambda [1].
+%
+%   [1] Graph Laplacians and their Convergence on Random Neighborhood 
+%   Graphs. M. Hein, J.-Y. Audibert, and U. von Luxburg, 2007.
+%
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015-11-01)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2017-2018)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -41,7 +52,16 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function A = grasp_adjacency_gaussian(graph, sigma)
+function A = grasp_adjacency_gaussian(graph, sigma, lambda)
+    if nargin == 2
+        lambda = 0;
+    end
     N = size(graph.distances, 1);
     A = exp(-graph.distances .^ 2 / (2 * sigma ^ 2)) - eye(N);
+    if lambda ~= 0
+        d = sum(A, 1);
+        D = diag(d .^ (-lambda));
+        A = D * A * D;
+    end
+    A = (A + A') / 2;
 end
