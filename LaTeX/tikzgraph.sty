@@ -56,7 +56,7 @@
 
 % Color of positive values
 \define@cmdkeys{flatgraph}{maxcol,mincol,edgecol,nodeedgecol,maxvalue,minvalue,nodesize,%
-    nodelinewidth,intprecision,textscale,xscale}
+    nodelinewidth,intprecision,textscale,xscale,appendedcode}
 \presetkeys{flatgraph}{maxcol=black}{}
 \presetkeys{flatgraph}{mincol=white}{}
 \presetkeys{flatgraph}{edgecol=gray}{}
@@ -68,6 +68,7 @@
 \presetkeys{flatgraph}{intprecision=2}{}
 \presetkeys{flatgraph}{textscale=1}{}
 \presetkeys{flatgraph}{xscale=1}{}
+\presetkeys{flatgraph}{appendedcode={}}{}
 % Named color map 
 \define@choicekey*{flatgraph}{colormap}[\val\nr]{hot,jet,bicolor,redblue,redbluedark,hsv}[hot]{
   \ifcase\nr\relax
@@ -99,7 +100,7 @@
 
 
 \newcommand\flatgraph[4][]{
-  \setkeys{flatgraph}[backgroundwidth,colormapthickness,appendedcode]{#1}
+  \setkeys{flatgraph}[backgroundwidth,colormapthickness]{#1}
   \ifthenelse{\@babel@loaded=1}{\shorthandoff{:;!?}}{}
   \tikzpicturedependsonfile{#2}
   \tikzpicturedependsonfile{#3}
@@ -153,7 +154,11 @@
     \colormap{\value}
     \node[fill=curcol,line width=\cmdKV@flatgraph@nodelinewidth](\i) at (node cs:name=\i_c){};
   }
-  
+
+  \begin{scope}[x={(\cmdKV@flatgraph@xscale,0)},y={(0,1)}]
+    \cmdKV@flatgraph@appendedcode
+  \end{scope}
+
   % Graph bounding box
   \begin{scope}[every node/.style={draw=none,fill=none}]
     \coordinate (nw) at (current bounding box.north west) {};
@@ -206,9 +211,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Regular graph with background %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\define@cmdkeys{backgroundflatgraph}{backgroundwidth,appendedcode}
+\define@cmdkeys{backgroundflatgraph}{backgroundwidth}%,appendedcode}
 \presetkeys{backgroundflatgraph}{backgroundwidth=10cm}{}
-\presetkeys{backgroundflatgraph}{appendedcode={}}{}
+% \presetkeys{backgroundflatgraph}{appendedcode={}}{}
 
 \newcommand\backgroundflatgraph[5][]{
   \setkeys{backgroundflatgraph,flatgraph}{#1}
@@ -245,7 +250,7 @@
   \begin{scope}[x={(\xscale,0)},y={(0,\yscale)}]
     \flatgraph[#1,showcolormap=false]{#2}{#3}{#4}
 
-    \cmdKV@backgroundflatgraph@appendedcode
+%     \cmdKV@backgroundflatgraph@appendedcode
   \end{scope}
 
   % Graph bounding box
