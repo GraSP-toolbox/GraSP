@@ -24,6 +24,7 @@
  * `grasp_translation`: new translation operator based a symmetric graph shift [3].
  * `grasp_convolution`: convolutive operator output (matrix) if only two arguments.
  * `grasp_plane_rnd`: options to control the threshold on weights of displayed edges.
+ * `grasp_show_fouriermodes`: pass along options to `grasp_show_graph`.
 
 ### Bugfixes
 
