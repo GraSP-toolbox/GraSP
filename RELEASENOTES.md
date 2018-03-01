@@ -34,6 +34,7 @@
  * Latex `tikzgraph` command: append Latex/TikZ code before the boundaries and the scale are drawn.
  * `grasp_subaxis_matrix_dimensions`: background was not set with 2 arguments with a numerical 2nd argument.
  * `grasp_show_graph`: Text in 3D fixed.
+ * `grasp_exportcsv_signal`: there was an error when using sparse signals.
 
 ### References
 
