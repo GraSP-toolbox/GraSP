@@ -21,6 +21,7 @@
  * `grasp_directed_torus`: one argument for equal dimensions.
  * `grasp_translation`: custom definition of frequencies, or equivalently builds an isometric graph operator.
  * `grasp_minnesota`: more adjacency matrix construction schemes.
+ * `grasp_translation`: new translation operator based a symmetric graph shift [3].
 
 ### Bugfixes
 
@@ -32,3 +33,4 @@
 
 [1] https://hal.archives-ouvertes.fr/tel-01256044
 [2] http://biron.usc.edu/wiki/index.php/Graph_Fourier_Transform_Interactive_GUI
+[3] https://doi.org/10.1109/GlobalSIP.2016.7905858

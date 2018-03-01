@@ -14,7 +14,7 @@
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015)
 % Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2016)
+% Angeles, California, USA (2016-2018)
 % 
 % benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
@@ -57,13 +57,22 @@ function T = grasp_translation(graph, freqs)
     
     %% Intialization
     if ~strcmp(graph.fourier_version, 'standard laplacian') && ~strcmp(graph.fourier_version, 'normalized laplacian')
-        error('Error: The Fourier transform should be the result of the decomposition of a Laplacian matrix!');
+        if ~(strcmp(graph.fourier_version, 'graph shift') && ~grasp_is_directed(graph))
+            error('Error: The Fourier transform should be the result of the decomposition of a Laplacian matrix, or a symmetric graph shift!');
+        end
     end
     
     %% Eigenvalue upper bound
     rho = 2;
     if strcmp(graph.fourier_version, 'standard laplacian')
         rho = grasp_lapl_eigval_upper_bound(graph);
+    end
+    
+    %% Graph shift special case [Girault et al., 2016, IEEE GlobalSIP]
+    if strcmp(graph.fourier_version, 'graph shift')
+        rho = max(graph.eigvals);
+        T = expm(-1i * pi * (eye(grasp_nb_nodes(graph)) - full(graph.A) / rho));
+        return
     end
     
     %% Translation operator
