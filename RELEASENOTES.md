@@ -24,7 +24,8 @@
 
 ### Bugfixes
 
- * grasp_adjacency_knn: incorrect weights fixed
+ * grasp_adjacency_knn: incorrect weights fixed.
+ * Latex `tikzgraph` command: append Latex/TikZ code before the boundaries and the scale are drawn.
 
 ### References
 
