@@ -23,6 +23,7 @@
  * `grasp_minnesota`: more adjacency matrix construction schemes.
  * `grasp_translation`: new translation operator based a symmetric graph shift [3].
  * `grasp_convolution`: convolutive operator output (matrix) if only two arguments.
+ * `grasp_plane_rnd`: options to control the threshold on weights of displayed edges.
 
 ### Bugfixes
 

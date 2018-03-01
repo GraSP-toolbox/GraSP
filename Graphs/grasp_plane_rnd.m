@@ -9,14 +9,20 @@
 %
 %   options.directed: true if graph should stay directed (default: false)
 %   options.sigma: sigma^2 in the Gaussian kernel (default: 1)
+%   options.display_threshold: edge weight threshold for display purposes
+%       (default:0.3)
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015-11-01)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2017-2018)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -51,7 +57,8 @@ function graph = grasp_plane_rnd(N, varargin)
     %% Parameters
     default_param = struct(...
         'directed', false,...
-        'sigma', 1);
+        'sigma', 1,...
+        'display_threshold', 0.3);
     if nargin == 1
         options = struct;
     elseif nargin > 2
@@ -77,4 +84,7 @@ function graph = grasp_plane_rnd(N, varargin)
     if ~options.directed
         graph.A = max(graph.A, graph.A');
     end
+    
+    %% Threshold the weights to keep the number of displayed edges small
+    graph.A_layout = grasp_adjacency_thresh(graph, options.display_threshold);
 end
