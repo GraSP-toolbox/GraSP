@@ -26,6 +26,7 @@
 
  * grasp_adjacency_knn: incorrect weights fixed.
  * Latex `tikzgraph` command: append Latex/TikZ code before the boundaries and the scale are drawn.
+ * `grasp_subaxis_matrix_dimensions`: background was not set with 2 arguments with a numerical 2nd argument.
 
 ### References
 

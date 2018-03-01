@@ -14,11 +14,15 @@
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015-11-01)
+% Copyright Benjamin Girault, University of Southern California, USA
+% (2016-2018).
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -55,10 +59,14 @@ function [L, C] = grasp_subaxis_matrix_dimensions(figure_handle, nb_cells, backg
         nb_cells = figure_handle;
         figure_handle = gcf;
         background = '';
-    elseif nargin == 2 && ischar(nb_cells)
-        nb_cells = figure_handle;
-        background = nb_cells;
-        figure_handle = gcf;
+    elseif nargin == 2
+        if ischar(nb_cells)
+            background = nb_cells;
+            nb_cells = figure_handle;
+            figure_handle = gcf;
+        else
+            background = '';
+        end
     end
 
     if strcmp(background, '')
