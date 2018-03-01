@@ -30,7 +30,7 @@
 % Copyright Diego R. C. Silva, Universidade Federal do Rio Grande do Norte,
 % BRAZIL (2015)
 % Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2016)
+% Angeles, California, USA (2016-2018)
 % 
 % diego at ect dot ufrn dot br
 % benjamin.girault@usc.edu
@@ -97,7 +97,11 @@ function grasp_gft_gui_OpeningFcn(hObject, ~, handles, varargin)
 handles.graph  = varargin{1};
 handles.orig_signal = varargin{2};
 if numel(varargin) > 2
-    handles.paramplot = varargin{3:end};
+    if numel(varargin) > 3
+        handles.paramplot = cell2struct(varargin(4:2:end), varargin(3:2:end), 2);
+    else
+        handles.paramplot = varargin{3:end};
+    end
 else
     handles.paramplot = struct();
 end
