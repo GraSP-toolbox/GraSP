@@ -1,26 +1,14 @@
-%Constructs the adjacency matrix of a graph as a Gaussian kernel of its
-%distance matrix.
+%Normalize the adjacency matrix using a power a of degree matrix.
 %
-%   A = GRASP_ADJACENCY_GAUSSIAN(graph, sigma) construct the adjacency
-%   matrix A such that a_ij = exp(-d_ij² / (2 * sigma²)).
-%
-%   GRASP_ADJACENCY_GAUSSIAN(..., lambda) normalize weights with the power
-%   lambda of each degree prior to computing the Gaussian kernel, i.e.
-%   compute A=D^-lambda * A * D^-lambda [1].
-%
-%   [1] Graph Laplacians and their Convergence on Random Neighborhood 
-%   Graphs. M. Hein, J.-Y. Audibert, and U. von Luxburg, 2007.
+%   graph = GRASP_ADJACENCY_DEGREENORM(graph, lambda) normalize the
+%   adjacency matrix by A_norm = D^-lambda * A * D^-lambda.
 %
 % Authors:
-%  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
 %  - Benjamin Girault <benjamin.girault@usc.edu>
 
-% Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
-% Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2017-2018)
+% Copyright Benjamin Girault, University of Southern California, USA
+% (2017-2018).
 % 
-% benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
@@ -52,14 +40,14 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function A = grasp_adjacency_gaussian(graph, sigma, lambda)
-    if nargin == 2
-        lambda = 0;
+function graph = grasp_adjacency_degreenorm(graph, lambda)
+    d = diag(grasp_degrees(graph));
+    Dl = diag(d ^ (-lambda));
+    A = Dl * graph.A * Dl;
+    if grasp_is_directed(graph)
+        graph.A = A;
+    else
+        % Ensures that the graph stays undirected after normalization.
+        graph.A = (A + A') / 2;
     end
-    N = size(graph.distances, 1);
-    graph.A = exp(-graph.distances .^ 2 / (2 * sigma ^ 2)) - eye(N);
-    if lambda ~= 0
-        graph = grasp_adjacency_degreenorm(graph, lambda);
-    end
-    A = graph.A;
 end
