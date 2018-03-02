@@ -8,6 +8,7 @@
  * `grasp_bibliography`: Returns the papers to add to the references based on the started third party toolboxes.
  * `grasp_eigendecomposition`: Stable decomposition of directed adjacency using block diagonal Schur decomposition [1].
  * `grasp_gft_gui`: Port to GraSP of a GUI displaying the GFT of a graph [2].
+ * `grasp_eigendecomposition`: irregularity aware GFT [4].
 
 ### New Third Party Toolboxes
 
@@ -41,3 +42,4 @@
 [1] https://hal.archives-ouvertes.fr/tel-01256044
 [2] http://biron.usc.edu/wiki/index.php/Graph_Fourier_Transform_Interactive_GUI
 [3] https://doi.org/10.1109/GlobalSIP.2016.7905858
+[4] https://hal.archives-ouvertes.fr/hal-01708695
