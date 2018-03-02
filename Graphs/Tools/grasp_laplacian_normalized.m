@@ -57,6 +57,9 @@ function [Gamma, Phi] = grasp_laplacian_normalized(graph)
     if ~grasp_is_directed(graph)
         %% Non directed graph: Phi = D
         Phi = D;
+        Dsqrtinv = diag(diag(D) .^ (-1/2));
+        Gamma = Dsqrtinv * (D - graph.A) * Dsqrtinv;
+        return;
     else
         %% Directed graph: Phi = Froebinius vector
         if sum(sum(graph.A < 0)) > 0
@@ -74,6 +77,6 @@ function [Gamma, Phi] = grasp_laplacian_normalized(graph)
     
     %% Diplacian
     Phi = full(Phi);
-    Gamma = Phi ^ (1/2) * (eye(N) - P) * Phi ^ (-1/2);
+    Gamma = Phi ^ (1/2) * (speye(N) - P) * Phi ^ (-1/2);
     Gamma = sparse(Gamma);
 end
