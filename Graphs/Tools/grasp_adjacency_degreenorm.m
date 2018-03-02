@@ -42,7 +42,7 @@
 
 function graph = grasp_adjacency_degreenorm(graph, lambda)
     d = diag(grasp_degrees(graph));
-    Dl = diag(d ^ (-lambda));
+    Dl = diag(d .^ (-lambda));
     A = Dl * graph.A * Dl;
     if grasp_is_directed(graph)
         graph.A = A;
