@@ -44,6 +44,9 @@
 ### References
 
 [1] https://hal.archives-ouvertes.fr/tel-01256044
+
 [2] http://biron.usc.edu/wiki/index.php/Graph_Fourier_Transform_Interactive_GUI
+
 [3] https://doi.org/10.1109/GlobalSIP.2016.7905858
+
 [4] https://hal.archives-ouvertes.fr/hal-01708695
