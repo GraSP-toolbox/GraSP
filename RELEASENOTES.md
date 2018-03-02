@@ -9,6 +9,7 @@
  * `grasp_eigendecomposition`: Stable decomposition of directed adjacency using block diagonal Schur decomposition [1].
  * `grasp_gft_gui`: Port to GraSP of a GUI displaying the GFT of a graph [2].
  * `grasp_eigendecomposition`: irregularity aware GFT [4].
+ * `grasp_voronoi_areas`: Voronoi cell area inner product matrix [4].
 
 ### New Third Party Toolboxes
 
