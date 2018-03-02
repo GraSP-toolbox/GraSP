@@ -14,11 +14,19 @@
 %tail_back_quantity.
 %
 %   GRASP_SHOW_GRAPH(axis_handle, graph) plots the graph on the axis
-%   pointed by axis_handle.
+%       pointed by axis_handle.
 %
 %   GRASP_SHOW_GRAPH(..., options) optional parameters:
 %
 %   options.background: plot over a background image.
+%
+%   options.layout_boundaries: 2 rows "x", "y" (or 3 for 3D layout, "x", 
+%       "y", "z") of with boundaries to plot the graph [min max] (default: 
+%       [0 10] for each dimension). Set to 0 for a automatic computation of
+%       the boundaries with a 5% margin.
+%
+%   options.viewpoint3D: arguments to give to VIEW to set the camera
+%       position for a 3D plot.
 %
 %   options.node_values: plot the values on the nodes using colors
 %       (default: no values).
@@ -55,18 +63,21 @@
 %   options.edge_thickness: use the thickness provided to draw edges or
 %       directed edges (default: 0.5).
 %
-%   options.tail_back_quantity: use the provided quantity to substract from
-%       a directed edge tip to draw an arrow (default: 0.2 for a layout
-%       with coordinates in [0 10] without maximizing the window ; use 0.08
-%       when maximizing).
+%   options.arrow_max_tip_back_fraction: the tip of the arrow is pulled
+%       slightly back. Fraction of the the edge length that the arrow tip
+%       is actually pulled back (default: 5%).
 %
-%   options.head_proportion: use the provided peedge_color_scalercentage to
-%       compute the arrow's head length (default: 10%).
+%   options.arrow_max_head_fraction: maximum fraction of the edge length
+%       dedicated to the arrow head (default: 70%). This is a limit for
+%       edges of 0 length.
+%
+%   options.arrow_width_screen_fraction: width of the arrow head as a
+%       fraction of the axes boundaries diagonal length (default: 0.5%).
 %
 %   [nodes_handle, edges_handle] = GRASP_SHOW_GRAPH(...) returns the handle
-%   to the nodes graphics objects (scatter), and edge graphics object. For
-%   the edges, it returns an array of 3 elements: the non directed edges
-%   (plot), the arrow heads (fill), and the arrow tails (plot)
+%       to the nodes graphics objects (scatter), and edge graphics object. 
+%       For the edges, it returns an array of 3 elements: the non directed 
+%       edges (plot), the arrow heads (fill), and the arrow tails (plot)
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
@@ -113,6 +124,8 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
     %% Parameters
     default_param = struct(...
         'background', input_graph.background,...
+        'layout_boundaries', [],...
+        'viewpoint3D', [20 45],...
         'node_values', 0,...
         'value_scale', 0,...
         'highlight_nodes', [],...
@@ -124,8 +137,9 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
         'edge_colormap', '',...
         'edge_color_scale', 0,...
         'edge_thickness', 0.5,...
-        'tail_back_quantity', 0.2,...
-        'head_proportion', 0.1);
+        'arrow_max_tip_back_fraction', 0.05,...
+        'arrow_max_head_fraction', 0.7,...
+        'arrow_width_screen_fraction', 0.005);
     if nargin == 2
         options = struct;
     elseif nargin > 3
@@ -141,14 +155,30 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
     if isfield(input_graph, 'A_layout') && numel(input_graph.A_layout) == N ^ 2
         A_layout = input_graph.A_layout;
     end
+    
+    %% Setting the axes
+    
+    if isempty(options.layout_boundaries)
+        options.layout_boundaries = kron([0 10], ones(size(input_graph.layout, 2), 1));
+    elseif numel(options.layout_boundaries) == 1
+        options.layout_boundaries = [min(input_graph.layout)' max(input_graph.layout)'];
+        boundaries_size = options.layout_boundaries(:, 2) - options.layout_boundaries(:, 1);
+        margin_size = 0.05 * boundaries_size; % 5% margin
+        options.layout_boundaries(:, 1) = options.layout_boundaries(:, 1) - margin_size;
+        options.layout_boundaries(:, 2) = options.layout_boundaries(:, 2) + margin_size;
+    elseif size(options.layout_boundaries, 2) ~= 2 || size(options.layout_boundaries, 1) < 2 || size(options.layout_boundaries, 1) > 3
+        error('''layout_boundaries'' should be a 2x2 or a 3x2 matrix!');
+    end
+    
     cla(axis_handle);
     hold(axis_handle, 'on');
+    
     % Setting boundaries now for optimisation
-    axis(axis_handle, [0 10 0 10]);
+    axis(axis_handle, [options.layout_boundaries(1, :) options.layout_boundaries(2, :)]);
     set(axis_handle, 'XTick', [], 'YTick', []);
     if size(input_graph.layout, 2) == 3  % 3D layout
-        zlim(axis_handle, [0 10]);
-        view(axis_handle, [20 45]);
+        zlim(axis_handle, options.layout_boundaries(3, :));
+        view(axis_handle, options.viewpoint3D);
         set(axis_handle, 'ZTick', []);
 %         camzoom(axis_handle, 1.5);
     end
@@ -177,7 +207,7 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
         for i = 1:size(img, 3)
             img(:, :, i) = flipud(img(:, :, i));
         end
-        imagesc([0 10], [0 10], img);
+        imagesc(options.layout_boundaries(1, :), options.layout_boundaries(2, :), img);
         set(axis_handle, 'DataAspectRatio', [info.Height info.Width 1]);
     end
 
@@ -247,48 +277,64 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
         % Select directed edges
         [rows, cols] = find(adja - undir); % directed edges
         if numel(rows) > 0
-            % Arrows
+            % Edge lengths
             x_orig = input_graph.layout(rows', 1)';
             y_orig = input_graph.layout(rows', 2)';
             x_targ = input_graph.layout(cols', 1)';
             y_targ = input_graph.layout(cols', 2)';
-            x = x_targ - x_orig;
-            y = y_targ - y_orig;
-            length_tail = sqrt(x .^ 2 + y .^ 2) * 10;
-            x_targ = x_targ - x ./ length_tail * options.tail_back_quantity;
-            y_targ = y_targ - y ./ length_tail * options.tail_back_quantity;
-            shortest_length = min(length_tail);
+            dx = x_targ - x_orig;
+            dy = y_targ - y_orig;
+            
+            % Screen length of the arrow tail (assuming square axes)
+            boundaries_size = options.layout_boundaries(:, 2) - options.layout_boundaries(:, 1);
+            edge_screen_size = sqrt((dx / boundaries_size(1)) .^ 2 + (dy / boundaries_size(2)) .^ 2);
+            
+            % Computing head and tip back fractions
+            base_fraction = 1 ./ (1 + 30 * edge_screen_size);
+            head_fraction = options.arrow_max_head_fraction * base_fraction;
+            tip_back_fraction = options.arrow_max_tip_back_fraction * (1 - base_fraction);
+            
+            % Final arrow lengths
+            x_targ = x_targ - tip_back_fraction .* dx;
+            y_targ = y_targ - tip_back_fraction .* dy;
+            
+            % Direction of the arrow
+            main_vector_direction = -[x_targ - x_orig ; y_targ - y_orig];
+            main_vector_direction = cell2mat(arrayfun(@(i) main_vector_direction(:, i) / norm(main_vector_direction(:, i)), (1:size(main_vector_direction, 2)), 'UniformOutput', false));
+            
+            % Head computations
+            arrow_dx     = head_fraction .* dx;
+            arrow_dy     = head_fraction .* dy;
+            arrow_length = sqrt(arrow_dx .^ 2 + arrow_dy .^ 2);
+            arrow_width  = options.arrow_width_screen_fraction * norm(boundaries_size);
+            
+            arrow_angle = atan(arrow_width ./ arrow_length);
+            arrow_side_length = sqrt((arrow_width / 2) .^ 2 + (arrow_length) .^ 2);
 
+            % Computing the head (for filling a triangle) and the tail (for
+            % the edge plotting)
             M = numel(x_orig);
             headsX = NaN * zeros(3, M);
             headsY = NaN * zeros(3, M);
-        %     headsX = NaN * zeros(1, 4 * M);
-        %     headsY = NaN * zeros(1, 4 * M);
             tailsX = NaN * zeros(1, 3 * M);
             tailsY = NaN * zeros(1, 3 * M);
             for i = 1:M
-                alpha = atan(shortest_length / length_tail(i));
-                rotation_1 = [cos(alpha / 2) -sin(alpha / 2) ; sin(alpha / 2) cos(alpha / 2)];
+                rotation_1 = [cos(arrow_angle(i) / 2) -sin(arrow_angle(i) / 2) ; sin(arrow_angle(i) / 2) cos(arrow_angle(i) / 2)];
                 rotation_2 = rotation_1';
 
-                main_vector = -[x_targ(i) - x_orig(i) ; y_targ(i) - y_orig(i)];
-                head1 = rotation_1 * main_vector;
-                head2 = rotation_2 * main_vector;
+                head1_direction = rotation_1 * main_vector_direction(:, i);
+                head2_direction = rotation_2 * main_vector_direction(:, i);
 
                 firstHead = [1 i];
                 middleHead = [2 i];
                 lastHead = [3 i];
-        %         firstHead = [1 4 * (i - 1) + 1];
-        %         middleHead = [1 4 * (i - 1) + 2];
-        %         lastHead = [1 4 * (i - 1) + 3];
-        %         % separator = [1 4 * (i - 1) + 4];
 
-                headsX(firstHead(1), firstHead(2)) = x_targ(i) + head1(1) * options.head_proportion;
-                headsY(firstHead(1), firstHead(2)) = y_targ(i) + head1(2) * options.head_proportion;
+                headsX(firstHead(1), firstHead(2)) = x_targ(i) + head1_direction(1) * arrow_side_length(i);
+                headsY(firstHead(1), firstHead(2)) = y_targ(i) + head1_direction(2) * arrow_side_length(i);
                 headsX(middleHead(1), middleHead(2)) = x_targ(i);
                 headsY(middleHead(1), middleHead(2)) = y_targ(i);
-                headsX(lastHead(1), lastHead(2)) = x_targ(i) + head2(1) * options.head_proportion;
-                headsY(lastHead(1), lastHead(2)) = y_targ(i) + head2(2) * options.head_proportion;
+                headsX(lastHead(1), lastHead(2)) = x_targ(i) + head2_direction(1) * arrow_side_length(i);
+                headsY(lastHead(1), lastHead(2)) = y_targ(i) + head2_direction(2) * arrow_side_length(i);
 
                 firstTail = 3 * (i - 1) + 1;
                 lastTail = 3 * (i - 1) + 2;
@@ -297,6 +343,7 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
                 tailsX(lastTail) = x_targ(i);
                 tailsY(lastTail) = y_targ(i);
             end
+            
             % Plot them
             edges_handle{2} = fill(headsX, headsY, options.edge_color,...% '-k',...
                                    'linewidth', options.edge_thickness,...

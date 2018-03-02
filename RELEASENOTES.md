@@ -30,6 +30,8 @@
  * `grasp_show_fouriermodes`: pass along options to `grasp_show_graph`.
  * `grasp_adjacency_gaussian`, `grasp_adjacency_degreenorm`: degree-normalized weights.
  * `grasp_subgraph`: perform a subgraph computation from a subset of vertices.
+ * `grasp_show_graph`: reworked design of the arrow for directed edges.
+ * `grasp_show_graph`: allows for automatic computation of the graph boundaries.
 
 ### Bugfixes
 
