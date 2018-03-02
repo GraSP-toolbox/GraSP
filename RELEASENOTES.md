@@ -10,6 +10,7 @@
  * `grasp_gft_gui`: Port to GraSP of a GUI displaying the GFT of a graph [2].
  * `grasp_eigendecomposition`: irregularity aware GFT [4].
  * `grasp_voronoi_areas`: Voronoi cell area inner product matrix [4].
+ * `grasp_gfm_l1`: first graph Fourier modes computation using an l1-norm graph variation [4].
 
 ### New Third Party Toolboxes
 
