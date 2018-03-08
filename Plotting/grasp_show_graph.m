@@ -14,7 +14,8 @@
 %tail_back_quantity.
 %
 %   GRASP_SHOW_GRAPH(axis_handle, graph) plots the graph on the axis
-%       pointed by axis_handle.
+%       pointed by axis_handle. Uses the field graph.show_graph_options for
+%       default plotting values of GRASP_SHOW_GRAPH.
 %
 %   GRASP_SHOW_GRAPH(..., options) optional parameters:
 %
@@ -24,6 +25,8 @@
 %       "y", "z") of with boundaries to plot the graph [min max] (default: 
 %       [0 10] for each dimension). Set to 0 for a automatic computation of
 %       the boundaries with a 5% margin.
+%
+%   options.axis_style: see AXIS style input property (default: equal).
 %
 %   options.viewpoint3D: arguments to give to VIEW to set the camera
 %       position for a 3D plot.
@@ -37,6 +40,9 @@
 %   options.highlight_nodes: draw a bigger circle around the given nodes.
 %
 %   options.color_map: use the provide color map (default: 'default').
+%
+%   options.show_colorbar: show the color bar on the right (default:
+%       false).
 %
 %   options.node_display_size: use the size provided for the nodes
 %       (default: 1500).
@@ -125,11 +131,13 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
     default_param = struct(...
         'background', input_graph.background,...
         'layout_boundaries', [],...
+        'axis_style', 'equal',...
         'viewpoint3D', [20 45],...
         'node_values', 0,...
         'value_scale', 0,...
         'highlight_nodes', [],...
         'color_map', 'default',...
+        'show_colorbar', false,...
         'node_display_size', 1500,...
         'node_text', [],...
         'show_edges', true,...
@@ -146,6 +154,9 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
         options = cell2struct(varargin(2:2:end), varargin(1:2:end), 2);
     else
         options = varargin{1};
+    end
+    if isfield(input_graph, 'show_graph_options')
+        default_param = grasp_merge_structs(default_param, input_graph.show_graph_options);
     end
     options = grasp_merge_structs(default_param, options);
     
@@ -172,6 +183,7 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
     
     cla(axis_handle);
     hold(axis_handle, 'on');
+    axis(options.axis_style);
     
     % Setting boundaries now for optimisation
     axis(axis_handle, [options.layout_boundaries(1, :) options.layout_boundaries(2, :)]);
@@ -394,6 +406,13 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
                 text(input_graph.layout(i, 1), input_graph.layout(i, 2), input_graph.layout(i, 3), options.node_text{i});
             end
         end
+    end
+    
+    %% Colorbar
+    if options.show_colorbar
+        colorbar
+    else
+        colorbar off
     end
      
      %% Plot

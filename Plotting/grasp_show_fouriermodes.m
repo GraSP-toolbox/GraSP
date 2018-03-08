@@ -11,6 +11,9 @@
 %       must be of the size the number of modes, or 0 to display the
 %       eigenvalues. Any other size will disable titles.
 %
+%   options.eigval_precision: when using options.titles = 0, controls how
+%       many floating point digits are displayed (default: 2).
+%
 %   options.energy: shows the energy of the modes.
 %
 %   options.value_scale: sets the color scale of the plot.
@@ -69,6 +72,7 @@ function grasp_show_fouriermodes(graph, varargin)
     default_param = struct(...
         'modes', 0,...
         'titles', cell(1),...
+        'eigval_precision', 2,...
         'energy', 0,...
         'value_scale', [-1 1],...
         'show_edges', true,...
@@ -101,7 +105,7 @@ function grasp_show_fouriermodes(graph, varargin)
     if numel(options.titles) == 1
         options.titles = cell(nb_modes, 1);
         for i = 1:nb_modes
-            options.titles{i} = sprintf('\\lambda=%f', graph.eigvals(options.modes(i)));
+            options.titles{i} = sprintf(sprintf('\\\\lambda_{%%d}=%%.%df', options.eigval_precision), options.modes(i), graph.eigvals(options.modes(i)));
         end
     end
     
@@ -153,7 +157,7 @@ function grasp_show_fouriermodes(graph, varargin)
         else
             colormap(curAxis, options.cmap);
         end
-        if nargin > 2 && numel(options.titles) == nb_modes
+        if nargin >= 2 && numel(options.titles) == nb_modes
             title(curAxis, options.titles{mode_id});
         end
     end

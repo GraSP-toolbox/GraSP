@@ -1,5 +1,22 @@
 # Release Notes
 
+## Development Version
+
+### Major Features
+
+### New Third Party Toolboxes
+
+### Minor Features
+
+ * `grasp_show_fouriermodes`: parameter for eigenvalue precision for titles.
+ * `grasp_show_graph`: use default parameters embedded in the graph structure
+ * `grasp_show_graph`: default axis style to `equal` for accurate coordinates display
+ * `grasp_show_graph`: colorbar switch
+
+### Bugfixes
+
+ * `grasp_show_fouriermodes`: Missing titles when using a single structure parameter.
+
 ## Version 1.1
 
 ### Major Features
