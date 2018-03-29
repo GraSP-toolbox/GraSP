@@ -62,6 +62,8 @@ function list = grasp_dependencies_list
     list(cur_dep).root_dir = 'package_emd/';
     list(cur_dep).init_script = 'install_emd';
     list(cur_dep).path_list = {'.', 'EMDs', 'utils'};
+    list(cur_dep).optional = 1;
+    list(cur_dep).ref_bib = 'https://doi.org/10.1109/LSP.2007.904710';
     
     cur_dep = cur_dep + 1;
     
@@ -121,7 +123,7 @@ function list = grasp_dependencies_list
     list(cur_dep).url = 'http://sipi.usc.edu/database/misc.zip';
     list(cur_dep).name = 'usc_sipi_image_db_misc/';
     list(cur_dep).root_dir = 'misc/';
-    list(cur_dep).ref_bib = 'TODO';
+    list(cur_dep).ref_bib = 'http://sipi.usc.edu/database/';
     list(cur_dep).path_list = {'.'};
     
     cur_dep = cur_dep + 1;
@@ -137,6 +139,7 @@ function list = grasp_dependencies_list
     list(cur_dep).url = 'https://github.com/STAC-USC/Graph_Learning/archive/master.zip';
     list(cur_dep).name = 'usc_graph_learning/';
     list(cur_dep).root_dir = 'Graph_Learning-master/';
+    list(cur_dep).optional = 1;
     list(cur_dep).ref_bib = 'https://doi.org/10.1109/JSTSP.2017.2726975';
     list(cur_dep).path_list = {'.', 'functions', 'misc'};
     
