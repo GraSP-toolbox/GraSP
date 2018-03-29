@@ -81,6 +81,6 @@ function grasp_show_matrix(axis_handle, M, X, Y)
     set(axis_handle, 'ydir', 'reverse');
     set(axis_handle, 'DataAspectRatio', [nblines nbcols 1]);
     hold(axis_handle, 'on');
-    fill(polys_x, polys_y, M(indices), 'EdgeColor', 'none');
+    patch(polys_x, polys_y, M(indices), 'EdgeColor', 'none');
     hold(axis_handle, 'off');
 end
