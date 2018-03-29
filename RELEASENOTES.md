@@ -12,6 +12,8 @@
  * `grasp_show_graph`: use default parameters embedded in the graph structure
  * `grasp_show_graph`: default axis style to `equal` for accurate coordinates display
  * `grasp_show_graph`: colorbar switch
+ * `grasp_show_matrix`: faster plotting using `patch` instead of `fill`
+ * `grasp_show_graph`: nodes with edges to identify nodes filled in white
 
 ### Bugfixes
 

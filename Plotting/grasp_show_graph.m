@@ -45,7 +45,11 @@
 %       false).
 %
 %   options.node_display_size: use the size provided for the nodes
-%       (default: 1500).
+%       (default: 200).
+%
+%   options.node_marker_edge_width: each node is represented by a marker,
+%       this options sets the width of the edge of the marker, 0 disables
+%       that edge (default: 1).
 %
 %   options.node_text: use the provided cell to plot also a label
 %       associated to each node (default: cell(0)).
@@ -138,14 +142,15 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
         'highlight_nodes', [],...
         'color_map', 'default',...
         'show_colorbar', false,...
-        'node_display_size', 1500,...
+        'node_display_size', 200,...
+        'node_marker_edge_width', 1,...
         'node_text', [],...
         'show_edges', true,...
         'edge_color', [0 0 0],...
         'edge_colormap', '',...
         'edge_color_scale', 0,...
         'edge_thickness', 0.5,...
-        'arrow_max_tip_back_fraction', 0.05,...
+        'arrow_max_tip_back_fraction', 0.02,...
         'arrow_max_head_fraction', 0.7,...
         'arrow_width_screen_fraction', 0.005);
     if nargin == 2
@@ -372,17 +377,33 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
 %            node_values = fix (size(colormap, 1) / range (node_values) * (node_values - min (node_values)));
 %        end
         if size(input_graph.layout, 2) == 2
-            nodes_handle = scatter(axis_handle, input_graph.layout(:, 1), input_graph.layout(:, 2), options.node_display_size, options.node_values, '.');
+            nodes_handle = scatter(axis_handle, input_graph.layout(:, 1), input_graph.layout(:, 2), options.node_display_size, options.node_values, 'filled');
+            if options.node_marker_edge_width > 0
+                nodes_handle.MarkerEdgeColor = 'k';
+                nodes_handle.LineWidth = options.node_marker_edge_width;
+            end
         else
             set(gcf,'CurrentAxes', axis_handle)
-            nodes_handle = scatter3(input_graph.layout(:, 1), input_graph.layout(:, 2), input_graph.layout(:, 3), options.node_display_size, options.node_values, '.');
+            nodes_handle = scatter3(input_graph.layout(:, 1), input_graph.layout(:, 2), input_graph.layout(:, 3), options.node_display_size, options.node_values, 'filled');
+            if options.node_marker_edge_width > 0
+                nodes_handle.MarkerEdgeColor = 'k';
+                nodes_handle.LineWidth = options.node_marker_edge_width;
+            end
         end
     else
         if size(input_graph.layout, 2) == 2
-            nodes_handle = scatter(axis_handle, input_graph.layout(:, 1), input_graph.layout(:, 2), options.node_display_size, 'b', '.');
+            nodes_handle = scatter(axis_handle, input_graph.layout(:, 1), input_graph.layout(:, 2), options.node_display_size, 'b', 'filled');
+            if options.node_marker_edge_width > 0
+                nodes_handle.MarkerEdgeColor = 'k';
+                nodes_handle.LineWidth = options.node_marker_edge_width;
+            end
         else
             set(gcf,'CurrentAxes', axis_handle)
-            nodes_handle = scatter3(input_graph.layout(:, 1), input_graph.layout(:, 2), input_graph.layout(:, 3), options.node_display_size, 'b', '.');
+            nodes_handle = scatter3(input_graph.layout(:, 1), input_graph.layout(:, 2), input_graph.layout(:, 3), options.node_display_size, 'b', 'filled');
+            if options.node_marker_edge_width > 0
+                nodes_handle.MarkerEdgeColor = 'k';
+                nodes_handle.LineWidth = options.node_marker_edge_width;
+            end
         end
     end
     
