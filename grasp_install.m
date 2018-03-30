@@ -5,11 +5,15 @@
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015-11-01)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2018)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -41,7 +45,11 @@
 % knowledge of the CeCILL license and that you accept its terms.
 
 function grasp_install
-    prev = cd('3rdParty');
-    grasp_init_3rd_party;
-    cd(prev);
+    if exist([pwd '/3rdParty'], 'dir')
+        prev = cd('3rdParty');
+        grasp_init_3rd_party;
+        cd(prev);
+    else
+        error('The current folder needs to be the root folder grasp of the GraSP toolbox!');
+    end
 end

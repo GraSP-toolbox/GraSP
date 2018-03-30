@@ -14,6 +14,7 @@
  * `grasp_show_graph`: colorbar switch
  * `grasp_show_matrix`: faster plotting using `patch` instead of `fill`
  * `grasp_show_graph`: nodes with edges to identify nodes filled in white
+ * `grasp_install`: check that the current directory is the top-level directory
 
 ### Bugfixes
 
