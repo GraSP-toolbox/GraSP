@@ -1,5 +1,7 @@
 %Constructs a graph from the Watts-Strogatz model.
 %
+%Ref: https://doi.org/10.1038/30918
+%
 %   graph = GRASP_WATTS_STROGATZ(N, K, beta) constructs a watts-stogatz
 %   graph with N nodes, average degree K and with probability beta of
 %   rewiring.
@@ -57,8 +59,9 @@ function graph = grasp_watts_strogatz(N, K, beta)
     end
     
     %% Rewiring
-    for i = 1:N
-        for j = (i + 1):N
+    for dj = 1:nbRightNeighbors
+        for i = 1:N
+            j = mod(i + dj - 1, N) + 1;
             if graph.A(i, j) > 0 && rand(1) < beta
                 k = randi([1 N]);
                 while k == i || graph.A(i, k) > 0

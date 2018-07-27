@@ -19,6 +19,7 @@
 ### Bugfixes
 
  * `grasp_show_fouriermodes`: Missing titles when using a single structure parameter.
+ * `grasp_watts_strogatz`: Better implementation, closer to the original model.
 
 ## Version 1.1
 
