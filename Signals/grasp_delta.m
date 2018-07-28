@@ -2,13 +2,20 @@
 %
 %   delta = GRASP_DELTA(graph, node) constructs the delta on node.
 %
+%   ... = GRASP_DELTA(..., full_delta) whether the output should be a full
+%       vector or a sparse vector (default: full).
+%
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
+% Inria, FRANCE (2015-2016)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2018)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -39,7 +46,10 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function delta = grasp_delta(graph, node)
-    delta(grasp_nb_nodes(graph), 1) = 0;
-    delta(node) = 1;
+function delta = grasp_delta(graph, node, full_delta)
+    if nargin == 2 || full_delta
+        delta = full(sparse(node, 1, 1, grasp_nb_nodes(graph), 1));
+    else
+        delta = sparse(node, 1, 1, grasp_nb_nodes(graph), 1);
+    end
 end
