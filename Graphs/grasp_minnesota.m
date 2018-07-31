@@ -20,7 +20,7 @@
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015)
 % Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2016)
+% Angeles, California, USA (2016-2018)
 % 
 % benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
@@ -73,6 +73,9 @@ function graph = grasp_minnesota(varargin)
     data = load('minnesota');
     % Remove nodes #348 and #349 (disconnected nodes)
     mask = [1:347 350:numel(data.labels)];
+    
+    % Load the matlab-bgl toolbox having the minnesota dataset
+    grasp_start_opt_3rd_party('MatlabBGL');
     
     %% Basic data
     graph.A = data.A(mask, mask);

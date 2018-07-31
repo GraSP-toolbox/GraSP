@@ -146,6 +146,9 @@ function [ts, P, bins_center, bins_bounds, final_loss, ssl_centroids] = grasp_du
             bins_center = Y_num ./ Y_denom;
             final_loss = -1;
         case 'anneal'
+            % Load the toolbox
+            grasp_start_opt_3rd_party('anneal');
+            
             % First, we convert the adjacency matrix to a random walk
             % matrix
             graph.A = P;

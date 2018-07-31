@@ -4,6 +4,14 @@
 
 ### Major Features
 
+ * Reworked dependencies:
+   * removed unrelated ones
+   * less toolboxes started (only the strictly necessary ones)
+   * automatic start of toolboxes when needed
+   * new interface to handle local dependencies
+     * `grasp_add_dependency`: to add one
+     * `grasp_remove_dependency`: to remove one
+
 ### New Third Party Toolboxes
 
 ### Minor Features

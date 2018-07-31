@@ -14,11 +14,15 @@
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
+% Inria, FRANCE (2015)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2018)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -61,6 +65,9 @@ function [x, y, distances] = grasp_farthest(graph, varargin)
         options = varargin{1};
     end
     options = grasp_merge_structs(default_param, options);
+    
+    %% Load the matlab-bgl toolbox for 'all_shortest_paths'
+    grasp_start_opt_3rd_party('MatlabBGL');
     
     %% Edge-distance matrix
     switch options.adjacency_matrix

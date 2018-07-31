@@ -12,7 +12,7 @@
 %  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
+% Inria, FRANCE (2015)
 % Copyright Benjamin Girault, University of Sourthern California, Los
 % Angeles, California, USA (2017-2018)
 % 
@@ -49,6 +49,9 @@
 % knowledge of the CeCILL license and that you accept its terms.
 
 function [graph, nodes] = grasp_biggest_connected_component(graph)
+    % Load the matlab-bgl toolbox for 'components'
+    grasp_start_opt_3rd_party('MatlabBGL');
+    
     % Find the biggest connected component
     [conn_comps, sizes] = components(sparse(graph.A));
     [~, biggest_cc] = max(sizes);

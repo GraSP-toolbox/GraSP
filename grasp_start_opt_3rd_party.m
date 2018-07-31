@@ -1,13 +1,15 @@
-%Start an optional third party toolbox
+%Start an optional third party toolbox. Starred entries correspond to local
+%dependencies.
 %
 %   GRASP_START_OPT_3RD_PARTY() lists all optional toolboxes
 %
 %   GRASP_START_OPT_3RD_PARTY(toolbox_id) starts the given toolbox_id.
-%   toolbox_id can be either the id the toolbox or its name (as given by
-%   GRASP_START_OPT_3RD_PARTY()).
+%       toolbox_id can be either the id the toolbox or its name (as given
+%       by GRASP_START_OPT_3RD_PARTY()).
 %
 %   opt_tools = GRASP_START_OPT_3RD_PARTY(0) returns opt_tools, the struct
-%   array with info on the toolboxes (useful only to GRASP_BIBLIOGRAPHY).
+%       array with info on the toolboxes (useful only to 
+%       GRASP_BIBLIOGRAPHY).
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@usc.edu>
@@ -53,8 +55,22 @@ function opt_tools_ret = grasp_start_opt_3rd_party(toolbox_id)
     addpath(tmp_dir);
     dep_list = grasp_dependencies_list;
     rmpath(tmp_dir);
+    nb_base_dependencies = numel(dep_list);
     
-    opt_tools = [];
+    % Local dependencies
+    mfile_dir = [fileparts(mfilename('fullpath')), filesep];
+    local_dep_file = [mfile_dir '/3rdParty/local_dependencies.mat'];
+    load(local_dep_file, 'local_dependencies');
+    for cur_dep = 1:numel(local_dependencies)                 %#ok
+        cur_soft_id = numel(dep_list) + 1;
+        cur_dep_fields = fields(local_dependencies{cur_dep}); %#ok
+        for f_id = 1:numel(cur_dep_fields)
+            dep_list(cur_soft_id).(cur_dep_fields{f_id}) = local_dependencies{cur_dep}.(cur_dep_fields{f_id});
+        end
+    end
+    
+    % Cleanup
+    opt_tools = repmat(dep_list(1), sum([dep_list.optional]), 1);
     cur_tool = 1;
     for i = 1:numel(dep_list)
         if numel(dep_list(i).optional) > 0 && dep_list(i).optional
@@ -69,7 +85,11 @@ function opt_tools_ret = grasp_start_opt_3rd_party(toolbox_id)
     %% Do we list or start?
     if nargin == 0
         for i = 1:numel(opt_tools)
-            fprintf('#%d\t%s\n', opt_tools(i).id, opt_tools(i).name);
+            if opt_tools(i).dep_id <= nb_base_dependencies
+                fprintf('#%d\t%s\n', opt_tools(i).id, opt_tools(i).name);
+            else
+                fprintf('#%d*\t%s\n', opt_tools(i).id, opt_tools(i).name);
+            end
         end
         return
     end
@@ -119,4 +139,6 @@ function opt_tools_ret = grasp_start_opt_3rd_party(toolbox_id)
         addpath([root_path, soft.path_list{p}]);
     end
     GRASP_OPT_TOOLS(toolbox_id) = 1;
+    
+    disp(['Toolbox ''' opt_tools(toolbox_id).name ''' started.']);
 end

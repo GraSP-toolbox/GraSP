@@ -57,38 +57,17 @@ function list = grasp_dependencies_list
     
     cur_dep = cur_dep + 1;
     
-    list(cur_dep).url = 'http://perso.ens-lyon.fr/patrick.flandrin/pack_emd.zip';
-    list(cur_dep).name = 'EMD/';
-    list(cur_dep).root_dir = 'package_emd/';
-    list(cur_dep).init_script = 'install_emd';
-    list(cur_dep).path_list = {'.', 'EMDs', 'utils'};
-    list(cur_dep).optional = 1;
-    list(cur_dep).ref_bib = 'https://doi.org/10.1109/LSP.2007.904710';
-    
-    cur_dep = cur_dep + 1;
-    
-    list(cur_dep).url = 'http://github.com/altmany/export_fig/archive/f0af704d84608f5a69e3de82581869e7b6161d4f.zip';
-    list(cur_dep).name = 'ExportFig/';
-    list(cur_dep).root_dir = 'export_fig-f0af704d84608f5a69e3de82581869e7b6161d4f/';
-    list(cur_dep).path_list = {'.'};
-    
-    cur_dep = cur_dep + 1;
-    
-    list(cur_dep).url = 'http://www.mathworks.com/matlabcentral/fileexchange/submissions/39275/v/4/download/zip';
-    list(cur_dep).name = 'HistogramDistance/';
-    list(cur_dep).path_list = {'.'};
-    
-    cur_dep = cur_dep + 1;
-    
     list(cur_dep).url = 'http://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/4266/versions/4/download/zip';
     list(cur_dep).name = 'GrTheory/';
     list(cur_dep).path_list = {'.'};
+    list(cur_dep).optional = 1;
     
     cur_dep = cur_dep + 1;
     
     list(cur_dep).url = 'http://www.mathworks.com/matlabcentral/fileexchange/submissions/10922/v/2/download/zip';
-    list(cur_dep).name = 'MathBFL/';
+    list(cur_dep).name = 'MatlabBGL/';
     list(cur_dep).path_list = {'matlab_bgl', 'matlab_bgl/graphs'};
+    list(cur_dep).optional = 1;
     
     cur_dep = cur_dep + 1;
     
@@ -96,6 +75,7 @@ function list = grasp_dependencies_list
     list(cur_dep).name = 'anneal/';
     list(cur_dep).path_list = {'.'};
     list(cur_dep).patches = {'anneal/anneal.m', 'anneal.patch'};
+    list(cur_dep).optional = 1;
     
     cur_dep = cur_dep + 1;
     
@@ -120,20 +100,13 @@ function list = grasp_dependencies_list
     
     cur_dep = cur_dep + 1;
     
-    list(cur_dep).url = 'http://sipi.usc.edu/database/misc.zip';
-    list(cur_dep).name = 'usc_sipi_image_db_misc/';
-    list(cur_dep).root_dir = 'misc/';
-    list(cur_dep).ref_bib = 'http://sipi.usc.edu/database/';
-    list(cur_dep).path_list = {'.'};
-    
-    cur_dep = cur_dep + 1;
-    
     list(cur_dep).url = 'https://github.com/STAC-USC/Active_SSL_with_Sampling_Theory/archive/54fff129c0e1e41d109a104a500acd3172aa7ed4.zip';
     list(cur_dep).name = 'usc_ssl_sampling/';
     list(cur_dep).root_dir = 'Active_SSL_with_Sampling_Theory-54fff129c0e1e41d109a104a500acd3172aa7ed4/';
     list(cur_dep).optional = 1;
     list(cur_dep).ref_bib = 'https://doi.org/10.1145/2623330.2623760';
     list(cur_dep).dependencies = {'sgwt'};
+    
     cur_dep = cur_dep + 1;
     
     list(cur_dep).url = 'https://github.com/STAC-USC/Graph_Learning/archive/master.zip';

@@ -1,29 +1,15 @@
-%Download and setup necessary third party tools into the directory
-%3rdParty/.
+%Remove a local dependency previously added by GRASP_ADD_DEPENDENCY.
 %
-%   GRASP_INSTALL() install the base third party toolboxes
-%
-%   GRASP_INSTALL(options) optional parameters:
-%
-%   options.with_local_deps: true if libraries added using 
-%       GRASP_ADD_DEPENDENCY are also installed. (default: false)
-%
-%   options.without_mex: disable building of dependencies that require 
-%       compilation of mex files (default: false)
-%
-%   options.reinstall: whether already installed libraries should be
-%       reinstalled (default: false)
+%   GRASP_REMOVE_DEPENDENCY(dep) remove dep from the list of local
+%       dependencies, either using its name as given by
+%       GRASP_START_OPT_3RD_PARTY.
 %
 % Authors:
-%  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
 %  - Benjamin Girault <benjamin.girault@usc.edu>
 
-% Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-2016)
 % Copyright Benjamin Girault, University of Sourthern California, Los
 % Angeles, California, USA (2018)
 % 
-% benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
@@ -55,28 +41,28 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function grasp_install(varargin)
-    %% Parameters
-    default_param = struct(...
-        'with_local_deps', false,...
-        'without_mex', false,...
-        'reinstall', false);
-    if nargin == 0
-        options = struct;
-    elseif nargin > 1
-        options = cell2struct(varargin(2:2:end), varargin(1:2:end), 2);
-    else
-        options = varargin{1};
-    end
-    options = grasp_merge_structs(default_param, options);
+function grasp_remove_dependency(dep)
+    %% Load the local dependency struct array
+    pwd = [fileparts(mfilename('fullpath')), filesep];
+    thirdparty_dir = [pwd, '3rdParty'];
+    local_dep_file = [thirdparty_dir '/local_dependencies.mat'];
+    load(local_dep_file, 'local_dependencies');
     
-    %% Start install
-    mfile_dir = [fileparts(mfilename('fullpath')), filesep];
-    if exist([mfile_dir '/3rdParty'], 'dir')
-        prev = cd([mfile_dir '/3rdParty']);
-        grasp_init_3rd_party(options);
-        cd(prev);
-    else
-        error('The current folder needs to be the root folder grasp of the GraSP toolbox!');
+    %% Find the dependency in local_dependencies
+    dep_index = -1;
+    for i = 1:numel(local_dependencies) %#ok
+        if strcmp(local_dependencies{i}.name(1:(end - 1)), dep)
+            dep_index = i;
+            break;
+        end
     end
+    if dep_index == -1
+        error('Dependency not found!');
+    end
+    
+    %% Remove it
+    local_dependencies = local_dependencies([1:(dep_index - 1) (dep_index + 1):end]); %#ok
+    
+    %% Save
+    save(local_dep_file, 'local_dependencies');
 end

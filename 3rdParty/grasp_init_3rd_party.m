@@ -1,7 +1,18 @@
 %Setup third party Matlab libraries.
 %
-%   GRASP_INIT_3RD_PARTY() downloads and install in this directory third
-%   party Matlab libraries.
+%   GRASP_INIT_3RD_PARTY(with_local_deps) downloads and install in this 
+%       directory third party Matlab libraries.
+%
+%   GRASP_INIT_3RD_PARTY(options) optional parameters:
+%
+%   options.with_local_deps: true if libraries added using 
+%       GRASP_ADD_DEPENDENCY are also installed. (default: false)
+%
+%   options.without_mex: disable building of dependencies that require 
+%       compilation of mex files (default: false)
+%
+%   options.reinstall: whether already installed libraries should be
+%       reinstalled (default: false)
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
@@ -10,7 +21,7 @@
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015)
 % Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2016)
+% Angeles, California, USA (2016-2018)
 % 
 % benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
@@ -44,12 +55,39 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function grasp_init_3rd_party
+function grasp_init_3rd_party(varargin)
+    %% Parameters
+    default_param = struct(...
+        'with_local_deps', false,...
+        'without_mex', false,...
+        'reinstall', false);
+    if nargin == 0
+        options = struct;
+    elseif nargin > 1
+        options = cell2struct(varargin(2:2:end), varargin(1:2:end), 2);
+    else
+        options = varargin{1};
+    end
+    options = grasp_merge_structs(default_param, options);
+
     %% List
     softwares = grasp_dependencies_list;
     
+    if options.with_local_deps
+        mfile_dir = [fileparts(mfilename('fullpath')), filesep];
+        local_dep_file = [mfile_dir '/local_dependencies.mat'];
+        load(local_dep_file, 'local_dependencies');
+        for cur_dep = 1:numel(local_dependencies)                 %#ok
+            cur_soft_id = numel(softwares) + 1;
+            cur_dep_fields = fields(local_dependencies{cur_dep}); %#ok
+            for f_id = 1:numel(cur_dep_fields)
+                softwares(cur_soft_id).(cur_dep_fields{f_id}) = local_dependencies{cur_dep}.(cur_dep_fields{f_id});
+            end
+        end
+    end
+    
     %% Matlab version
-    package_save = @(url, file) urlwrite(url, file);
+    package_save = @(url, file) urlwrite(url, file);  %#ok
     matlab_ver = ver('Matlab');
     if numel(matlab_ver) > 0 && str2double(matlab_ver.Version) >= 8.4
         package_save = @(url, file) websave(file, url);
@@ -58,14 +96,25 @@ function grasp_init_3rd_party
     %% MyPatcher path
     path_mypatcher = [fileparts(mfilename('fullpath')), filesep, softwares(1).name, softwares(1).root_dir];
 
-    %% Subaxis
+    %% Let's start...
     pwd = [fileparts(mfilename('fullpath')), filesep];
     for soft_id = 1:numel(softwares)
         soft = softwares(soft_id);
-        if soft.debug
+        if numel(soft.debug) > 0 && soft.debug
+            continue;
+        end
+        if options.without_mex && (soft.mex_flag || (isfield(soft, 'mexes') && numel(soft.mexes) > 0))
             continue;
         end
         dir = [pwd, soft.name];
+        if exist(dir, 'dir')
+            if ~options.reinstall
+                disp([soft.name(1:(end - 1)) ' already installed, skipping...']);
+                continue;
+            else
+                % delete(dir); % We don't actually remove anything, just in case
+            end
+        end
         package_save(soft.url, 'tmp.zip');
         mkdir(pwd, soft.name);
         unzip('tmp.zip', dir);
