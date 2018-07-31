@@ -8,7 +8,9 @@
 %   GRASP_PLANE_RND(..., options) optional parameters:
 %
 %   options.directed: true if graph should stay directed (default: false)
+%
 %   options.sigma: sigma^2 in the Gaussian kernel (default: 1)
+%
 %   options.display_threshold: edge weight threshold for display purposes
 %       (default:0.3)
 %

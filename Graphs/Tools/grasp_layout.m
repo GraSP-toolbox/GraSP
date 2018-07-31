@@ -117,7 +117,7 @@ function layout = grasp_layout(graph, varargin)
             gviz_tool = 'twopi';
         case 'spring_force'
             gviz_tool = 'fdp';
-        case 'spring_force_multiscale';
+        case 'spring_force_multiscale'
             gviz_tool = 'sfdp';
         case 'spring_basic'
         otherwise
