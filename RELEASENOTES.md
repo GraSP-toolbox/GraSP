@@ -11,6 +11,7 @@
    * new interface to handle local dependencies
      * `grasp_add_dependency`: to add one
      * `grasp_remove_dependency`: to remove one
+   * installation of dependencies with finer grain control (disabling of those already installed, or with mex file compilations, or local dependencies, see `grasp_install`)
 
 ### New Third Party Toolboxes
 
