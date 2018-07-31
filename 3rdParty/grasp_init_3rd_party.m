@@ -103,7 +103,7 @@ function grasp_init_3rd_party(varargin)
         if numel(soft.debug) > 0 && soft.debug
             continue;
         end
-        if options.without_mex && (soft.mex_flag || (isfield(soft, 'mexes') && numel(soft.mexes) > 0))
+        if options.without_mex && ((numel(soft.mex_flag) > 0 && soft.mex_flag) || (isfield(soft, 'mexes') && numel(soft.mexes) > 0))
             continue;
         end
         dir = [pwd, soft.name];
@@ -115,6 +115,7 @@ function grasp_init_3rd_party(varargin)
                 % delete(dir); % We don't actually remove anything, just in case
             end
         end
+        disp(['Installing ' soft.name(1:(end - 1)) '...']);
         package_save(soft.url, 'tmp.zip');
         mkdir(pwd, soft.name);
         unzip('tmp.zip', dir);

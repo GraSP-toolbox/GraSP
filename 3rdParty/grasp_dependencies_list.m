@@ -54,6 +54,7 @@ function list = grasp_dependencies_list
     list(cur_dep).name = 'MyPatcher/';
     list(cur_dep).root_dir = 'MyPatcher-1.1.1/';
     list(cur_dep).debug = 0;
+    list(cur_dep).mex_flag = [];
     
     cur_dep = cur_dep + 1;
     
