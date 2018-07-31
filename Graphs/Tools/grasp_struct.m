@@ -4,11 +4,15 @@
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
+% Inria, FRANCE (2015-2016)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2018)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -40,16 +44,17 @@
 % knowledge of the CeCILL license and that you accept its terms.
 
 function g = grasp_struct
-    g.A = 0;                      % Adjacency matrix
-    g.A_layout = 0;               % Adjacency matrix to plot
-    g.layout = 0;                 % Graph layout (in the 10x10 2D plane)
-    g.distances = 0;              % Matrix of distances between any pair of nodes
-    g.node_names = {};            % Cell of string for the names of nodes
-    g.L = 0;                      % Laplacian matrix (std or norm)
-    g.fourier_version = 'n.a.';   % Matrix used for the Fourier transform
-    g.eigvals = 0;                % Eigenvalues of the graph
-    g.F = 0;                      % Fourier matrix
-    g.Finv = 0;                   % Invert Fourier matrix
-    g.T = 0;                      % Translation operator
-    g.background = '';            % Background file
+    g.A = 0;                         % Adjacency matrix
+    g.A_layout = 0;                  % Adjacency matrix to plot
+    g.layout = 0;                    % Graph layout (2D or 3D)
+    g.distances = 0;                 % Matrix of distances between any pair of nodes
+    g.node_names = {};               % Cell of strings for the names of nodes
+    g.L = 0;                         % Laplacian matrix
+    g.fourier_version = 'n.a.';      % Version of the graph Fourier transform used to get eigvals, F and Finv
+    g.eigvals = 0;                   % Graph frequencies of the graph
+    g.F = 0;                         % Fourier matrix
+    g.Finv = 0;                      % Inverse Fourier matrix
+    g.T = 0;                         % Translation operator
+    g.background = '';               % Background image file path
+    g.show_graph_options = struct(); % Default options for grasp_show_graph
 end
