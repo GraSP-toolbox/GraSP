@@ -1,16 +1,27 @@
 %Constructs an Erdős-Renyi graph.
 %
 %   graph = GRASP_ERDOS_RENYI(N, p) returns the adjacency matrix A of a
-%   Erdős-Renyi graph of N nodes with probability p on the edges. The graph
-%   is directed.
+%       Erdős-Renyi graph of N nodes with probability p on the edges. The
+%       graph is directed.
+%
+%   GRASP_ERDOS_RENYI(..., options) optional parameters:
+%
+%   options.directed: true if graph should stay directed (default: true)
+%
+%   options.build_layout: true if the graph should include a layout
+%       (default: true)
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
+% Inria, FRANCE (2015)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2018)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -41,9 +52,39 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function graph = grasp_erdos_renyi(N, p)
+function graph = grasp_erdos_renyi(N, p, varargin)
+    %% Parameters
+    default_param = struct(...
+        'directed', true,...
+        'build_layout', true);
+    if nargin == 2
+        options = struct;
+    elseif nargin > 3
+        options = cell2struct(varargin(2:2:end), varargin(1:2:end), 2);
+    else
+        options = varargin{1};
+    end
+    options = grasp_merge_structs(default_param, options);
+    
+    %% Graph Realization
     graph = grasp_struct;
-    graph.A = rand(N, N) <= p;
+    
+%     graph.A = rand(N, N) <= p;
+    graph.A = rand(N, N);
+    if ~options.directed
+        % This method is faster than triu then A + A'
+        if p <= 0.5
+            graph.A = double((graph.A + graph.A') < sqrt(2 * p));
+        else
+            graph.A = double((graph.A + graph.A') < 2 - sqrt(2 - 2 * p));
+        end
+    else
+        graph.A = double(graph.A <= p);
+    end
     graph.A = graph.A - diag(diag(graph.A));
-    graph.layout = grasp_layout(graph);
+    
+    %% Layout?
+    if options.build_layout
+        graph.layout = grasp_layout(graph);
+    end
 end
