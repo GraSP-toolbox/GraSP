@@ -1,17 +1,22 @@
 %Generate a gif image file from a graph and several graph signals.
 %
 %   GRASP_GENERATE_GIF(fh, filename, graph, signals, titles, title_font_size, show_graph_options)
-%   generates the GIF file filename by iteratively plotting signals(:, i)
-%   using graph. titles{i} is used to give a title to the figure, with font
-%   size title_font_size. The figure handle fh is used.
+%       generates the GIF file filename by iteratively plotting 
+%       signals(:, i) using graph. titles{i} is used to give a title to the 
+%       figure, with font size title_font_size. The figure handle fh is 
+%       used.
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
+% Inria, FRANCE (2015)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2018)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -49,15 +54,22 @@ function grasp_generate_gif(fh, filename, graph, signals, titles, title_font_siz
     set(fh, 'color', 'w');
     
     f = getframe(fh);
-    [im, map] = rgb2ind(f.cdata, 256, 'nodither');
-    N = size(signals, 2);
-    im(1, 1, 1, N) = 0;
-    for k = 1:N
+    if ~grasp_is_octave()
+        [im, map] = rgb2ind(f.cdata, 256, 'nodither');
+    else
+        [im, map] = rgb2ind(f.cdata);
+    end
+    imwrite(im, map, filename, 'DelayTime', 0.1, 'LoopCount', inf);
+    for k = 1:size(signals, 2)
         title(ah, titles{k}, 'interpreter', 'latex', 'fontsize', title_font_size);
         set(nh, 'CData', signals(:, k));
         drawnow;
         f = getframe(fh);
-        im(:, :, 1, k) = rgb2ind(f.cdata, map, 'nodither');
+        if ~grasp_is_octave()
+            [im, map] = rgb2ind(f.cdata, 256, 'nodither');
+        else
+            [im, map] = rgb2ind(f.cdata);
+        end
+        imwrite(im, map, filename, 'DelayTime', 0.1, 'WriteMode', 'append');
     end
-    imwrite(im, map, filename, 'DelayTime', 0.1, 'LoopCount', inf);
 end
