@@ -15,6 +15,10 @@
 
 ### New Third Party Toolboxes
 
+### New Functions
+
+ * 
+
 ### Minor Features
 
  * `grasp_show_fouriermodes`: parameter for eigenvalue precision for titles.
@@ -28,6 +32,8 @@
  * `grasp_generate_gif`: memory optimization & GNU octave compatibility
  * `grasp_erdos_renyi`: possibility to remove layout computation or obtain an undirected graph
  * `grasp_barabasi_albert`: possibility to remove layout computation
+ * `grasp_eigendecomposition`: displaying the method and reference used to compute the GFT
+ * `grasp_struct`: using notations and matrices from the paper "Irregularity-Aware Graph Fourier Transforms"
 
 ### Bugfixes
 
@@ -69,7 +75,7 @@
 
 ### Bugfixes
 
- * grasp_adjacency_knn: incorrect weights fixed.
+ * `grasp_adjacency_knn`: incorrect weights fixed.
  * Latex `tikzgraph` command: append Latex/TikZ code before the boundaries and the scale are drawn.
  * `grasp_subaxis_matrix_dimensions`: background was not set with 2 arguments with a numerical 2nd argument.
  * `grasp_show_graph`: Text in 3D fixed.

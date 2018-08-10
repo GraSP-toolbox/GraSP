@@ -61,7 +61,8 @@ function graph = grasp_eigendecomposition(graph, varargin)
     %% Parameters
     default_param = struct(...
         'matrix', 'std_lapl',...
-        'inner_product', []);
+        'inner_product', [],...
+        'verbose', true);
     if nargin == 1
         options = struct;
     elseif nargin > 2
@@ -87,36 +88,40 @@ function graph = grasp_eigendecomposition(graph, varargin)
         if ~strcmp(options.matrix, 'adja') || sum(size(options.matrix) ~= (grasp_nb_nodes(graph) * [1 1])) > 0
             error('Error: directed graph not (yet) supported!');
         else
-            warning('The Fourier transform is most certainly not a unitary trasnform!');
+            warning('The Fourier transform is most certainly not a unitary transform!');
         end
     end
     
     %% Laplacian
     if sum(size(options.matrix) ~= (grasp_nb_nodes(graph) * [1 1])) == 0
         options.fundamental_matrix = options.matrix;
-        graph.L = options.matrix;
+        graph.M = options.matrix;
         options.matrix = 'custom';
+        if ~ismatrix(graph.M) || size(options.matrix, 1) ~= size(options.matrix, 2) || size(options.matrix, 1) ~= grasp_nb_nodes(graph)
+            error('options.matrix should be a square matrix of the same size than the graph!');
+        end
     else
         if ~ischar(options.matrix)
             error('Unknown matrix parameter!');
         end
         switch options.matrix
             case 'std_lapl'
-                graph.L = grasp_laplacian_standard(graph);
+                graph.M = grasp_laplacian_standard(graph);
                 graph.fourier_version = 'standard laplacian';
-                options.fundamental_matrix = graph.L;
+                options.fundamental_matrix = graph.M;
             case 'norm_lapl'
-                graph.L = grasp_laplacian_normalized(graph);
+                graph.M = grasp_laplacian_normalized(graph);
                 graph.fourier_version = 'normalized laplacian';
-                options.fundamental_matrix = graph.L;
+                options.fundamental_matrix = graph.M;
             case 'adja'
-                graph.L = graph.A;
+                graph.M = graph.A;
                 graph.fourier_version = 'graph shift';
-                options.fundamental_matrix = graph.L;
+                options.fundamental_matrix = graph.M;
             otherwise
                 error(['Unknown matrix parameter (' options.matrix ')!']);
         end
     end
+    graph.L = graph.M; %TODO: Remove
     
     %% Inner Product
     if isempty(options.inner_product)
@@ -131,6 +136,13 @@ function graph = grasp_eigendecomposition(graph, varargin)
         % We perform the Schur Block Diagonalization, more stable than the 
         % Jordan Normal Form [Girault, PhD Thesis, 2015]
         % The call to schur ensures a block trigonal matrix Tschur
+        if option.verbose
+            fprintf('Graph Shift GFT\n')
+            fprintf('\tDOI: https://doi.org/10.1109/TSP.2013.2238935\n');
+            fprintf('Using Schur block diagonalization instead of Jordan decomposition\n');
+            fprintf('\tHAL: https://tel.archives-ouvertes.fr/tel-01256044\n');
+        end
+        
         tmp = options.fundamental_matrix;
         if numel(options.inner_product) > 0
             tmp = (options.inner_product ^ -1) * tmp;
@@ -140,11 +152,23 @@ function graph = grasp_eigendecomposition(graph, varargin)
         graph.Finv = V * Y;
         graph.Tschur = Tblk;
         graph.eigvals = diag(graph.Tschur);
+        graph.Z = graph.fundamental_matrix;
     else
         % Unitarily diagonalizable case
         if numel(options.inner_product) == 0
+            if option.verbose
+                fprintf('Standard diagonalization\n');
+                fprintf('\thttps://doi.org/10.1109/MSP.2012.2235192\n');
+            end
+            
             [graph.Finv, D] = eig(full(options.fundamental_matrix));
+            graph.Z = graph.fundamental_matrix;
         else
+            if option.verbose
+                fprintf('Irregularity-Aware GFT\n');
+                fprintf('\tDOI: <to appear>\n');
+            end
+            
             if issparse(options.fundamental_matrix) || issparse(options.inner_product)
                 % Matlab is stupid here: eig cannot be used to compute
                 % eigenvalues and eigenvectors of sparse matrices (even in
@@ -161,6 +185,7 @@ function graph = grasp_eigendecomposition(graph, varargin)
             else
                 [graph.Finv, D] = eig(options.fundamental_matrix, options.inner_product);
             end
+            graph.Z = options.inner_product ^ (-1) * options.fundamental_matrix;
         end
         graph.eigvals = diag(D);
     end
