@@ -27,6 +27,7 @@
  * `grasp_delta`: faster implementation and sparse output addition
  * `grasp_generate_gif`: memory optimization & GNU octave compatibility
  * `grasp_erdos_renyi`: possibility to remove layout computation or obtain an undirected graph
+ * `grasp_barabasi_albert`: possibility to remove layout computation
 
 ### Bugfixes
 

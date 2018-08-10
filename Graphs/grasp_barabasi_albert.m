@@ -2,20 +2,29 @@
 %directed.
 %
 %   graph = GRASP_BARABASI_ALBERT(N, m0) constructs a Barabási–Albert graph
-%   with N nodes, and initial degree m0.
+%       with N nodes, and initial degree m0.
 %
 %   graph = GRASP_BARABASI_ALBERT(N, starting_graph) constructs a
-%   Barabási–Albert graph with N nodes, and initialized with
-%   starting_graph, and with initial degree equal to the number of nodes of
-%   starting_graph.
+%       Barabási–Albert graph with N nodes, and initialized with
+%       starting_graph, and with initial degree equal to the number of
+%       nodes of starting_graph.
+%
+%   GRASP_BARABASI_ALBERT(..., options) optional parameters:
+%
+%   options.build_layout: true if the graph should include a layout
+%       (default: true)
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
+% Inria, FRANCE (2015)
+% Copyright Benjamin Girault, University of Southern California, USA
+% (2018).
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -46,7 +55,19 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function graph = grasp_barabasi_albert(N, arg2)
+function graph = grasp_barabasi_albert(N, arg2, varargin)
+    %% Parameters
+    default_param = struct(...
+        'build_layout', true);
+    if nargin == 2
+        options = struct;
+    elseif nargin > 3
+        options = cell2struct(varargin(2:2:end), varargin(1:2:end), 2);
+    else
+        options = varargin{1};
+    end
+    options = grasp_merge_structs(default_param, options);
+    
     %% Initialization
     graph = grasp_struct;
     graph.A(N, N) = 0;
@@ -98,5 +119,7 @@ function graph = grasp_barabasi_albert(N, arg2)
     graph.A = sparse(graph.A);
     
     %% Layout
-    graph.layout = grasp_layout(graph);
+    if options.build_layout
+        graph.layout = grasp_layout(graph);
+    end
 end
