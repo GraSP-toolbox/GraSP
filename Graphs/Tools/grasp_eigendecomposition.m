@@ -1,7 +1,7 @@
 %Computes the eigendecomposition of a graph (Fourier operators).
 %
 %   graph = GRASP_EIGENDECOMPOSITION(graph) computes the Laplacian matrix,
-%   and its eigendecomposition.
+%       and its eigendecomposition.
 %
 %   GRASP_EIGENDECOMPOSITION(..., options) optional parameters:
 %
@@ -11,8 +11,12 @@
 %       - 'adja': adjacency matrix (graph shift)
 %       - any valid NxN matlab matrix, with N the number of vertices
 %       (matrix M in [1])
+%
 %   options.inner_product: Compute a familly of eigenvectors orthonormal
-%       according to the given inner product (matrix Q in [1]).
+%       according to the given inner product (matrix Q in [1]), or one of
+%       the named inner products:
+%       - 'dotprod': dot product (default)
+%       - 'degree': degree matrix of graph
 %
 %   [1] https://hal.archives-ouvertes.fr/hal-01708695
 %
@@ -21,7 +25,7 @@
 %  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
+% Inria, FRANCE (2015)
 % Copyright Benjamin Girault, University of Southern California, USA
 % (2017-2018).
 % 
@@ -92,42 +96,73 @@ function graph = grasp_eigendecomposition(graph, varargin)
         end
     end
     
-    %% Laplacian
+    %% Quadratic Graph Variation Operator
     if sum(size(options.matrix) ~= (grasp_nb_nodes(graph) * [1 1])) == 0
-        options.fundamental_matrix = options.matrix;
+        options.variation_matrix = options.matrix;
         graph.M = options.matrix;
         options.matrix = 'custom';
-        if ~ismatrix(graph.M) || size(options.matrix, 1) ~= size(options.matrix, 2) || size(options.matrix, 1) ~= grasp_nb_nodes(graph)
+        if ~ismatrix(graph.M) || size(graph.M, 1) ~= size(graph.M, 2) || size(graph.M, 1) ~= grasp_nb_nodes(graph)
             error('options.matrix should be a square matrix of the same size than the graph!');
         end
+        graph.fourier_version = 'irregularity-aware';
     else
         if ~ischar(options.matrix)
             error('Unknown matrix parameter!');
         end
+        dotprod_cond = isempty(options.inner_product);
+        dotprod_cond = dotprod_cond || (ischar(options.inner_product) && strcmp(options.inner_product, 'dotprod'));
+        dotprod_cond = dotprod_cond || (isnumeric(options.inner_product) && nnz(options.inner_product - speye(grasp_nb_nodes(graph))) == numel(graph.A));
         switch options.matrix
             case 'std_lapl'
                 graph.M = grasp_laplacian_standard(graph);
-                graph.fourier_version = 'standard laplacian';
-                options.fundamental_matrix = graph.M;
+                if dotprod_cond
+                    graph.fourier_version = 'standard laplacian';
+                elseif ischar(options.inner_product) && strcmp(options.inner_product, 'degree')
+                    graph.fourier_version = 'random walk laplacian';
+                else
+                    graph.fourier_version = 'irregularity-aware';
+                end
+                options.variation_matrix = graph.M;
             case 'norm_lapl'
                 graph.M = grasp_laplacian_normalized(graph);
-                graph.fourier_version = 'normalized laplacian';
-                options.fundamental_matrix = graph.M;
+                if dotprod_cond
+                    graph.fourier_version = 'normalized laplacian';
+                else
+                    graph.fourier_version = 'irregularity-aware';
+                end
+                options.variation_matrix = graph.M;
             case 'adja'
                 graph.M = graph.A;
-                graph.fourier_version = 'graph shift';
-                options.fundamental_matrix = graph.M;
+                if dotprod_cond
+                    graph.fourier_version = 'graph shift';
+                else
+                    graph.fourier_version = 'irregularity-aware';
+                end
+                options.variation_matrix = graph.M;
             otherwise
                 error(['Unknown matrix parameter (' options.matrix ')!']);
         end
     end
-    graph.L = graph.M; %TODO: Remove
+    graph.L = graph.M; %TODO: Remove once it does not appear elsewhere
     
-    %% Inner Product
+    %% Graph Signals Inner Product
     if isempty(options.inner_product)
         graph.Q = speye(grasp_nb_nodes(graph));
-    else
+    elseif isnumeric(options.inner_product)
         graph.Q = options.inner_product;
+    elseif ischar(options.inner_product)
+        switch options.inner_product
+            case 'dotprod'
+                graph.Q = speye(grasp_nb_nodes(graph));
+                options.inner_product = [];
+            case 'degree'
+                graph.Q = grasp_degrees(graph);
+                options.inner_product = graph.Q;
+            otherwise
+                error(['Unknown inner product type ''' options.inner_product '''!']);
+        end
+    else
+        error('options.inner_product should a matrix or string!');
     end
     
     %% Core
@@ -136,14 +171,14 @@ function graph = grasp_eigendecomposition(graph, varargin)
         % We perform the Schur Block Diagonalization, more stable than the 
         % Jordan Normal Form [Girault, PhD Thesis, 2015]
         % The call to schur ensures a block trigonal matrix Tschur
-        if option.verbose
+        if options.verbose
             fprintf('Graph Shift GFT\n')
             fprintf('\tDOI: https://doi.org/10.1109/TSP.2013.2238935\n');
             fprintf('Using Schur block diagonalization instead of Jordan decomposition\n');
             fprintf('\tHAL: https://tel.archives-ouvertes.fr/tel-01256044\n');
         end
         
-        tmp = options.fundamental_matrix;
+        tmp = options.variation_matrix;
         if numel(options.inner_product) > 0
             tmp = (options.inner_product ^ -1) * tmp;
         end
@@ -152,24 +187,24 @@ function graph = grasp_eigendecomposition(graph, varargin)
         graph.Finv = V * Y;
         graph.Tschur = Tblk;
         graph.eigvals = diag(graph.Tschur);
-        graph.Z = graph.fundamental_matrix;
+        graph.Z = graph.variation_matrix;
     else
         % Unitarily diagonalizable case
         if numel(options.inner_product) == 0
-            if option.verbose
+            if options.verbose
                 fprintf('Standard diagonalization\n');
                 fprintf('\thttps://doi.org/10.1109/MSP.2012.2235192\n');
             end
             
-            [graph.Finv, D] = eig(full(options.fundamental_matrix));
-            graph.Z = graph.fundamental_matrix;
+            [graph.Finv, D] = eig(full(options.variation_matrix));
+            graph.Z = options.variation_matrix;
         else
-            if option.verbose
+            if options.verbose
                 fprintf('Irregularity-Aware GFT\n');
                 fprintf('\tDOI: <to appear>\n');
             end
             
-            if issparse(options.fundamental_matrix) || issparse(options.inner_product)
+            if issparse(options.variation_matrix) || issparse(options.inner_product)
                 % Matlab is stupid here: eig cannot be used to compute
                 % eigenvalues and eigenvectors of sparse matrices (even in
                 % the symmetric real case), yet eigs displays a warning in
@@ -180,17 +215,17 @@ function graph = grasp_eigendecomposition(graph, varargin)
                 % into memory.
                 opts.v0 = ones(grasp_nb_nodes(graph), 1);
 %                 warning('off', 'MATLAB:eigs:TooManyRequestedEigsForRealSym');
-                [graph.Finv, D] = eigs(options.fundamental_matrix, options.inner_product, grasp_nb_nodes(graph), 'sm', opts);
+                [graph.Finv, D] = eigs(options.variation_matrix, options.inner_product, grasp_nb_nodes(graph), 'sm', opts);
 %                 warning('on', 'MATLAB:eigs:TooManyRequestedEigsForRealSym');
             else
-                [graph.Finv, D] = eig(options.fundamental_matrix, options.inner_product);
+                [graph.Finv, D] = eig(options.variation_matrix, options.inner_product);
             end
-            graph.Z = options.inner_product ^ (-1) * options.fundamental_matrix;
+            graph.Z = options.inner_product ^ (-1) * options.variation_matrix;
         end
         graph.eigvals = diag(D);
     end
     
-    % Sorting...
+    %% Sorting of graph frequencies...
     if strcmp(options.matrix, 'adja')
         if grasp_is_directed(graph)
             % Some rounding operation (we keep only 6 digits) to perform
@@ -212,7 +247,7 @@ function graph = grasp_eigendecomposition(graph, varargin)
         graph.F = graph.Finv ^ (-1);
     else
         % graph.Finv is a unitary matrix
-        if numel(options.inner_product) == 0
+        if isempty(options.inner_product)
             graph.F = graph.Finv';
         else
             graph.F = graph.Finv' * options.inner_product;

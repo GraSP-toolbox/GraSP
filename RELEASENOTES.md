@@ -12,6 +12,7 @@
      * `grasp_add_dependency`: to add one
      * `grasp_remove_dependency`: to remove one
    * installation of dependencies with finer grain control (disabling of those already installed, or with mex file compilations, or local dependencies, see `grasp_install`)
+ * `grasp_struct`: using notations and matrices from the paper "Irregularity-Aware Graph Fourier Transforms"
 
 ### New Third Party Toolboxes
 
@@ -33,7 +34,7 @@
  * `grasp_erdos_renyi`: possibility to remove layout computation or obtain an undirected graph
  * `grasp_barabasi_albert`: possibility to remove layout computation
  * `grasp_eigendecomposition`: displaying the method and reference used to compute the GFT
- * `grasp_struct`: using notations and matrices from the paper "Irregularity-Aware Graph Fourier Transforms"
+ * `grasp_eigendecomposition`: named inner products
 
 ### Bugfixes
 
