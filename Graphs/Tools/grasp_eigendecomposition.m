@@ -104,11 +104,19 @@ function graph = grasp_eigendecomposition(graph, varargin)
         if ~ismatrix(graph.M) || size(graph.M, 1) ~= size(graph.M, 2) || size(graph.M, 1) ~= grasp_nb_nodes(graph)
             error('options.matrix should be a square matrix of the same size than the graph!');
         end
-        graph.fourier_version = 'irregularity-aware';
-    else
-        if ~ischar(options.matrix)
-            error('Unknown matrix parameter!');
+        if ishermitian(graph.M)
+            [~, p] = chol(graph.M + 1e-15 * eye(100)); % Trick to quickly test whether M is semi-definite positive (up to an 1e-15 error)
+            if p == 0
+                graph.fourier_version = 'irregularity-aware';
+            else
+                warning('GraSP:GFTDegenerateVariation', 'Degenerate irregularity-aware GFT: option.matrix is not semi-definite positive!');
+                graph.fourier_version = 'degenerate irregularity-aware';
+            end
+        else
+            % Non Hermitian case => we don't have a quadratic graph variation.
+            graph.fourier_version = 'diagonalization';
         end
+    elseif ischar(options.matrix)
         dotprod_cond = isempty(options.inner_product);
         dotprod_cond = dotprod_cond || (ischar(options.inner_product) && strcmp(options.inner_product, 'dotprod'));
         dotprod_cond = dotprod_cond || (isnumeric(options.inner_product) && nnz(options.inner_product - speye(grasp_nb_nodes(graph))) == numel(graph.A));
@@ -142,6 +150,8 @@ function graph = grasp_eigendecomposition(graph, varargin)
             otherwise
                 error(['Unknown matrix parameter (' options.matrix ')!']);
         end
+    else
+        error('Unknown matrix parameter!');
     end
     graph.L = graph.M; %TODO: Remove once it does not appear elsewhere
     
@@ -149,6 +159,13 @@ function graph = grasp_eigendecomposition(graph, varargin)
     if isempty(options.inner_product)
         graph.Q = speye(grasp_nb_nodes(graph));
     elseif isnumeric(options.inner_product)
+        if ~ishermitian(options.inner_product)
+            error('options.inner_product needs to be Hermitian!');
+        end
+        [~, p] = chol(options.inner_product); % Trick to quickly test whether M is definite positive
+        if p ~= 0
+            error('options.inner_product needs to be a positive matrix!');
+        end
         graph.Q = options.inner_product;
     elseif ischar(options.inner_product)
         switch options.inner_product
@@ -162,7 +179,7 @@ function graph = grasp_eigendecomposition(graph, varargin)
                 error(['Unknown inner product type ''' options.inner_product '''!']);
         end
     else
-        error('options.inner_product should a matrix or string!');
+        error('options.inner_product should be a matrix or string!');
     end
     
     %% Core
