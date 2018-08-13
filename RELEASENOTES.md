@@ -18,7 +18,7 @@
 
 ### New Functions
 
- * 
+ * `grasp_clean_pdf_export`: Function to create nice PDFs, not cropped ones...
 
 ### Minor Features
 
