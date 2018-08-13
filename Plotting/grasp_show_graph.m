@@ -266,6 +266,15 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
         for i = 1:size(img, 3)
             img(:, :, i) = flipud(img(:, :, i));
         end
+        % Bugfix for GNU Octave ()
+        if grasp_is_octave && numel(alpha) > 0
+            warning('GraSP:OctaveBugfixTrick', 'Blending alpha channel!');
+            alpha_mask = double(flipud(alpha)) / 255;
+            for i = 1:size(img, 3)
+                img(:, :, i) = uint8(alpha_mask .* img(:, :, i) + (1 - alpha_mask) * 255);
+            end
+            alpha = [];
+        end
         % And finally, showing the image
         imh = imagesc(options.layout_boundaries(1, :), options.layout_boundaries(2, :), img);
         if numel(alpha) > 0
