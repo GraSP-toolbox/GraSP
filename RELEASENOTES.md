@@ -35,6 +35,9 @@
  * `grasp_barabasi_albert`: possibility to remove layout computation
  * `grasp_eigendecomposition`: displaying the method and reference used to compute the GFT
  * `grasp_eigendecomposition`: named inner products
+ * `grasp_show_graph`: Honoring hold on / off
+ * `grasp_show_graph`: More options to display node labels (background color, shifted text, font size)
+ * `grasp_show_graph`: Better handling of background images, with the possibility of plain color images)
 
 ### Bugfixes
 

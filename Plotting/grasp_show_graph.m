@@ -19,7 +19,11 @@
 %
 %   GRASP_SHOW_GRAPH(..., options) optional parameters:
 %
-%   options.background: plot over a background image.
+%   options.background: plot over a background image (default: set by the
+%       input graph).
+%
+%   options.background_grayscale: whether the background should be
+%       converted to grayscale (default: true).
 %
 %   options.layout_boundaries: 2 rows "x", "y" (or 3 for 3D layout, "x", 
 %       "y", "z") of with boundaries to plot the graph [min max] (default: 
@@ -52,7 +56,22 @@
 %       that edge (default: 1).
 %
 %   options.node_text: use the provided cell to plot also a label
-%       associated to each node (default: cell(0)).
+%       associated to each node (disabled: cell(0) (default), string cell
+%       with one element per node: custom labels, 'ID': id of the node,
+%       anything else: graph.node_names if set, or id of the node
+%       otherwise.)
+%
+%   options.node_text_shift: shift the node label relative to the node
+%       (default: no shift).
+%
+%   options.node_text_fontsize: Font size of the node labels (default: 20).
+%
+%   options.node_text_background_color: the color of the background
+%       underneath the node label (default: white, use 'none' for 
+%       transparent).
+%
+%   options.node_text_background_edge: the color of the background edge
+%       underneath the node label (default: black, use 'none' to disable).
 %
 %   options.show_edges: whether or not to show edges of the graph
 %       (default: true if there is no background, false otherwise).
@@ -134,6 +153,7 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
     %% Parameters
     default_param = struct(...
         'background', input_graph.background,...
+        'background_grayscale', true,...
         'layout_boundaries', [],...
         'axis_style', 'equal',...
         'viewpoint3D', [20 45],...
@@ -145,6 +165,10 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
         'node_display_size', 200,...
         'node_marker_edge_width', 1,...
         'node_text', [],...
+        'node_text_shift', 0,...
+        'node_text_fontsize', 20,...
+        'node_text_background_color', 'white',...
+        'node_text_background_edge', 'black',...
         'show_edges', true,...
         'edge_color', [0 0 0],...
         'edge_colormap', '',...
@@ -186,7 +210,10 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
         error('''layout_boundaries'' should be a 2x2 or a 3x2 matrix!');
     end
     
-    cla(axis_handle);
+    prev_hold = get(axis_handle, 'NextPlot');
+    if strcmp(prev_hold, 'replace')
+        cla(axis_handle);
+    end
     hold(axis_handle, 'on');
     axis(options.axis_style);
     
@@ -213,19 +240,40 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
     
     %% Background
     if ~isempty(options.background)
-        [img, map] = imread(options.background);
-        info = imfinfo(options.background);
-        if ~isempty(map)
-            img = ind2rgb(img, map);
+        % Background file or image?
+        if ischar(options.background)
+            [img, map, alpha] = imread(options.background);
+            info = imfinfo(options.background);
+        else
+            img = options.background;
+            map = [];
+            alpha = [];
+            info.Height = size(options.background, 1);
+            info.Width  = size(options.background, 2);
         end
-        img(:, :, 1) = mean(img, 3);
-        img(:, :, 2) = img(:, :, 1);
-        img(:, :, 3) = img(:, :, 1);
+        % Converting RGB to data used by imagesc, possibly in grayscale
+        if ~isempty(map)
+            if options.background_grayscale
+                map = rgb2gray(map);
+            end
+            img = ind2rgb(img, map);
+        elseif options.background_grayscale
+            img = rgb2gray(img);
+            img(:, :, 2) = img(:, :, 1);
+            img(:, :, 3) = img(:, :, 1);
+        end
+        % Flipping to get the origin on the bottom left
         for i = 1:size(img, 3)
             img(:, :, i) = flipud(img(:, :, i));
         end
-        imagesc(options.layout_boundaries(1, :), options.layout_boundaries(2, :), img);
-        set(axis_handle, 'DataAspectRatio', [info.Height info.Width 1]);
+        % And finally, showing the image
+        imh = imagesc(options.layout_boundaries(1, :), options.layout_boundaries(2, :), img);
+        if numel(alpha) > 0
+            set(imh, 'AlphaData', flipud(alpha));
+        end
+        set(axis_handle, 'DataAspectRatio', ...
+            [info.Height / (options.layout_boundaries(2, 2) - options.layout_boundaries(2, 1)) ...
+             info.Width  / (options.layout_boundaries(1, 2) - options.layout_boundaries(1, 1)) 1]);
     end
 
     %% Layout
@@ -379,30 +427,38 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
         if size(input_graph.layout, 2) == 2
             nodes_handle = scatter(axis_handle, input_graph.layout(:, 1), input_graph.layout(:, 2), options.node_display_size, options.node_values, 'filled');
             if options.node_marker_edge_width > 0
-                nodes_handle.MarkerEdgeColor = 'k';
-                nodes_handle.LineWidth = options.node_marker_edge_width;
+                set(nodes_handle, 'MarkerEdgeColor', 'k');
+                set(nodes_handle, 'LineWidth', options.node_marker_edge_width);
+%                nodes_handle.MarkerEdgeColor = 'k';
+%                nodes_handle.LineWidth = options.node_marker_edge_width;
             end
         else
             set(gcf,'CurrentAxes', axis_handle)
             nodes_handle = scatter3(input_graph.layout(:, 1), input_graph.layout(:, 2), input_graph.layout(:, 3), options.node_display_size, options.node_values, 'filled');
             if options.node_marker_edge_width > 0
-                nodes_handle.MarkerEdgeColor = 'k';
-                nodes_handle.LineWidth = options.node_marker_edge_width;
+                set(nodes_handle, 'MarkerEdgeColor', 'k');
+                set(nodes_handle, 'LineWidth', options.node_marker_edge_width);
+%                nodes_handle.MarkerEdgeColor = 'k';
+%                nodes_handle.LineWidth = options.node_marker_edge_width;
             end
         end
     else
         if size(input_graph.layout, 2) == 2
             nodes_handle = scatter(axis_handle, input_graph.layout(:, 1), input_graph.layout(:, 2), options.node_display_size, 'b', 'filled');
             if options.node_marker_edge_width > 0
-                nodes_handle.MarkerEdgeColor = 'k';
-                nodes_handle.LineWidth = options.node_marker_edge_width;
+                set(nodes_handle, 'MarkerEdgeColor', 'k');
+                set(nodes_handle, 'LineWidth', options.node_marker_edge_width);
+%                nodes_handle.MarkerEdgeColor = 'k';
+%                nodes_handle.LineWidth = options.node_marker_edge_width;
             end
         else
             set(gcf,'CurrentAxes', axis_handle)
             nodes_handle = scatter3(input_graph.layout(:, 1), input_graph.layout(:, 2), input_graph.layout(:, 3), options.node_display_size, 'b', 'filled');
             if options.node_marker_edge_width > 0
-                nodes_handle.MarkerEdgeColor = 'k';
-                nodes_handle.LineWidth = options.node_marker_edge_width;
+                set(nodes_handle, 'MarkerEdgeColor', 'k');
+                set(nodes_handle, 'LineWidth', options.node_marker_edge_width);
+%                nodes_handle.MarkerEdgeColor = 'k';
+%                nodes_handle.LineWidth = options.node_marker_edge_width;
             end
         end
     end
@@ -411,20 +467,37 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
         scatter(axis_handle, input_graph.layout(options.highlight_nodes, 1), input_graph.layout(options.highlight_nodes, 2), options.node_display_size / 2, 'r', 'o');
     end
     
-    if numel(options.node_text) > 0 && numel(options.node_text) ~= grasp_nb_nodes(input_graph)
-        if isfield(input_graph, 'node_names') && numel(input_graph.node_names) == grasp_nb_nodes(input_graph)
+    node_text_ID_test = (ischar(options.node_text) && strcmp(options.node_text, 'ID'));
+    if numel(options.node_text) > 0 && (numel(options.node_text) ~= grasp_nb_nodes(input_graph) || node_text_ID_test)
+        if ~node_text_ID_test && isfield(input_graph, 'node_names') && numel(input_graph.node_names) >= grasp_nb_nodes(input_graph)
             options.node_text = input_graph.node_names;
         else
-            warning('Field ''node_names'' not set in the graph!');
-            options.node_text = default_param.node_text;
+            if ~node_text_ID_test
+                warning('GraSP:showGraphID', 'Using node ID as node_text!');
+            end
+            options.node_text = arrayfun(@(i) num2str(i), (1:grasp_nb_nodes(input_graph))', 'UniformOutput', false);
         end
+    end
+    if numel(options.node_text_shift) ~= size(input_graph.layout, 2)
+        options.node_text_shift = options.node_text_shift * ones(1, size(input_graph.layout, 2));
     end
     if numel(options.node_text) > 1
         for i = 1:grasp_nb_nodes(input_graph)
             if size(input_graph.layout, 2) == 2
-                text(input_graph.layout(i, 1), input_graph.layout(i, 2), options.node_text{i});
+                text(input_graph.layout(i, 1) + options.node_text_shift(1),...
+                     input_graph.layout(i, 2) + options.node_text_shift(2),...
+                     options.node_text{i},...
+                     'FontSize', options.node_text_fontsize,...
+                     'BackgroundColor', options.node_text_background_color,...
+                     'EdgeColor', options.node_text_background_edge);
             else
-                text(input_graph.layout(i, 1), input_graph.layout(i, 2), input_graph.layout(i, 3), options.node_text{i});
+                text(input_graph.layout(i, 1) + options.node_text_shift(1),...
+                     input_graph.layout(i, 2) + options.node_text_shift(2),...
+                     input_graph.layout(i, 3) + options.node_text_shift(3),...
+                     options.node_text{i},...
+                     'FontSize', options.node_text_fontsize,...
+                     'BackgroundColor', options.node_text_background_color,...
+                     'EdgeColor', options.node_text_background_edge);
             end
         end
     end
@@ -436,6 +509,6 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
         colorbar off
     end
      
-     %% Plot
-    hold(axis_handle, 'off');
+    %% Plot
+    set(axis_handle, 'NextPlot', prev_hold);
 end
