@@ -97,6 +97,11 @@ function grasp_add_dependency(new_dependency)
         error('The field ''name'' should not contain any slash (''/'')!');
     end
     
+    %% Add path
+    if ~isfield(clean_new_dependency, 'path_list')
+        clean_new_dependency.path_list = {'.'};
+    end
+    
     %% Save
     local_dep_file = [thirdparty_dir '/local_dependencies.mat'];
     if exist(local_dep_file, 'file')
