@@ -13,6 +13,10 @@
      * `grasp_remove_dependency`: to remove one
    * installation of dependencies with finer grain control (disabling of those already installed, or with mex file compilations, or local dependencies, see `grasp_install`)
  * `grasp_struct`: using notations and matrices from the paper "Irregularity-Aware Graph Fourier Transforms"
+ * New data structure to handle graph filters of various types, and optimize computations
+   * `grasp_filter_struct`: documentation, and function to create an all-pass filter
+   * `grasp_apply_filter`: function to obtain either the filter in matrix form, or apply it to a signal given a graph
+   * `grasp_show_spectral_response`: given a graph and a filter, shows its spectral response
 
 ### New Third Party Toolboxes
 
