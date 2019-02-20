@@ -9,7 +9,7 @@
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015-2016)
 % Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2018)
+% Angeles, California, USA (2018-2019)
 % 
 % benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
@@ -44,7 +44,7 @@
 % knowledge of the CeCILL license and that you accept its terms.
 
 function g = grasp_struct
-    g.A = 0;                         % Adjacency matrix
+    g.A = 0;                         % Adjacency matrix. g.A(j,i) is the weight of the edge from i to j
     g.A_layout = 0;                  % Adjacency matrix to plot
     g.layout = 0;                    % Graph layout (2D or 3D)
     g.distances = 0;                 % Matrix of distances between any pair of nodes
