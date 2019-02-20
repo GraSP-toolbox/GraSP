@@ -67,7 +67,8 @@ function list = grasp_dependencies_list
     
     list(cur_dep).url = 'http://www.mathworks.com/matlabcentral/fileexchange/submissions/10922/v/2/download/zip';
     list(cur_dep).name = 'MatlabBGL/';
-    list(cur_dep).path_list = {'matlab_bgl', 'matlab_bgl/graphs'};
+    list(cur_dep).root_dir = 'matlab_bgl/';
+    list(cur_dep).path_list = {'.', 'graphs'};
     list(cur_dep).optional = 1;
     
     cur_dep = cur_dep + 1;
