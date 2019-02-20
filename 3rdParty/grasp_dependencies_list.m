@@ -11,7 +11,7 @@
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015)
 % Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2016-2018)
+% Angeles, California, USA (2016-2019)
 % 
 % benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
