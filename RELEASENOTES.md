@@ -18,6 +18,7 @@
    * `grasp_apply_filter`: function to obtain either the filter in matrix form, or apply it to a signal given a graph
    * `grasp_show_spectral_response`: given a graph and a filter, shows its spectral response
  * Initial implementation for directed graphs
+ * Linear graph signal transform visualization (`grasp_show_transform`)
 
 ### New Third Party Toolboxes
 
@@ -27,6 +28,7 @@
  * `grasp_set_figure_size`: Function to set a figure to a predefined size (works with docked figures too)
  * `grasp_ternary_op`: Classical ternary operator missing from Matlab
  * `grasp_intrinsic_stationary_realization`: Function to generate a realization of an intrinsic stationary graph signal
+ * `grasp_show_transform`: Function to show a linear graph signal transform
 
 ### Minor Features
 
