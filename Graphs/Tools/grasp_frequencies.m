@@ -5,11 +5,15 @@
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015-11-01)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2018-2019)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -45,12 +49,14 @@ function freqs = grasp_frequencies(graph)
         error('Fourier transform not performed!');
     end
     
-    if strcmp(graph.fourier_version, 'standard laplacian')
+    if strcmp(graph.fourier_version, 'standard laplacian') || strcmp(graph.fourier_version, 'irregularity-aware')
         freqs = 0.5 * abs(sqrt(graph.eigvals / grasp_lapl_eigval_upper_bound(graph)));
     elseif strcmp(graph.fourier_version, 'normalized laplacian')
         freqs = 0.5 * abs(sqrt(graph.eigvals / 2));
-    elseif strcmp(graph.fourier_version, 'graph shift')
-        freqs = 0.25 * (1 - graph.eigvals / max(graph.eigvals));
+%     elseif 
+%         freqs = 0.5 * abs(sqrt(graph.eigvals / max(graph.eigvals)));
+    elseif strcmp(graph.fourier_version, 'graph shift') || strcmp(graph.fourier_version, 'diagonalization')
+        freqs = 0.25 * (1 - graph.eigvals / max(abs(graph.eigvals)));
     else
         error('Unknown Fourier transform!');
     end

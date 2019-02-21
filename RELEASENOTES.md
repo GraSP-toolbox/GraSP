@@ -17,6 +17,7 @@
    * `grasp_filter_struct`: documentation, and function to create an all-pass filter
    * `grasp_apply_filter`: function to obtain either the filter in matrix form, or apply it to a signal given a graph
    * `grasp_show_spectral_response`: given a graph and a filter, shows its spectral response
+ * Initial implementation for directed graphs
 
 ### New Third Party Toolboxes
 

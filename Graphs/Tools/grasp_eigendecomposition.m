@@ -26,8 +26,8 @@
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015)
-% Copyright Benjamin Girault, University of Southern California, USA
-% (2017-2018).
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2017-2019)
 % 
 % benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
@@ -76,23 +76,30 @@ function graph = grasp_eigendecomposition(graph, varargin)
     end
     options = grasp_merge_structs(default_param, options);
     if isfield(options, 'laplacian')
-        warning('DEPRECATED ''laplacian'' parameter! Use ''matrix'' instead.');
+        warning('GraSP:Deprecated', 'DEPRECATED ''laplacian'' parameter! Use ''matrix'' instead.');
         switch options.laplacian
             case 'standard'
                 options.matrix = 'std_lapl';
             case 'normalized'
                 options.matrix = 'norm_lapl';
             otherwise
-                error('Unrecognized Laplacian!');
+                error('GraSP:Eigendecomposition:UnknownLaplacian', 'Unrecognized Laplacian!');
         end
     end
     
     %% Checks
+    is_invalid_matrix = ~ischar(options.matrix) && sum(size(options.matrix) ~= (grasp_nb_nodes(graph) * [1 1])) > 0;
+    if is_invalid_matrix
+        error('GraSP:Eigendecomposition:MatrixIncorrectSize', 'Error: options.matrix is of incorrect size!');
+    end
+    
     if grasp_is_directed(graph)
-        if ~strcmp(options.matrix, 'adja') || sum(size(options.matrix) ~= (grasp_nb_nodes(graph) * [1 1])) > 0
-            error('Error: directed graph not (yet) supported!');
-        else
-            warning('The Fourier transform is most certainly not a unitary transform!');
+        is_adja = ischar(options.matrix) && strcmp(options.matrix, 'adja');
+        is_nonhermitian = ~ischar(options.matrix) && ~ishermitian(options.matrix);
+        if is_adja
+            warning('GraSP:Eigendecomposition:GFTNonUnitary', 'The Fourier transform is most certainly not a unitary transform!');
+        elseif is_nonhermitian
+            error('GraSP:Eigendecomposition:MatrixNonHermitian', 'Error: Non Hermitian matrix which is not the adjacency matrix is not supported!');
         end
     end
     
@@ -102,14 +109,14 @@ function graph = grasp_eigendecomposition(graph, varargin)
         graph.M = options.matrix;
         options.matrix = 'custom';
         if ~ismatrix(graph.M) || size(graph.M, 1) ~= size(graph.M, 2) || size(graph.M, 1) ~= grasp_nb_nodes(graph)
-            error('options.matrix should be a square matrix of the same size than the graph!');
+            error('GraSP:Eigendecomposition:MatrixNonSquare', 'options.matrix should be a square matrix of the same size than the graph!');
         end
         if ishermitian(graph.M)
-            [~, p] = chol(graph.M + 1e-15 * eye(100)); % Trick to quickly test whether M is semi-definite positive (up to an 1e-15 error)
+            [~, p] = chol(graph.M + 1e-15 * eye(grasp_nb_nodes(graph))); % Trick to quickly test whether M is semi-definite positive (up to an 1e-15 error)
             if p == 0
                 graph.fourier_version = 'irregularity-aware';
             else
-                warning('GraSP:GFTDegenerateVariation', 'Degenerate irregularity-aware GFT: option.matrix is not semi-definite positive!');
+                warning('GraSP:Eigendecomposition:GFTDegenerateVariation', 'Degenerate irregularity-aware GFT: option.matrix is not semi-definite positive!');
                 graph.fourier_version = 'degenerate irregularity-aware';
             end
         else
@@ -148,10 +155,10 @@ function graph = grasp_eigendecomposition(graph, varargin)
                 end
                 options.variation_matrix = graph.M;
             otherwise
-                error(['Unknown matrix parameter (' options.matrix ')!']);
+                error('GraSP:Eigendecomposition:MatrixUnknown', ['Unknown matrix parameter (' options.matrix ')!']);
         end
     else
-        error('Unknown matrix parameter!');
+        error('GraSP:Eigendecomposition:MatrixUnknown', 'Unknown matrix parameter!');
     end
     graph.L = graph.M; %TODO: Remove once it does not appear elsewhere
     
@@ -160,11 +167,11 @@ function graph = grasp_eigendecomposition(graph, varargin)
         graph.Q = speye(grasp_nb_nodes(graph));
     elseif isnumeric(options.inner_product)
         if ~ishermitian(options.inner_product)
-            error('options.inner_product needs to be Hermitian!');
+            error('GraSP:Eigendecomposition:NonHermitianInnerProduct', 'options.inner_product needs to be Hermitian!');
         end
         [~, p] = chol(options.inner_product); % Trick to quickly test whether M is definite positive
         if p ~= 0
-            error('options.inner_product needs to be a positive matrix!');
+            error('GraSP:Eigendecomposition:NonPositiveInnerProduct', 'options.inner_product needs to be a positive matrix!');
         end
         graph.Q = options.inner_product;
     elseif ischar(options.inner_product)
@@ -173,18 +180,26 @@ function graph = grasp_eigendecomposition(graph, varargin)
                 graph.Q = speye(grasp_nb_nodes(graph));
                 options.inner_product = [];
             case 'degree'
-                graph.Q = grasp_degrees(graph);
+                if grasp_is_directed(graph)
+                    if strcmp(options.matrix, 'std_lapl')
+                        graph.Q = diag(diag(graph.M));
+                    else
+                        error('GraSP:Eigendecomposition:InnerProductDegreeMatrixStdLaplWithDirectedGraph', 'options.inner_product set to ''degree'' without using the standard Laplacian and with a directed graph (unsupported)!');
+                    end
+                else
+                    graph.Q = grasp_degrees(graph);
+                end
                 options.inner_product = graph.Q;
             otherwise
-                error(['Unknown inner product type ''' options.inner_product '''!']);
+                error('GraSP:Eigendecomposition:InnerProductUnknown', ['Unknown inner product type ''' options.inner_product '''!']);
         end
     else
-        error('options.inner_product should be a matrix or string!');
+        error('GraSP:Eigendecomposition:InnerProductUnknown', 'options.inner_product should be a matrix or string!');
     end
     
     %% Core
-    if grasp_is_directed(graph)
-        % Only the adjacency matrix is used here
+    if grasp_is_directed(graph) && strcmp(options.matrix, 'ajda')
+        % The adjacency matrix is used here
         % We perform the Schur Block Diagonalization, more stable than the 
         % Jordan Normal Form [Girault, PhD Thesis, 2015]
         % The call to schur ensures a block trigonal matrix Tschur
@@ -194,7 +209,7 @@ function graph = grasp_eigendecomposition(graph, varargin)
             fprintf('Using Schur block diagonalization instead of Jordan decomposition\n');
             fprintf('\tHAL: https://tel.archives-ouvertes.fr/tel-01256044\n');
         end
-        
+
         tmp = options.variation_matrix;
         if numel(options.inner_product) > 0
             tmp = (options.inner_product ^ -1) * tmp;
@@ -210,7 +225,7 @@ function graph = grasp_eigendecomposition(graph, varargin)
         if numel(options.inner_product) == 0
             if options.verbose
                 fprintf('Standard diagonalization\n');
-                fprintf('\thttps://doi.org/10.1109/MSP.2012.2235192\n');
+                fprintf('\tDOI: https://doi.org/10.1109/MSP.2012.2235192\n');
             end
             
             [graph.Finv, D] = eig(full(options.variation_matrix));
@@ -218,7 +233,7 @@ function graph = grasp_eigendecomposition(graph, varargin)
         else
             if options.verbose
                 fprintf('Irregularity-Aware GFT\n');
-                fprintf('\tDOI: <to appear>\n');
+                fprintf('\tDOI: https://doi.org/10.1109/TSP.2018.2870386\n');
             end
             
             if issparse(options.variation_matrix) || issparse(options.inner_product)
