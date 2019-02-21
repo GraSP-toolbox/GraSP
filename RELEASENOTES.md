@@ -24,6 +24,7 @@
 ### New Functions
 
  * `grasp_clean_pdf_export`: Function to create nice PDFs, not cropped ones...
+ * `grasp_set_figure_size`: Function to set a figure to a predefined size (works with docked figures too)
 
 ### Minor Features
 
