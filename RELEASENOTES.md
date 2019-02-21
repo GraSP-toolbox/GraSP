@@ -44,6 +44,7 @@
  * `grasp_show_graph`: More options to display node labels (background color, shifted text, font size)
  * `grasp_show_graph`: Better handling of background images, with the possibility of plain color images)
  * `grasp_merge_struct`: Warning for each parameter set that has no default value (helps with typos in parameter names)
+ * `grasp_show_graph`: More parameters to control the look of highlighted nodes
 
 ### Bugfixes
 

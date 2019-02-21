@@ -43,6 +43,11 @@
 %
 %   options.highlight_nodes: draw a bigger circle around the given nodes.
 %
+%   options.highlight_nodes_size: size of the circle (default:
+%       2 * node_display_size).
+%
+%   options.highlight_nodes_width: width of the circle line (default: 0.5).
+%
 %   options.color_map: use the provide color map (default: 'default').
 %
 %   options.show_colorbar: show the color bar on the right (default:
@@ -115,7 +120,7 @@
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015)
 % Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2016-2018)
+% Angeles, California, USA (2016-2019)
 % 
 % benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
@@ -160,6 +165,8 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
         'node_values', 0,...
         'value_scale', 0,...
         'highlight_nodes', [],...
+        'highlight_nodes_size', -1,...
+        'highlight_nodes_width', 0.5,...
         'color_map', 'default',...
         'show_colorbar', false,...
         'node_display_size', 200,...
@@ -194,6 +201,11 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
     A_layout = input_graph.A;
     if isfield(input_graph, 'A_layout') && numel(input_graph.A_layout) == N ^ 2
         A_layout = input_graph.A_layout;
+    end
+    
+    %% Highlighted nodes default values
+    if options.highlight_nodes_size == -1
+        options.highlight_nodes_size = 2 * options.node_display_size;
     end
     
     %% Setting the axes
@@ -473,7 +485,10 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
     end
     
     if numel(options.highlight_nodes) > 0
-        scatter(axis_handle, input_graph.layout(options.highlight_nodes, 1), input_graph.layout(options.highlight_nodes, 2), options.node_display_size / 2, 'r', 'o');
+        scatter(axis_handle,...
+                input_graph.layout(options.highlight_nodes, 1), input_graph.layout(options.highlight_nodes, 2),...
+                options.highlight_nodes_size, 'r', 'o',...
+                'LineWidth', options.highlight_nodes_width);
     end
     
     node_text_ID_test = (ischar(options.node_text) && strcmp(options.node_text, 'ID'));
