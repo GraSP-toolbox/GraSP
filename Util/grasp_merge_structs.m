@@ -1,7 +1,11 @@
 %Set defaults values to a structure
 %
-%   s_out = GRASP_MERGE_STRUCTS(s_defaults, s_out) set the default values of
-%   s_out to s_defaults.
+%   s_out = GRASP_MERGE_STRUCTS(s_defaults, s_out) set the default values
+%       of s_out to s_defaults.
+%
+%   ... = GRASP_MERGE_STRUCTS(..., verbose) sets the verbosity (whether or
+%       not to show a warning when s_out has a field not in s_defaults)
+%       (default: true).
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
@@ -10,7 +14,7 @@
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015)
 % Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2016)
+% Angeles, California, USA (2016-2019)
 % 
 % benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
@@ -44,11 +48,17 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function s_out = grasp_merge_structs(s_defaults, s_out)
+function s_out = grasp_merge_structs(s_defaults, s_out, verbose)
+    if nargin == 2
+        verbose = true;
+    end
     fields = fieldnames(s_defaults);
     for i = 1:numel(fields)
         if ~isfield(s_out, fields{i})
             s_out.(fields{i}) = s_defaults.(fields{i});
         end
+    end
+    if verbose
+        cellfun(@(f) warning(['Field ''' f ''' has no default value, it may be incorrect.']), setxor(fields, fieldnames(s_out)));
     end
 end
