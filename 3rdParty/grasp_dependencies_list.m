@@ -105,6 +105,7 @@ function list = grasp_dependencies_list
     list(cur_dep).url = 'https://github.com/STAC-USC/Active_SSL_with_Sampling_Theory/archive/54fff129c0e1e41d109a104a500acd3172aa7ed4.zip';
     list(cur_dep).name = 'usc_ssl_sampling/';
     list(cur_dep).root_dir = 'Active_SSL_with_Sampling_Theory-54fff129c0e1e41d109a104a500acd3172aa7ed4/';
+    list(cur_dep).path_list = {'.'};
     list(cur_dep).optional = 1;
     list(cur_dep).ref_bib = 'https://doi.org/10.1145/2623330.2623760';
     list(cur_dep).dependencies = {'sgwt'};
