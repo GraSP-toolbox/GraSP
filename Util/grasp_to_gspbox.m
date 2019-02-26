@@ -11,7 +11,7 @@
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015-2016)
 % Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2018)
+% Angeles, California, USA (2018-2019)
 % 
 % benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
@@ -51,14 +51,19 @@ function gsp_graph = grasp_to_gspbox(graph)
     gsp_graph.coords = (graph.layout - 5) / 5;
     gsp_graph.grasp_distances = graph.distances;
     gsp_graph.grasp_node_names = graph.node_names;
-    gsp_graph.L = graph.L;
     switch (graph.fourier_version)
         case 'standard laplacian'
             gsp_graph.lap_type = 'combinatorial';
+            gsp_graph.L = graph.M;
         case 'normalized laplacian'
             gsp_graph.lap_type = 'normalized';
+            gsp_graph.L = graph.M;
         case 'adja'
-            error('Unsupported Fourier tranform by GSPbox!');
+            warning('GraSP:ToGSPBox:Unsupported', 'Unsupported graph Shift Fourier tranform by GSPbox!');
+        case 'random walk laplacian'
+            warning('GraSP:ToGSPBox:Unsupported', 'Unsupported random Walk Laplacian Fourier transform by GSPbox!');
+        case 'irregularity-aware'
+            warning('GraSP:ToGSPBox:Unsupported', 'Unsupported irregularity-aware Fourier transform by GSPbox!');
     end
     if numel(graph.eigvals) > 1
         gsp_graph.e = graph.eigvals;
@@ -67,6 +72,9 @@ function gsp_graph = grasp_to_gspbox(graph)
     gsp_graph.grasp_T = graph.T;
     gsp_graph.grasp_background = graph.background;
     gsp_graph.type = 'GraSP';
+    gsp_graph.grasp_M = graph.M;
+    gsp_graph.grasp_Q = graph.Q;
+    gsp_graph.grasp_Z = graph.Z;
     
     grasp_start_opt_3rd_party('gspbox');
     gsp_graph = gsp_graph_default_parameters(gsp_graph);

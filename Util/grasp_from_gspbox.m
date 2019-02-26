@@ -7,11 +7,15 @@
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015-11-01)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2019)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -54,13 +58,13 @@ function graph = grasp_from_gspbox(gsp_graph)
     switch (gsp_graph.lap_type)
         case 'combinatorial'
             graph.fourier_version = 'standard laplacian';
-            graph.L = gsp_graph.L;
+            graph.M = gsp_graph.L;
             graph.Finv = gsp_graph.U;
             graph.F = graph.Finv';
             graph.eigvals = gsp_graph.e;
         case 'normalized'
             graph.fourier_version = 'normalized laplcian';
-            graph.L = gsp_graph.L;
+            graph.M = gsp_graph.L;
             graph.Finv = gsp_graph.U;
             graph.F = graph.Finv';
             graph.eigvals = gsp_graph.e;
@@ -71,6 +75,8 @@ function graph = grasp_from_gspbox(gsp_graph)
         graph.node_names = gsp_graph.grasp_node_names;
         graph.T = gsp_graph.grasp_T;
         graph.background = gsp_graph.grasp_background;
+        graph.Q = gsp_graph.grasp_Q;
+        graph.Z = gsp_graph.grasp_Z;
     end
     graph.gsp_plotting = gsp_graph.plotting;
 end
