@@ -133,6 +133,7 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
     
     %% Reference
     if options.verbose
+        fprintf('Graph signal transform vizualization\n');
         fprintf('\tDOI: <to appear>\n');
     end
     
@@ -266,8 +267,6 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
             % - Order according to clusters, and then the already computed ordering
             vertex_ordering_wrt_clusters = zeros(N, 1);
             % - Compute the induced regular embedding
-            % - Compute boundaries of each cluster in the embedding
-            clusters_first_and_last = zeros(num_clusters, 2);
             
             prev_vertex = 0;
             orig_ordering_inv(options.ordering) = (1:N)';
@@ -282,30 +281,28 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
                 vertex_ordering_wrt_clusters(cluster_mask) = prev_vertex + remap(orig_ordering);
                 
                 prev_vertex = prev_vertex + numel(orig_ordering);
-                
-                % Boundaries of the cluster
-                [~, IX] = min(vertex_ordering_wrt_clusters + (N * (1 - cluster_mask)));
-                clusters_first_and_last(c, 1) = IX;
-                [~, IX] = max(vertex_ordering_wrt_clusters .* cluster_mask);
-                clusters_first_and_last(c, 2) = IX;
             end
             
             % Ordering as required (instead of permutation)
             tmp(vertex_ordering_wrt_clusters) = (1:N)'; % inverse permutation
             options.embedding(tmp) = data_points;
             options.ordering = tmp;
-            
-            % Boundaries of clusters in the embedded space
-            tmp = clusters_first_and_last';
-            cluster_boundaries(1) = options.embedding(tmp(1));
-            cluster_boundaries(2:num_clusters) = mean([options.embedding(tmp(3:2:(end - 1))), options.embedding(tmp(2:2:(end - 2)))]);
-            cluster_boundaries(num_clusters + 1) = options.embedding(tmp(end));
         end
     end
     if size(options.embedding, 2) > 1
         options.embedding = options.embedding';
     end
     embedding = options.embedding;
+    
+    %% Cluster Boundaries
+    if num_clusters > 1
+        cluster_boundaries = zeros(num_clusters + 1, 1);
+        cluster_boundaries(1) = min(options.embedding);
+        cluster_boundaries(num_clusters + 1) = max(options.embedding);
+        for c = 2:num_clusters
+            cluster_boundaries(c) = (min(options.embedding(options.clusters == c)) + max(options.embedding(options.clusters == c - 1))) / 2;
+        end
+    end
     
     %% Frequencies y axis coordinates
     modes = options.transform_matrix;
@@ -360,7 +357,7 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
          repmat(spectral_spacing, 2, 1),...
          'Color', (1 - min_gray) * [1 1 1]);
     hold('on');
-    final_yticks = get(gca, 'YTick');Weights'
+    final_yticks = get(gca, 'YTick');
     final_yticks = final_yticks(final_yticks - floor(final_yticks) < 0.01);
     
     cur_amplitude_scale = options.amplitude_scale * (max(spectral_spacing) - min(spectral_spacing)) / M;
@@ -401,7 +398,7 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
         
     % Cluster Boundaries
     ylim_tmp = ylim();
-    plot([cluster_boundaries(2:(end - 1)) cluster_boundaries(2:(end - 1))], repmat(ylim_tmp, numel(cluster_boundaries) - 2, 1), 'k', 'LineWidth', 1.5);
+    plot([cluster_boundaries(2:(end - 1)) cluster_boundaries(2:(end - 1))]', repmat(ylim_tmp, numel(cluster_boundaries) - 2, 1)', 'k', 'LineWidth', 1.5);
     
     % Bands
 %     left_bands = zeros(size(options.bands_indices, 1), 2);
