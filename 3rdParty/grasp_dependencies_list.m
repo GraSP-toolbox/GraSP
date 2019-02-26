@@ -115,6 +115,7 @@ function list = grasp_dependencies_list
     list(cur_dep).url = 'https://github.com/STAC-USC/Graph_Learning/archive/master.zip';
     list(cur_dep).name = 'usc_graph_learning/';
     list(cur_dep).root_dir = 'Graph_Learning-master/';
+    list(cur_dep).path_list = {'.'};
     list(cur_dep).optional = 1;
     list(cur_dep).ref_bib = 'https://doi.org/10.1109/JSTSP.2017.2726975';
     list(cur_dep).path_list = {'.', 'functions', 'misc'};
@@ -124,6 +125,7 @@ function list = grasp_dependencies_list
     list(cur_dep).url = 'https://github.com/STAC-USC/Disc-GLasso/archive/7d255cad9f2a73a58af2e92ece07e26358e1d143.zip';
     list(cur_dep).name = 'usc_disc_glasso/';
     list(cur_dep).root_dir = 'Disc-GLasso-7d255cad9f2a73a58af2e92ece07e26358e1d143/';
+    list(cur_dep).path_list = {'.'};
     list(cur_dep).optional = 1;
     list(cur_dep).ref_bib = 'https://doi.org/10.1109/ICASSP.2017.7952698';
     
@@ -132,6 +134,15 @@ function list = grasp_dependencies_list
     list(cur_dep).url = 'https://github.com/STAC-USC/symmetric_grid/archive/d3150ee84e370e40ca5868d867f2bf744d846d80.zip';
     list(cur_dep).name = 'usc_symmetric_grid/';
     list(cur_dep).root_dir = 'symmetric_grid-d3150ee84e370e40ca5868d867f2bf744d846d80/';
+    list(cur_dep).path_list = {'.'};
     list(cur_dep).optional = 1;
     list(cur_dep).ref_bib = 'https://doi.org/10.1109/ICASSP.2017.7952929';
+    
+    cur_dep = cur_dep + 1;
+    
+    list(cur_dep).url = 'https://github.com/STAC-USC/GraphStructures/archive/master.zip';
+    list(cur_dep).name = 'usc_graphs/';
+    list(cur_dep).root_dir = 'GraphStructures-master/';
+    list(cur_dep).path_list = {'ToyGraphGSPExample/'};
+    list(cur_dep).optional = 1;
 end
