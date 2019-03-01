@@ -10,8 +10,8 @@
 %   GRASP_SHOW_TRANSFORM(..., options) optional parameters:
 %
 %   options.transform_matrix: use the provided transform matrix instead of 
-%       the GFT (default: [], for the GFT). The transform matrix should be
-%       of size NxM, with N the number of vertices.
+%       the GFT (default: [], for the GFT matrix). The transform matrix 
+%       should be of size MxN, with N the number of vertices.
 %
 %   options.highlight_entries: 0/1 matrix of the same size than
 %       options.transform_matrix indicating which entries to highlight in
@@ -25,16 +25,10 @@
 %       Laplacian, or a vector such that clusters(i) is the cluster index 
 %       of vertex i (default: 1).
 %
-%   options.ordering: ordering of vertices for the matrices (the vertex 
-%       indices as they should appear in the embedding ordering(1) is the 
-%       first vertex, and ordering(N) is the last). If ordering is
-%       not of the right length, ordering will be computed from 
-%       options.embedding if set or otherwise from sorting the second 
-%       eigenvector of the Random Walk Laplacian (default: []).
-%
-%   options.embedding: embedding of vertices in 1D (default: [] for evenly
-%       spread according to options.ordering). Set to 0 to use the random
-%       walk Laplacian embedding.
+%   options.embedding: embedding of vertices in 1D (default: 0). Set to 0 
+%       to use the random walk Laplacian embedding (default) or 1 for an
+%       even embedding ordered according to the random walk Laplacian
+%       embedding.
 %
 %   options.amplitude_scale: scaling of the transform modes. Use the value 
 %       1 for an optimal scaling without overlap, or 2 for an optimal 
@@ -112,8 +106,7 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
         'highlight_entries', [],...
         'graph_frequencies', [],...
         'clusters', 1,...
-        'ordering', [],...
-        'embedding', [],...
+        'embedding', 0,...
         'amplitude_scale', 1.5,...
         'amplitude_normalization', 'max_abs',...
         'epsilon_support', 0.05,...
@@ -148,27 +141,33 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
     
     if numel(options.transform_matrix) > 0
         % Provided matrix
-        if size(options.transform_matrix, 1) ~= N
-            error('options.transform_matrix should be of size NxM where N is the number of vertices!');
-        end
         if size(options.transform_matrix, 2) ~= N
-            if numel(options.graph_frequencies) ~= size(options.transform_matrix, 2)
-                error('Please provide the graph frequencies with options.graph_frequencies!');
+            error('options.transform_matrix should be of size MxN where N is the number of vertices!');
+        end
+        if size(options.transform_matrix, 1) ~= N
+            if numel(options.graph_frequencies) ~= size(options.transform_matrix, 1)
+                error('Please provide the correct number of graph frequencies with options.graph_frequencies!');
             end
             % frequencies ok
         else
-            if numel(options.graph_frequencies) == 0
+            if numel(options.graph_frequencies) == 0 && numel(graph.eigvals) == N
                 disp('Using graph.eigvals as graph frequencies.');
                 options.graph_frequencies = graph.eigvals;
-            elseif numel(options.graph_frequencies) ~= size(options.transform_matrix, 2)
-                error('Please provide as many graph frequencies in options.graph_frequencies as columns in options.transform_matrix!');
+            elseif numel(options.graph_frequencies) ~= size(options.transform_matrix, 1)
+                error('Please provide as many graph frequencies in options.graph_frequencies as lines in options.transform_matrix!');
             end
             % frequencies ok
         end
+        if sum(size(graph.Q) == [N N]) == 2
+            modes = graph.Q ^ (-1) * options.transform_matrix';
+        else
+            modes = options.transform_matrix';
+        end
     else
         % GFT
-        options.transform_matrix = graph.Finv;
+        options.transform_matrix = graph.F;
         options.graph_frequencies = graph.eigvals;
+        modes = graph.Finv;
     end
     if size(options.graph_frequencies, 2) > 1
         options.graph_frequencies = options.graph_frequencies';
@@ -180,39 +179,6 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
     end
     if sum(size(options.highlight_entries) ~= size(options.transform_matrix)) > 0
         error('options.highlight_entries should have the same size than options.transform_matrix.');
-    end
-    
-    %% Vertex ordering and embedding
-    V = [];
-    if numel(options.embedding) == 1 && options.embedding == 0
-        if numel(V) == 0
-            warning('off', 'MATLAB:eigs:IllConditionedA');
-            [V, ~] = eigs(grasp_laplacian_standard(graph), grasp_degrees(graph), 2, 0);
-            warning('on', 'MATLAB:eigs:IllConditionedA');
-        end
-        options.embedding = V(:, 2);
-    end
-    
-    if numel(options.ordering) ~= N
-        if numel(options.embedding) == N
-            [~, options.ordering] = sort(options.embedding);
-        else
-            if numel(V) == 0
-                warning('off', 'MATLAB:eigs:IllConditionedA');
-                [V, ~] = eigs(grasp_laplacian_standard(graph), grasp_degrees(graph), 2, 0);
-                warning('on', 'MATLAB:eigs:IllConditionedA');
-            end
-            disp('Computing vertex ordering using the second eigenvector of the Random Walk Laplacian...');
-            [~, options.ordering] = sort(V(:, 2));
-        end
-    elseif numel(options.embedding) == N
-        [~, tmp] = sort(options.embedding);
-        if sum(arrayfun(@(i,j) double(i ~= j), options.ordering, tmp)) > 0
-            error('options.ordering and options.embedding are not consistent!');
-        end
-    end
-    if size(options.ordering, 2) > 1
-        options.ordering = options.ordering';
     end
     
     %% Clusters
@@ -232,69 +198,86 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
             warning('on', 'MATLAB:eigs:IllConditionedA');
             options.clusters = kmeans(V, options.clusters);
         end
-    else
+    end
+    if size(options.clusters, 2) > 1
+        options.clusters = options.clusters';
+    end
+    
+    %% Number of clusters
+    num_clusters = numel(unique(options.clusters));
+    
+    %% Vertex embedding
+    if numel(options.embedding) == 1
+        disp('Computing vertex embedding using the second eigenvector of the Random Walk Laplacian...');
+        warning('off', 'MATLAB:eigs:IllConditionedA');
+        [V, ~] = eigs(grasp_laplacian_standard(graph), grasp_degrees(graph), 2, 0);
+        warning('on', 'MATLAB:eigs:IllConditionedA');
+        [~, options.ordering] = sort(V(:, 2));
+        if options.embedding == 0
+            options.embedding = V(:, 2);
+        elseif options.embedding == 1
+            disp('Computing regular vertex embedding...');
+            data_points = ((1:N)' - 1) / (N - 1);
+            if num_clusters == 1
+                options.embedding(options.ordering) = data_points;
+            else
+                % In that case, we:
+                % - Order according to clusters, and then the already computed ordering
+                vertex_ordering_wrt_clusters = zeros(N, 1);
+                % - Compute the induced regular embedding
+
+                prev_vertex = 0;
+                orig_ordering_inv(options.ordering) = (1:N)';
+                for c = 1:num_clusters
+                    cluster_mask = options.clusters == c;
+
+                    orig_ordering = orig_ordering_inv(cluster_mask)';
+
+                    % New ordering
+                    remap = zeros(N, 1);
+                    remap(sort(orig_ordering)) = (1:numel(orig_ordering))';
+                    vertex_ordering_wrt_clusters(cluster_mask) = prev_vertex + remap(orig_ordering);
+
+                    prev_vertex = prev_vertex + numel(orig_ordering);
+                end
+
+                % Ordering as required (instead of permutation)
+                tmp(vertex_ordering_wrt_clusters) = (1:N)'; % inverse permutation
+                options.embedding(tmp) = data_points;
+                options.ordering = tmp;
+            end
+        else
+            error('GraSP:ShowTransform:EmbeddingCode', 'Unknown embedding scheme.');
+        end
+    elseif numel(options.embedding) == N
+        if size(options.embedding, 2) > 1
+            options.embedding = options.embedding';
+        end
+        [~, options.ordering] = sort(options.embedding);
+        
+        % Checking ordering is consistent with clusters
         x_coords = options.clusters(options.ordering);
         tmp2 = sort(x_coords(x_coords(2:end) - x_coords(1:(end - 1)) ~= 0));
         if sum(tmp2(2:end) - tmp2(1:(end - 1)) == 0) > 0
-            error('Vertex ordering and clusters are inconsistent.');
+            error('Vertex embedding and clusters are inconsistent (split cluster(s) in the embedding).');
         end
-    end
-    
-    %% Cluster ordering: relabel the clusters according to options.ordering
-    cluster_mean = zeros(max(options.clusters), 1);
-    tmp(options.ordering) = (1:N)';
-    num_clusters = numel(cluster_mean);
-    for c = 1:num_clusters
-        cluster_mean(c) = mean(tmp(options.clusters == c));
-    end
-    [~, IX] = sort(cluster_mean);
-    options.clusters = IX(options.clusters);
-    
-    clusters = options.clusters;
-    
-    %% Vertical lines to separate the clusters (only if using the regular
-    % vertex embedding)
-    cluster_boundaries = [];
-    
-    %% Vertex embedding
-    if numel(options.embedding) ~= N
-        disp('Computing regular vertex embedding...');
-        data_points = ((1:N)' - 1) / (N - 1);
-        if num_clusters == 1
-            options.embedding(options.ordering) = data_points;
-        else
-            % In that case, we:
-            % - Order according to clusters, and then the already computed ordering
-            vertex_ordering_wrt_clusters = zeros(N, 1);
-            % - Compute the induced regular embedding
-            
-            prev_vertex = 0;
-            orig_ordering_inv(options.ordering) = (1:N)';
-            for c = 1:num_clusters
-                cluster_mask = options.clusters == c;
-                
-                orig_ordering = orig_ordering_inv(cluster_mask)';
-                
-                % New ordering
-                remap = zeros(N, 1);
-                remap(sort(orig_ordering)) = (1:numel(orig_ordering))';
-                vertex_ordering_wrt_clusters(cluster_mask) = prev_vertex + remap(orig_ordering);
-                
-                prev_vertex = prev_vertex + numel(orig_ordering);
-            end
-            
-            % Ordering as required (instead of permutation)
-            tmp(vertex_ordering_wrt_clusters) = (1:N)'; % inverse permutation
-            options.embedding(tmp) = data_points;
-            options.ordering = tmp;
-        end
-    end
-    if size(options.embedding, 2) > 1
-        options.embedding = options.embedding';
+    else
+        error('GraSP:ShowTransform:EmbeddingSize', 'Incorrect embedding size.');
     end
     embedding = options.embedding;
     
-    %% Cluster Boundaries
+    %% Cluster ordering: relabel the clusters according to options.embedding
+    cluster_mean = zeros(max(options.clusters), 1);
+    for c = unique(options.clusters)'
+        cluster_mean(c) = mean(options.embedding(options.clusters == c));
+    end
+    [~, IX] = sort(cluster_mean);
+    tmp(IX) = (1:numel(cluster_mean));
+    options.clusters = tmp(options.clusters)';
+    clusters = options.clusters;
+    
+    %% Vertical lines to separate the clusters
+    cluster_boundaries = [];
     if num_clusters > 1
         cluster_boundaries = zeros(num_clusters + 1, 1);
         cluster_boundaries(1) = min(options.embedding);
@@ -305,8 +288,7 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
     end
     
     %% Frequencies y axis coordinates
-    modes = options.transform_matrix;
-    M = size(modes, 2);
+    M = size(modes, 1);
     switch options.graph_signal_y_scheme
         case 'regular'
             spectral_spacing  = 0:(M - 1);
@@ -353,6 +335,7 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
     min_gray = 0.1;
     
     cur_xlim = [min(options.embedding) max(options.embedding)];
+    cur_xlim = cur_xlim + (cur_xlim(2) - cur_xlim(1)) / 100 * [-1 1];
     plot(repmat(cur_xlim', 1, M),...
          repmat(spectral_spacing, 2, 1),...
          'Color', (1 - min_gray) * [1 1 1]);
@@ -390,7 +373,7 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
     scatter(all_x(abs(all_ordered_modes(:)) > options.epsilon_support), all_series(abs(all_ordered_modes(:)) > options.epsilon_support), options.support_scatter_size, '.k');
     
     % Highlighting nodes
-    ordered_highlight = options.highlight_entries(options.ordering, :);
+    ordered_highlight = options.highlight_entries(:, options.ordering)';
     scatter(all_x(ordered_highlight > 0), all_series(ordered_highlight > 0), options.support_scatter_size, 'r');
     
     ylim(yleftlimits);
