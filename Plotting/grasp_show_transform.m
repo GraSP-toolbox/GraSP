@@ -215,6 +215,13 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
         [~, options.ordering] = sort(V(:, 2));
         if options.embedding == 0
             options.embedding = V(:, 2);
+        
+            % Checking ordering is consistent with clusters
+            x_coords = options.clusters(options.ordering);
+            tmp2 = sort(x_coords(x_coords(2:end) - x_coords(1:(end - 1)) ~= 0));
+            if sum(tmp2(2:end) - tmp2(1:(end - 1)) == 0) > 0
+                error('Vertex embedding and clusters are inconsistent (split cluster(s) in the embedding).');
+            end
         elseif options.embedding == 1
             disp('Computing regular vertex embedding...');
             data_points = ((1:N)' - 1) / (N - 1);
@@ -288,7 +295,7 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
     end
     
     %% Frequencies y axis coordinates
-    M = size(modes, 1);
+    M = size(modes, 2);
     switch options.graph_signal_y_scheme
         case 'regular'
             spectral_spacing  = 0:(M - 1);
