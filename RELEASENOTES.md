@@ -4,6 +4,19 @@
 
 ### Major Features
 
+### New Third Party Toolboxes
+
+### New Functions
+
+### Minor Features
+
+### Bugfixes
+
+
+## Version 1.2
+
+### Major Features
+
  * Reworked dependencies:
    * removed unrelated ones
    * less toolboxes started (only the strictly necessary ones)
