@@ -145,4 +145,14 @@ function list = grasp_dependencies_list
     list(cur_dep).root_dir = 'GraphStructures-master/';
     list(cur_dep).path_list = {'ToyGraphGSPExample/'};
     list(cur_dep).optional = 1;
+    
+    cur_dep = cur_dep + 1;
+    
+    list(cur_dep).url = 'https://github.com/ychtanaka/FastGSSS/archive/master.zip';
+    list(cur_dep).name = 'fast_gsss/';
+    list(cur_dep).root_dir = 'FastGSSS-master/';
+    list(cur_dep).path_list = {'.'};
+    list(cur_dep).optional = 1;
+    list(cur_dep).ref_bib = 'To appear in IEEE TSP';
+    list(cur_dep).dependencies = {'sgwt'};
 end

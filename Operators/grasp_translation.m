@@ -1,11 +1,16 @@
-%Computes the graph translation [Girault et al. 2015, IEEE SPL].
+%Computes the graph translation operator [Girault et al. 2015, IEEE SPL].
 %
-%   T = GRASP_TRANSLATION(graph) uses the graph structure to build its
-%   graph translation.
+%   filter = GRASP_TRANSLATION(graph) uses the graph structure to build its
+%       graph translation.
 %
-%   T = GRASP_TRANSLATION(..., freqs) use the given frequencies instead of
-%   the ones from [Girault et al. 2015, IEEE SPL]. The resulting operator
-%   verifies T\chi_l=exp(-i * 2 * pi * freqs(l)) \chi_l.
+%   filter = GRASP_TRANSLATION(..., freqs) use the given frequencies 
+%       instead of the ones from [Girault et al. 2015, IEEE SPL]. The 
+%       resulting operator verifies 
+%       T\chi_l=exp(-i * 2 * pi * freqs(l)) \chi_l.
+%
+%   [..., T] = GRASP_TRANSLATION(...) also returns the matrix of the graph
+%       translation operator. This may be faster than using
+%       GRASP_APPLY_FILTER.
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
@@ -48,17 +53,27 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function T = grasp_translation(graph, freqs)
+function [filter, T] = grasp_translation(graph, freqs)
+    %% Check
+    if ~isfield(graph, 'fourier_version') || strcmp(graph.fourier_version, 'n.a.')
+        error('GraSP:Translation:MissingGFT', 'Missing GFT! Please run grasp_eigendecomposition first.');
+    end
+
     %% Use the provided freqs if given
     if nargin == 2
-        T = grasp_fourier_inverse(graph, diag(exp(-1i * 2 * pi * freqs)));
+        filter.type = 'convolution';
+        filter.data = exp(-1i * 2 * pi * freqs);
+        if nargout == 2
+%             T = grasp_fourier_inverse(graph, diag(exp(-1i * 2 * pi * freqs)));
+            T = grasp_apply_filter(graph, filter);
+        end
         return;
     end
     
     %% Intialization
     if ~strcmp(graph.fourier_version, 'standard laplacian') && ~strcmp(graph.fourier_version, 'normalized laplacian')
         if ~(strcmp(graph.fourier_version, 'graph shift') && ~grasp_is_directed(graph))
-            error('Error: The Fourier transform should be the result of the decomposition of a Laplacian matrix, or a symmetric graph shift!');
+            error('GraSP:Translation:InvalidGFT', 'Error: The Fourier transform should be the result of the decomposition of a Laplacian matrix, or a symmetric graph shift!');
         end
     end
     
@@ -76,5 +91,9 @@ function T = grasp_translation(graph, freqs)
     end
     
     %% Translation operator
-    T = expm(-1i * pi * sqrtm(full(graph.L) / rho));
+    filter.type = 'kernel';
+    filter.data = @(x) exp(-1i * pi * sqrtm(x / rho));
+    if nargout == 2
+        T = expm(-1i * pi * sqrtm(full(graph.Z) / rho));
+    end
 end

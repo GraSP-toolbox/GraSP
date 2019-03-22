@@ -22,6 +22,8 @@
 
 ### New Third Party Toolboxes
 
+ * [FastGSSS](https://github.com/ychtanaka/FastGSSS)
+
 ### New Functions
 
  * `grasp_clean_pdf_export`: Function to create nice PDFs, not cropped ones...

@@ -51,6 +51,6 @@ Now that the GFT is defined, we can compute a more complex signal using [[grasp_
 
 This signal is a low pass signal. We can then convolve the two signals using:
 
- conv_sig = grasp_convolution(heat, delta_1);
+ conv_sig = grasp_convolution(g, heat, delta_1);
 
 You can find more operators in the [[Operators]] folder.

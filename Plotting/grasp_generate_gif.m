@@ -47,22 +47,63 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function grasp_generate_gif(fh, filename, graph, signals, titles, title_font_size, show_graph_options)
-    ah = get(fh, 'CurrentAxes');
-    nh = grasp_show_graph(ah, graph, show_graph_options);
-    colorbar;
-    set(fh, 'color', 'w');
+function grasp_generate_gif(fh, filename, graph, signals, titles, title_font_size, show_graph_options, varargin)
+    %% Parameters
+    default_param = struct(...
+        'signals_delays', 0.1,...
+        'overlay_function', [],...
+        'overlay_update', []);
+    if nargin == 7
+        options = struct;
+    elseif nargin > 8
+        options = cell2struct(varargin(2:2:end), varargin(1:2:end), 2);
+    else
+        options = varargin{1};
+    end
+    options = grasp_merge_structs(default_param, options);
     
+    %% Initializations
+    ah = get(fh, 'CurrentAxes');
+%     disp('<show_graph>');
+    nh = grasp_show_graph(ah, graph, show_graph_options);
+%     disp('</show_graph>');
+    overlay_h = [];
+    if numel(options.overlay_function) > 0
+        hold(ah, 'on');
+        overlay_h = options.overlay_function(ah);
+        hold(ah, 'off');
+    end
+    colorbar;
+%         disp('<set>');
+    set(fh, 'color', 'w');
+%         disp('</set>');
+    if numel(options.signals_delays) == 1
+        options.signals_delays = options.signals_delays * ones(size(signals, 2), 1);
+    end
+    
+    %% Code
+%         disp('<set>');
+    set(nh, 'CData', signals(:, 1));
+%         disp('</set>');
+    if numel(options.overlay_update) > 0
+        options.overlay_update(overlay_h, 1);
+    end
+    drawnow;
     f = getframe(fh);
     if ~grasp_is_octave()
         [im, map] = rgb2ind(f.cdata, 256, 'nodither');
     else
         [im, map] = rgb2ind(f.cdata);
     end
-    imwrite(im, map, filename, 'DelayTime', 0.1, 'LoopCount', inf);
-    for k = 1:size(signals, 2)
+    imwrite(im, map, filename, 'DelayTime', options.signals_delays(1), 'LoopCount', inf);
+    for k = 2:size(signals, 2)
         title(ah, titles{k}, 'interpreter', 'latex', 'fontsize', title_font_size);
+%         disp('<set>');
         set(nh, 'CData', signals(:, k));
+%         disp('</set>');
+        if numel(options.overlay_update) > 0
+            options.overlay_update(overlay_h, k);
+        end
         drawnow;
         f = getframe(fh);
         if ~grasp_is_octave()
@@ -70,6 +111,6 @@ function grasp_generate_gif(fh, filename, graph, signals, titles, title_font_siz
         else
             [im, map] = rgb2ind(f.cdata);
         end
-        imwrite(im, map, filename, 'DelayTime', 0.1, 'WriteMode', 'append');
+        imwrite(im, map, filename, 'DelayTime', options.signals_delays(k), 'WriteMode', 'append');
     end
 end
