@@ -13,6 +13,12 @@
 ### Bugfixes
 
 
+## Version 1.2.1
+
+### Bugfixes
+
+ * Bugfix in `grasp_install` (missing path)
+
 ## Version 1.2
 
 ### Major Features

@@ -21,7 +21,7 @@
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015-2016)
 % Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2018)
+% Angeles, California, USA (2018-2019)
 % 
 % benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
@@ -56,6 +56,9 @@
 % knowledge of the CeCILL license and that you accept its terms.
 
 function grasp_install(varargin)
+    %% Adding path to Util folder (for grasp_merge_struct)
+    addpath('Util');
+
     %% Parameters
     default_param = struct(...
         'with_local_deps', false,...
