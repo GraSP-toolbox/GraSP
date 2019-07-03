@@ -1,7 +1,10 @@
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
-% Inria, FRANCE (2015-11-01)
+% Inria, FRANCE (2015)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2019)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -44,8 +47,9 @@
 % 10x10 using the uniform distribution.
 
 g = grasp_plane_rnd(100);
-grasp_show_graph(gca, g, 'show_edges', false);
-colorbar;
+g.show_graph_options.color_map = flipud(colormap('hot'));
+g.show_graph_options.show_colorbar = true;
+grasp_show_graph(gca, g, 'show_edges', false, 'show_colorbar', false);
 
 %%
 % Add edges between vertices at distance less than $3$. Weight the edges
@@ -55,8 +59,8 @@ colorbar;
 
 g.A = grasp_adjacency_gaussian(g, 1/1.5);
 g.A = grasp_adjacency_thresh(g, exp(-3 * 3 ^ 2));
-grasp_show_graph(gca, g, 'show_edges', true);
-colorbar;
+g.A_layout = 0;
+grasp_show_graph(gca, g, 'show_edges', true, 'show_colorbar', false);
 
 %%
 % Create the Fourier transform.
@@ -74,20 +78,16 @@ GS = g.A;
 % Translate a delta signal to study the impulse response.
 
 d10 = grasp_delta(g, 10);
-grasp_show_graph(gca, g, 'node_values', abs(d10), 'value_scale', [0 1]);
-colorbar;
+grasp_show_graph(gca, g, 'node_values', abs(d10), 'value_scale', [0 2]);
 title('|\delta_{10}|');
 snapnow;
 grasp_show_graph(gca, g, 'node_values', abs(TG * d10), 'value_scale', [0 1]);
-colorbar;
 title('|T_g \delta_{10}|');
 snapnow;
 grasp_show_graph(gca, g, 'node_values', abs(T1 * d10), 'value_scale', [0 max(abs(T1 * d10))], 'highlight_nodes', 1);
-colorbar;
 title('|T_1 \delta_{10}|');
 snapnow;
 grasp_show_graph(gca, g, 'node_values', abs(GS * d10), 'value_scale', [0 1]);
-colorbar;
 title('|A \delta_{10}|');
 snapnow;
 
@@ -103,9 +103,9 @@ for k = 0:kmax
     translated_gt(:, k + 1) = TG ^ k * d10;
     translated_gs(:, k + 1) = GS ^ k * d10;
 end
-mod_options = struct('value_scale', [0 1], 'color_map', 'jet');
+mod_options = struct('value_scale', [0 1]);
 ang_options = struct('value_scale', [-pi pi], 'color_map', 'hsv');
-gs_options = struct('value_scale', [0 1], 'color_map', 'jet');
+gs_options = struct('value_scale', [0 1]);
 titles_mod = arrayfun(@(k) ['$|T_g^{' int2str(k) '} d_{10}|$'], 0:kmax, 'UniformOutput', false);
 titles_ang = arrayfun(@(k) ['$\angle(T_g^{' int2str(k) '} d_{10})$'], 0:kmax, 'UniformOutput', false);
 titles_gs = arrayfun(@(k) ['$|A^{' int2str(k) '} d_{10}|$'], 0:kmax, 'UniformOutput', false);
@@ -152,24 +152,20 @@ cla(gca);
 X = grasp_heat_kernel(g, 10);
 X = X / norm(X);
 grasp_show_graph(gca, g, 'node_values', abs(X));
-colorbar;
 title('|X|');
 
 %%
 % Translate X.
 
 grasp_show_graph(gca, g, 'node_values', abs(TG * X), 'value_scale', [0 max(abs(TG * X))]);
-colorbar;
 title('|T_g X|');
 snapnow;
 
 grasp_show_graph(gca, g, 'node_values', abs(T1 * X), 'value_scale', [0 max(abs(T1 * X))], 'highlight_nodes', 1);
-colorbar;
 title('|T_1 X|');
 snapnow;
 
 grasp_show_graph(gca, g, 'node_values', abs(GS * X), 'value_scale', [0 max(abs(GS * X))]);
-colorbar;
 title('|A X|');
 snapnow;
 
@@ -185,9 +181,9 @@ for k = 0:kmax
     tmp = GS ^ k * X;
     translated_gs(:, k + 1) = tmp / norm(tmp);
 end
-mod_options = struct('value_scale', [0 max(abs(translated_gt(:)))], 'color_map', 'jet');
+mod_options = struct('value_scale', [0 max(abs(translated_gt(:)))]);
 ang_options = struct('value_scale', [-pi pi], 'color_map', 'hsv');
-gs_options = struct('value_scale', [0 max(abs(translated_gs(:)))], 'color_map', 'jet');
+gs_options = struct('value_scale', [0 max(abs(translated_gs(:)))]);
 titles_mod = arrayfun(@(k) ['$|T_g^{' int2str(k) '} X|$'], 0:kmax, 'UniformOutput', false);
 titles_ang = arrayfun(@(k) ['$\angle(T_g^{' int2str(k) '} X)$'], 0:kmax, 'UniformOutput', false);
 titles_gs = arrayfun(@(k) ['$|A^{' int2str(k) '} X| / ||A^{' int2str(k) '} X||_2$'], 0:kmax, 'UniformOutput', false);
