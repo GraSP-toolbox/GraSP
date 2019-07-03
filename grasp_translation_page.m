@@ -66,7 +66,7 @@ g = grasp_eigendecomposition(g);
 %%
 % Create the translation operators.
 
-TG = grasp_translation(g);
+[~, TG] = grasp_translation(g);
 T1 = grasp_generalized_translation(g, 1);
 GS = g.A;
 
@@ -106,12 +106,12 @@ end
 mod_options = struct('value_scale', [0 1], 'color_map', 'jet');
 ang_options = struct('value_scale', [-pi pi], 'color_map', 'hsv');
 gs_options = struct('value_scale', [0 1], 'color_map', 'jet');
-titles_mod = arrayfun(@(k) ['|T_g^{' int2str(k) '} d_{10}|'], 0:kmax, 'UniformOutput', false);
-titles_ang = arrayfun(@(k) ['\angle(T_g^{' int2str(k) '} d_{10})'], 0:kmax, 'UniformOutput', false);
-titles_gs = arrayfun(@(k) ['|A^{' int2str(k) '} d_{10}|'], 0:kmax, 'UniformOutput', false);
-grasp_generate_gif(gcf, 'html/tg_d10_mod_anim.gif', g, abs(translated_gt), titles_mod, mod_options);
-grasp_generate_gif(gcf, 'html/tg_d10_ang_anim.gif', g, angle(translated_gt), titles_ang, ang_options);
-grasp_generate_gif(gcf, 'html/gs_d10_anim.gif', g, abs(translated_gs), titles_gs, gs_options);
+titles_mod = arrayfun(@(k) ['$|T_g^{' int2str(k) '} d_{10}|$'], 0:kmax, 'UniformOutput', false);
+titles_ang = arrayfun(@(k) ['$\angle(T_g^{' int2str(k) '} d_{10})$'], 0:kmax, 'UniformOutput', false);
+titles_gs = arrayfun(@(k) ['$|A^{' int2str(k) '} d_{10}|$'], 0:kmax, 'UniformOutput', false);
+grasp_generate_gif(gcf, 'html/tg_d10_mod_anim.gif', g, abs(translated_gt), titles_mod, 24, mod_options);
+grasp_generate_gif(gcf, 'html/tg_d10_ang_anim.gif', g, angle(translated_gt), titles_ang, 24, ang_options);
+grasp_generate_gif(gcf, 'html/gs_d10_anim.gif', g, abs(translated_gs), titles_gs, 24, gs_options);
 close;
 
 %%
@@ -133,9 +133,9 @@ close;
 for k = 0:kmax
     translated_gs(:, k + 1) = translated_gs(:, k + 1) / norm(translated_gs(:, k + 1));
 end
-titles_gs = arrayfun(@(k) ['|A^{' int2str(k) '} d_{10}| / ||A^{' int2str(k) '} d_{10}||_2'], 0:kmax, 'UniformOutput', false);
+titles_gs = arrayfun(@(k) ['$|A^{' int2str(k) '} d_{10}| / ||A^{' int2str(k) '} d_{10}||_2$'], 0:kmax, 'UniformOutput', false);
 cla(gca);
-grasp_generate_gif(gcf, 'html/gs_d10_norm_anim.gif', g, abs(translated_gs), titles_gs, gs_options);
+grasp_generate_gif(gcf, 'html/gs_d10_norm_anim.gif', g, abs(translated_gs), titles_gs, 24, gs_options);
 close;
 
 %%
@@ -188,12 +188,12 @@ end
 mod_options = struct('value_scale', [0 max(abs(translated_gt(:)))], 'color_map', 'jet');
 ang_options = struct('value_scale', [-pi pi], 'color_map', 'hsv');
 gs_options = struct('value_scale', [0 max(abs(translated_gs(:)))], 'color_map', 'jet');
-titles_mod = arrayfun(@(k) ['|T_g^{' int2str(k) '} X|'], 0:kmax, 'UniformOutput', false);
-titles_ang = arrayfun(@(k) ['\angle(T_g^{' int2str(k) '} X)'], 0:kmax, 'UniformOutput', false);
-titles_gs = arrayfun(@(k) ['|A^{' int2str(k) '} X| / ||A^{' int2str(k) '} X||_2'], 0:kmax, 'UniformOutput', false);
-grasp_generate_gif(gcf, 'html/tg_X_mod_anim.gif', g, abs(translated_gt), titles_mod, mod_options);
-grasp_generate_gif(gcf, 'html/tg_X_ang_anim.gif', g, angle(translated_gt), titles_ang, ang_options);
-grasp_generate_gif(gcf, 'html/gs_X_norm_anim.gif', g, abs(translated_gs), titles_gs, gs_options);
+titles_mod = arrayfun(@(k) ['$|T_g^{' int2str(k) '} X|$'], 0:kmax, 'UniformOutput', false);
+titles_ang = arrayfun(@(k) ['$\angle(T_g^{' int2str(k) '} X)$'], 0:kmax, 'UniformOutput', false);
+titles_gs = arrayfun(@(k) ['$|A^{' int2str(k) '} X| / ||A^{' int2str(k) '} X||_2$'], 0:kmax, 'UniformOutput', false);
+grasp_generate_gif(gcf, 'html/tg_X_mod_anim.gif', g, abs(translated_gt), titles_mod, 24, mod_options);
+grasp_generate_gif(gcf, 'html/tg_X_ang_anim.gif', g, angle(translated_gt), titles_ang, 24, ang_options);
+grasp_generate_gif(gcf, 'html/gs_X_norm_anim.gif', g, abs(translated_gs), titles_gs, 24, gs_options);
 close;
 
 %%
