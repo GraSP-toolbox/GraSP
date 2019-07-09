@@ -8,10 +8,11 @@
 %   options.type: specify how to construct the edges, 'gauss_dist' for a
 %       Gaussian kernel of the distance (default), 'shortest_path' for an
 %       adjacency matrix based on a Gaussian kernel of the shortest path
-%       (road) distance, 'road_dist' for the each edge corresponding to a
-%       road and weighted by its length, 'road' for 0/1 edges corresponding
-%       to roads.
-%   options.sigma: sigma^2 in the Gaussian kernel
+%       (road) distance, 'road_dist' for each edge corresponding to a road
+%       and weighted by its length, 'road' for 0/1 edges corresponding to
+%       roads.
+%   options.sigma: sigma^2 in the Gaussian kernel (see
+%       GRASP_ADJACENCY_GAUSSIAN)
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
@@ -20,7 +21,7 @@
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015)
 % Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2016-2018)
+% Angeles, California, USA (2016-2019)
 % 
 % benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
@@ -69,13 +70,15 @@ function graph = grasp_minnesota(varargin)
     options = grasp_merge_structs(default_param, options);
     
     %% Initializations
+    
+    % Load the matlab-bgl toolbox having the minnesota dataset...
+    grasp_start_opt_3rd_party('MatlabBGL');
+    
+    % ... and build the graph
     graph = grasp_struct;
     data = load('minnesota');
     % Remove nodes #348 and #349 (disconnected nodes)
     mask = [1:347 350:numel(data.labels)];
-    
-    % Load the matlab-bgl toolbox having the minnesota dataset
-    grasp_start_opt_3rd_party('MatlabBGL');
     
     %% Basic data
     graph.A = data.A(mask, mask);

@@ -19,6 +19,7 @@
 
  * Bugfix in `grasp_install` (missing path)
  * Bugfixes in `grasp_translation_page`
+ * Bugfix in `grasp_minnesota`
 
 ## Version 1.2
 
