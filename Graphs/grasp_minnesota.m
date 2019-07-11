@@ -1,18 +1,23 @@
 %Construct the Minnesota transport graph.
+%Note that the layout coordinates are longitude and latitude geographic
+%coordinates, while the distance matrix is computed using
+%GRASP_DISTANCES_GEO_LAYOUT from a Haversine approximation function of the 
+%true distance.
 %
 %   graph = GRASP_MINNESOTA() returns the Minnesota transport graph of
 %   3rdParty/MathBFL.
 %
 %   GRASP_MINNESOTA(options) optional parameters:
 %
-%   options.type: specify how to construct the edges, 'gauss_dist' for a
-%       Gaussian kernel of the distance (default), 'shortest_path' for an
-%       adjacency matrix based on a Gaussian kernel of the shortest path
-%       (road) distance, 'road_dist' for each edge corresponding to a road
-%       and weighted by its length, 'road' for 0/1 edges corresponding to
-%       roads.
+%   options.type: specify how to construct the edges, 'gauss_road' for
+%       roads weighted by a Gaussian kernel of the distance (defaul),
+%       'gauss_dist' for a Gaussian kernel of the distance (default), 
+%       'shortest_path' for an adjacency matrix based on a Gaussian kernel
+%       of the shortest path (road) distance, 'road_dist' for each edge
+%       corresponding to a road and weighted by its length, 'road' for 0/1
+%       edges corresponding to roads.
 %   options.sigma: sigma^2 in the Gaussian kernel (see
-%       GRASP_ADJACENCY_GAUSSIAN)
+%       GRASP_ADJACENCY_GAUSSIAN) (default: 30).
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
@@ -58,8 +63,8 @@
 function graph = grasp_minnesota(varargin)
     %% Parameters
     default_param = struct(...
-        'type', 'gauss_dist',...
-        'sigma', 1);
+        'type', 'gauss_road',...
+        'sigma', 30);
     if nargin == 0
         options = struct;
     elseif nargin > 1
@@ -84,18 +89,19 @@ function graph = grasp_minnesota(varargin)
     graph.A = data.A(mask, mask);
     graph.node_names = data.labels(mask);
     graph.layout = data.xy(mask, :);
+
+    %% Automatic layout boundaries computation for grasp_show_graph
+    graph.show_graph_options.layout_boundaries = 0;
     
-    %% Layout rescaled to the [0;10] square
-    m = ones(size(graph.layout, 1), 1) * min(graph.layout);
-    M = ones(size(graph.layout, 1), 1) * max(graph.layout);
-    graph.layout = 10 * (graph.layout - m) ./ (M - m);
-    
-    %% Distance matrix from the layout (between any two nodes)
-    graph.distances = grasp_distances_layout(graph);
+    %% Geo distance matrix from the layout (between any two nodes)
+    graph.distances = grasp_distances_geo_layout(graph);
     
     %% Adjacency matrix
     graph.A_layout = graph.A;
+    roads_only = false;
     switch options.type
+        case 'gauss_road'
+            roads_only = true;
         case 'gauss_dist'
             % nothing yet to do
         case 'shortest_path'
@@ -113,4 +119,7 @@ function graph = grasp_minnesota(varargin)
             error('Unrecognized type of graph! Please read the documentation for valid types.');
     end
     graph.A = grasp_adjacency_gaussian(graph, options.sigma);
+    if roads_only
+        graph.A = graph.A .* graph.A_layout;
+    end
 end
