@@ -8,6 +8,8 @@
 
 ### New Functions
 
+ * `grasp_distances_geo_layout`: function computing the distance matrix from latitude/longtitude coordinates
+
 ### Minor Features
 
  * `grasp_minnesota`: New default type where edges are road weighted by a Gaussian kernel of the distance
