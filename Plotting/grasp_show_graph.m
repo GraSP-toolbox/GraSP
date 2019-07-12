@@ -91,6 +91,10 @@
 %       through the matrix graph.A_layout, such that the color may
 %       correspond to something different than the edge weight.
 %
+%   options.edge_colorbar: whether or not to show a colorbar on the bottom
+%       of the plot to display the color mapping to weight values for the
+%       edges (default: false).
+%
 %   options.edge_color_scale: together with edge_colormap, set the
 %       weight boundaries in the colormap.
 %
@@ -179,6 +183,7 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
         'show_edges', true,...
         'edge_color', [0 0 0],...
         'edge_colormap', '',...
+        'edge_colorbar', false,...
         'edge_color_scale', 0,...
         'edge_thickness', 0.5,...
         'arrow_max_tip_back_fraction', 0.02,...
@@ -201,6 +206,7 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
     A_layout = input_graph.A;
     if isfield(input_graph, 'A_layout') && numel(input_graph.A_layout) == N ^ 2
         A_layout = input_graph.A_layout;
+        disp('Using adjacency matrix provided by ''A_layout''.');
     end
     
     %% Highlighted nodes default values
@@ -342,15 +348,16 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
                                     'linewidth', options.edge_thickness,...
                                     'Color', options.edge_color);
         end
+        
         % Adjust edge color if necessary
         if ~isempty(options.edge_colormap)
+            flipped_cm = flipud(options.edge_colormap);
             w = A_layout(sub2ind(size(A_layout), rows, cols));
             min_w = options.edge_color_scale(1);
             span_w = options.edge_color_scale(2) - options.edge_color_scale(1);
             colors = (w - min_w) / (span_w);
-            colors = 1 + (1 - min(max(colors, 0), 1)) * (size(options.edge_colormap, 1) - 1);
-            min(floor(colors))
-            colors = options.edge_colormap(floor(colors), :);
+            colors = 1 + (1 - min(max(colors, 0), 1)) * (size(flipped_cm, 1) - 1);
+            colors = flipped_cm(floor(colors), :);
             for i = 1:numel(edges_handle{1})
                 if verLessThan('matlab', '8.4.0')
                     set(edges_handle{1}(i), 'Color', colors(i, :));
@@ -527,10 +534,39 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
     end
     
     %% Colorbar
+    
     if options.show_colorbar
-        colorbar
+        colorbar(axis_handle);
     else
-        colorbar off
+        colorbar(axis_handle, 'off');
+    end
+    
+    % Show the colorbar for the edge weights => need for a new set of
+    % axes
+    if options.edge_colorbar && ~isempty(options.edge_colormap)
+        % First, remove any remaining
+        for ch = findall(axis_handle.Parent.Children, 'type', 'Axes')'
+            if ch == axis_handle
+                continue;
+            end
+            if sum(abs(ch.Position - axis_handle.Position)) == 0
+                delete(ch);
+            end
+        end
+        
+        axis_edge_cm_handle = axes;
+        linkprop([axis_handle, axis_edge_cm_handle], {'DataAspectRatio', 'PlotBoxAspectRatio', 'Position', 'XLim', 'YLim', 'ZLim', 'OuterPosition'});
+
+        axis_edge_cm_handle.Visible = 'off';
+        axis_edge_cm_handle.XTick = [];
+        axis_edge_cm_handle.YTick = [];
+        
+        colormap(axis_edge_cm_handle, options.edge_colormap);
+        caxis(options.edge_color_scale);
+        colorbar(axis_edge_cm_handle, 'southoutside');
+        axis_edge_cm_handle.Position = axis_handle.Position;
+        
+        axes(axis_handle);
     end
      
     %% Plot
