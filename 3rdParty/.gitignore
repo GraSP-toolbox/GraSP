@@ -10,3 +10,6 @@ usc_disc_glasso
 usc_symmetric_grid
 usc_graphs
 local_dependencies.mat
+bgirault_molene_dataset
+fast_gsss
+usc_graph_learning_properties

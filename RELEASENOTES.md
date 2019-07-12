@@ -2,9 +2,15 @@
 
 ## Development Version
 
+### Upgrade Instructions
+
+Just run `grasp_install` to install the missing 3rd party dependencies (see below).
+
 ### Major Features
 
 ### New Third Party Toolboxes
+
+ * `bgirault_molene_dataset`: Molène dataset (weather stations in Britanny, France)
 
 ### New Functions
 

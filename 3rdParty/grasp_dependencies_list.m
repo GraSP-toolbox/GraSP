@@ -155,4 +155,23 @@ function list = grasp_dependencies_list
     list(cur_dep).optional = 1;
     list(cur_dep).ref_bib = 'To appear in IEEE TSP';
     list(cur_dep).dependencies = {'sgwt'};
+    
+    cur_dep = cur_dep + 1;
+    
+    list(cur_dep).url = 'https://github.com/STAC-USC/graph_learning_properties/archive/master.zip';
+    list(cur_dep).name = 'usc_graph_learning_properties/';
+    list(cur_dep).root_dir = 'graph_learning_properties-master/';
+    list(cur_dep).path_list = {'.'};
+    list(cur_dep).optional = 1;
+    list(cur_dep).ref_bib = {'https://doi.org/10.1109/JSTSP.2017.2726975', 'https://doi.org/10.1109/TSP.2018.2813337'};
+    list(cur_dep).dependencies = {'usc_graph_learning'};
+    
+    cur_dep = cur_dep + 1;
+    
+    list(cur_dep).url = 'https://github.com/bgirault-usc/Molene-Dataset/archive/master.zip';
+    list(cur_dep).name = 'bgirault_molene_dataset/';
+    list(cur_dep).root_dir = 'Molene-Dataset-master/';
+    list(cur_dep).path_list = {'Matlab/'};
+    list(cur_dep).optional = 1;
+    list(cur_dep).ref_bib = {'https://doi.org/10.1109/EUSIPCO.2015.7362637'};
 end
