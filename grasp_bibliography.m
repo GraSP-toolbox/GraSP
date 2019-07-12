@@ -43,12 +43,19 @@
 
 function grasp_bibliography()
     global GRASP_OPT_TOOLS
-    fprintf('GraSP: https://doi.org/10.1109/ICASSP.2017.8005300 -- https://gforge.inria.fr/projects/grasp/\n');
+    fprintf('GraSP:\n\thttps://doi.org/10.1109/ICASSP.2017.8005300 -- https://gforge.inria.fr/projects/grasp/\n');
     
     opt_tools = grasp_start_opt_3rd_party(0);
     for i = 1:numel(GRASP_OPT_TOOLS)
         if GRASP_OPT_TOOLS(i)
-            fprintf('%s: %s\n', opt_tools(i).name, opt_tools(i).url);
+            fprintf('%s:\n', opt_tools(i).name);
+            if iscell(opt_tools(i).url)
+                for url = opt_tools(i).url
+                    fprintf('\t%s\n', url{1});
+                end
+            else
+                fprintf('\t%s\n', opt_tools(i).url);
+            end
         end
     end
 end
