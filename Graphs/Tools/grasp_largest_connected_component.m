@@ -1,10 +1,20 @@
-%Calls directly GRASP_LARGEST_CONNECTED_COMPONENT. DEPRECATED.
+%Selects the subgraph associated to the largest connected component of a
+%graph.
+%
+%   graph = GRASP_LARGEST_CONNECTED_COMPONENT(graph) find the largest
+%   connected component and returns it.
+%
+%   [..., nodes] = GRASP_LARGEST_CONNECTED_COMPONENT(...) also returns
+%   the set of selected nodes.
 %
 % Authors:
+%  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
 %  - Benjamin Girault <benjamin.girault@usc.edu>
 
+% Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
+% Inria, FRANCE (2015)
 % Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2019)
+% Angeles, California, USA (2017-2019)
 % 
 % benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
@@ -38,11 +48,15 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function [graph, nodes] = grasp_biggest_connected_component(graph)
-    warning('DEPRECATED! ''Use grasp_largest_connected_component''.');
-    if nargout == 1
-        graph = grasp_largest_connected_component(graph);
-    else
-        [graph, nodes] = grasp_largest_connected_component(graph);
-    end
+function [graph, nodes] = grasp_largest_connected_component(graph)
+    % Load the matlab-bgl toolbox for 'components'
+    grasp_start_opt_3rd_party('MatlabBGL');
+    
+    % Find the largest connected component
+    [conn_comps, sizes] = components(sparse(graph.A));
+    [~, largest_cc] = max(sizes);
+    nodes = find(conn_comps == largest_cc);
+    
+    % Select only the nodes of that component
+    graph = grasp_subgraph(graph, nodes);
 end

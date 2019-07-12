@@ -15,6 +15,7 @@ Just run `grasp_install` to install the missing 3rd party dependencies (see belo
 ### New Functions
 
  * `grasp_distances_geo_layout`: function computing the distance matrix from latitude/longtitude coordinates
+ * `grasp_largest_connected_component`: `grasp_biggest_connected_component` renamed (the original function is now deprecated and calls `grasp_largest_connected_component`)
 
 ### Minor Features
 
