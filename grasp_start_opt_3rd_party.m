@@ -78,6 +78,7 @@ function opt_tools_ret = grasp_start_opt_3rd_party(toolbox_id)
             opt_tools(cur_tool).id = cur_tool;
             opt_tools(cur_tool).dep_id = i;
             opt_tools(cur_tool).url = dep_list(i).ref_bib;
+            opt_tools(cur_tool).root_dir = [];
             cur_tool = cur_tool + 1;
         end
     end
