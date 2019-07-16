@@ -1,7 +1,7 @@
 %Plots a graph and a graph signal. See the options below for details on all
 %the capabilities.
 %
-% Arrow definition
+% Arrow definition (directed edges)
 %
 %An arrow is composed of a tail and two heads, one on each side. The 
 %length of each of these heads is a percentage head_proportion of the
@@ -17,10 +17,21 @@
 %       pointed by axis_handle. Uses the field graph.show_graph_options for
 %       default plotting values of GRASP_SHOW_GRAPH.
 %
+%   [nodes_handle, edges_handle] = GRASP_SHOW_GRAPH(...) returns the handle
+%       to the nodes graphics objects (scatter), and edge graphics object. 
+%       For the edges, it returns an array of 3 elements: the non directed 
+%       edges (plot), the arrow heads (fill), and the arrow tails (plot)
+%
 %   GRASP_SHOW_GRAPH(..., options) optional parameters:
+%
+%               ***Plot***
 %
 %   options.background: plot over a background image (default: set by the
 %       input graph).
+%
+%   options.background_boundaries: mapping between the boundaries of the
+%       images and the layout coordinate system (default: same as the
+%       layout_boundaries, see below).
 %
 %   options.background_grayscale: whether the background should be
 %       converted to grayscale (default: true).
@@ -35,30 +46,7 @@
 %   options.viewpoint3D: arguments to give to VIEW to set the camera
 %       position for a 3D plot.
 %
-%   options.node_values: plot the values on the nodes using colors
-%       (default: no values).
-%
-%   options.value_scale: use the color scale provided (default: [min max]
-%       of node_values).
-%
-%   options.highlight_nodes: draw a bigger circle around the given nodes.
-%
-%   options.highlight_nodes_size: size of the circle (default:
-%       2 * node_display_size).
-%
-%   options.highlight_nodes_width: width of the circle line (default: 0.5).
-%
-%   options.color_map: use the provide color map (default: 'default').
-%
-%   options.show_colorbar: show the color bar on the right (default:
-%       false).
-%
-%   options.node_display_size: use the size provided for the nodes
-%       (default: 200).
-%
-%   options.node_marker_edge_width: each node is represented by a marker,
-%       this options sets the width of the edge of the marker, 0 disables
-%       that edge (default: 1).
+%               ***Vertex Labels***
 %
 %   options.node_text: use the provided cell to plot also a label
 %       associated to each node (disabled: cell(0) (default), string cell
@@ -77,6 +65,37 @@
 %
 %   options.node_text_background_edge: the color of the background edge
 %       underneath the node label (default: black, use 'none' to disable).
+%
+%               ***Vertex Values***
+%
+%   options.node_values: plot the values on the nodes using colors
+%       (default: no values).
+%
+%   options.value_scale: use the color scale provided (default: [min max]
+%       of node_values).
+%
+%   options.color_map: use the provide color map (default: 'default').
+%
+%   options.show_colorbar: show the color bar on the right (default:
+%       false).
+%
+%   options.node_display_size: use the size provided for the nodes
+%       (default: 200).
+%
+%   options.node_marker_edge_width: each node is represented by a marker,
+%       this options sets the width of the edge of the marker, 0 disables
+%       that edge (default: 1).
+%
+%               ***Highlighted Nodes***
+%
+%   options.highlight_nodes: draw a bigger circle around the given nodes.
+%
+%   options.highlight_nodes_size: size of the circle (default:
+%       2 * node_display_size).
+%
+%   options.highlight_nodes_width: width of the circle line (default: 0.5).
+%
+%               ***Edges***
 %
 %   options.show_edges: whether or not to show edges of the graph
 %       (default: true if there is no background, false otherwise).
@@ -101,6 +120,8 @@
 %   options.edge_thickness: use the thickness provided to draw edges or
 %       directed edges (default: 0.5).
 %
+%               ***Directed Edges***
+%
 %   options.arrow_max_tip_back_fraction: the tip of the arrow is pulled
 %       slightly back. Fraction of the the edge length that the arrow tip
 %       is actually pulled back (default: 5%).
@@ -111,11 +132,6 @@
 %
 %   options.arrow_width_screen_fraction: width of the arrow head as a
 %       fraction of the axes boundaries diagonal length (default: 0.5%).
-%
-%   [nodes_handle, edges_handle] = GRASP_SHOW_GRAPH(...) returns the handle
-%       to the nodes graphics objects (scatter), and edge graphics object. 
-%       For the edges, it returns an array of 3 elements: the non directed 
-%       edges (plot), the arrow heads (fill), and the arrow tails (plot)
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
@@ -162,11 +178,12 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
     %% Parameters
     default_param = struct(...
         'background', input_graph.background,...
+        'background_boundaries', 0,...
         'background_grayscale', true,...
         'layout_boundaries', [],...
         'axis_style', 'equal',...
         'viewpoint3D', [20 45],...
-        'node_values', 0,...
+        'node_values', zeros(grasp_nb_nodes(input_graph), 1),...
         'value_scale', 0,...
         'highlight_nodes', [],...
         'highlight_nodes_size', -1,...
@@ -294,13 +311,14 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
             alpha = [];
         end
         % And finally, showing the image
-        imh = imagesc(options.layout_boundaries(1, :), options.layout_boundaries(2, :), img);
+        if numel(options.background_boundaries) == 4 && size(options.background_boundaries, 1) == 2
+            imh = imagesc(options.background_boundaries(1, :), options.background_boundaries(2, :), img);
+        else
+            imh = imagesc(options.layout_boundaries(1, :), options.layout_boundaries(2, :), img);
+        end
         if numel(alpha) > 0
             set(imh, 'AlphaData', flipud(alpha));
         end
-        set(axis_handle, 'DataAspectRatio', ...
-            [info.Height / (options.layout_boundaries(2, 2) - options.layout_boundaries(2, 1)) ...
-             info.Width  / (options.layout_boundaries(1, 2) - options.layout_boundaries(1, 1)) 1]);
     end
 
     %% Layout

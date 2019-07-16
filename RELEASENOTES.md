@@ -24,6 +24,7 @@ Just run `grasp_install` to install the missing 3rd party dependencies (see belo
  * `grasp_minnesota`: New default type where edges are road weighted by a Gaussian kernel of the distance
  * `grasp_bibliography`: possibility for multiple references for a given 3rd party toolbox
  * `grasp_show_graph`: colorbar for edge weight
+ * `grasp_show_graph`: better backgrounds handling & documentation
 
 ### Bugfixes
 
