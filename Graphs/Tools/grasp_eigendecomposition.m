@@ -198,7 +198,7 @@ function graph = grasp_eigendecomposition(graph, varargin)
     end
     
     %% Core
-    if grasp_is_directed(graph) && strcmp(options.matrix, 'ajda')
+    if grasp_is_directed(graph) && strcmp(options.matrix, 'adja')
         % The adjacency matrix is used here
         % We perform the Schur Block Diagonalization, more stable than the 
         % Jordan Normal Form [Girault, PhD Thesis, 2015]
@@ -219,7 +219,7 @@ function graph = grasp_eigendecomposition(graph, varargin)
         graph.Finv = V * Y;
         graph.Tschur = Tblk;
         graph.eigvals = diag(graph.Tschur);
-        graph.Z = graph.variation_matrix;
+        graph.Z = options.variation_matrix;
     else
         % Unitarily diagonalizable case
         if numel(options.inner_product) == 0
