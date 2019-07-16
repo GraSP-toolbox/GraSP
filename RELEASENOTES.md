@@ -18,6 +18,7 @@ Just run `grasp_install` to install the missing 3rd party dependencies (see belo
  * `grasp_largest_connected_component`: `grasp_biggest_connected_component` renamed (the original function is now deprecated and calls `grasp_largest_connected_component`)
  * `grasp_random_bipartite`: Random bipartite graph
  * `grasp_layout_spectral`: embedding from the random walk Laplacian eigenvectors
+ * `grasp_maximally_connected_subgraphs`: computes the maximally connected subgraphs
 
 ### Minor Features
 
