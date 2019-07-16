@@ -68,7 +68,9 @@ function [g, mapping] = grasp_subgraph(g, vertex_set)
     if numel(g.node_names) > 0
         g.node_names = g.node_names(vertex_set);
     end
-    g.L = 0;
+    g.M = 0;
+    g.Q = 0;
+    g.Z = 0;
     g.fourier_version = 'n.a.';   % Matrix used for the Fourier transform
     g.eigvals = 0;                % Eigenvalues of the graph
     g.F = 0;                      % Fourier matrix
