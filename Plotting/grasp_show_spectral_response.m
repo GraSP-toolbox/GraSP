@@ -67,7 +67,7 @@ function [freq_resp_handle, legend_handle, varargout] = grasp_show_spectral_resp
     %% Start holding plots
     prev_hold = get(axis_handle, 'NextPlot');
     if strcmp(prev_hold, 'replace')
-        cla(axis_handle);
+        cla(axis_handle, 'reset');
     end
     hold(axis_handle, 'on');
     
@@ -77,6 +77,11 @@ function [freq_resp_handle, legend_handle, varargout] = grasp_show_spectral_resp
         case 'polynomial'
             freq_resp_interp_handle = plot(axis_handle, x, polyval(filter.data, x), '-');
             freq_resp_handle        = scatter(axis_handle, graph.eigvals, polyval(filter.data, graph.eigvals), 'b');
+            
+            varargout{2 * double(nargin == 4) + 1} = freq_resp_interp_handle;
+        case 'chebpoly'
+            freq_resp_interp_handle = plot(axis_handle, x, grasp_apply_filter(x, filter), '-');
+            freq_resp_handle        = scatter(axis_handle, graph.eigvals, grasp_apply_filter(graph.eigvals, filter), 'b');
             
             varargout{2 * double(nargin == 4) + 1} = freq_resp_interp_handle;
         case 'kernel'

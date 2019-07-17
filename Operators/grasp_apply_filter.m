@@ -3,6 +3,9 @@
 %   H = GRASP_APPLY_FILTER(graph, filter) computes the matrix H of the
 %       graph filter filter on graph.
 %
+%   y = GRASP_APPLY_FILTER(x, filter) applies filter to each entry of x
+%       independently (not for 'convolution' and 'matrix' filter types).
+%
 %   output = GRASP_APPLY_FILTER(..., input) computes the output of the
 %       filter on the graph signal input.
 %
@@ -47,30 +50,53 @@ function out = grasp_apply_filter(graph, filter, signal)
     if nargin == 2
         switch filter.type
             case 'polynomial'
-                out = polyvalm(filter.data, graph.Z);
+                if isstruct(graph)
+                    out = polyvalm(filter.data, graph.Z);
+                else
+                    out = polyvalm(filter.data, graph);
+                end
             case 'chebpoly'
                 map_shift = (filter.data.interval(2) + filter.data.interval(1)) / 2;
                 map_scale = 2 / (filter.data.interval(2) - filter.data.interval(1));
                 
-                U0 = speye(grasp_nb_nodes(graph));
-                tmp = map_scale * (graph.Z - map_shift * U0);
+                if isstruct(graph)
+                    U0 = speye(grasp_nb_nodes(graph));
+                    tmp = map_scale * (graph.Z - map_shift * U0);
+                else
+                    U0 = ones(size(graph));
+                    tmp = map_scale * (graph - map_shift * U0);
+                end
                 U1 = (filter.data.cheb_kind) * tmp;
                 out = filter.data.coeffs(1) * U0;
                 
                 if numel(filter.data.coeffs) > 1
                     out = out + filter.data.coeffs(2) * U1;
                     for m = 3:numel(filter.data.coeffs)
-                        new_U = 2 * tmp * U1 - U0;
+                        if isstruct(graph)
+                            new_U = 2 * tmp * U1 - U0;
+                        else
+                            new_U = 2 * tmp .* U1 - U0;
+                        end
                         U0 = U1;
                         U1 = new_U;
                         out = out + filter.data.coeffs(m) * U1;
                     end
                 end
             case 'kernel'
-                out = grasp_fourier_inverse(graph, diag(filter.data(graph.eigvals)));
+                if isstruct(graph)
+                    out = grasp_fourier_inverse(graph, diag(filter.data(graph.eigvals)));
+                else
+                    out = filter.data(graph);
+                end
             case 'convolution'
+                if ~isstruct(graph)
+                    error('Graph only filter!');
+                end
                 out = grasp_convolution(graph, filter.data);
             case 'matrix'
+                if ~isstruct(graph)
+                    error('Graph only filter!');
+                end
                 out = filter.data;
             otherwise
                 error(['Unknown filter type ''' filter.type '''!']);
