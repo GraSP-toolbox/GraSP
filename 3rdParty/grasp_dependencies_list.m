@@ -174,4 +174,13 @@ function list = grasp_dependencies_list
     list(cur_dep).path_list = {'Matlab/'};
     list(cur_dep).optional = 1;
     list(cur_dep).ref_bib = {'https://doi.org/10.1109/EUSIPCO.2015.7362637'};
+    
+    cur_dep = cur_dep + 1;
+    
+    list(cur_dep).url = 'https://github.com/chebfun/chebfun/archive/v5.7.0.zip';
+    list(cur_dep).name = 'chebfun/';
+    list(cur_dep).root_dir = 'chebfun-5.7.0/';
+    list(cur_dep).path_list = {'.'};
+    list(cur_dep).optional = 1;
+    list(cur_dep).ref_bib = {'https://www.chebfun.org/docs/guide/chebfun_guide.pdf'};
 end
