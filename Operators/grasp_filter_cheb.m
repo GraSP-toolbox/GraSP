@@ -68,7 +68,7 @@ function filter = grasp_filter_cheb(fun, order, varargin)
     grasp_start_opt_3rd_party('chebfun')
     
     filter.type = 'chebpoly';
-    filter.data.coeffs = chebcoeffs(chebfun(fun, options.interval), order, 'kind', options.cheb_kind);
+    filter.data.coeffs = chebcoeffs(chebfun(fun, options.interval), order + 1, 'kind', options.cheb_kind);
     filter.data.interval = options.interval;
     filter.data.cheb_kind = options.cheb_kind;
 end
