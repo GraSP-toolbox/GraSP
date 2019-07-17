@@ -1,34 +1,23 @@
-%Defines and returns an all-pass graph filter.
+%Defines and returns a Chebyshev polynomial approximation of a given 
+%function.
 %
-%This file serves as a reference for the filter structure. These are
-%filters that are independent from the graph structure. At the moment,
-%two fields are required:
-% - type: how is the filter defined?
-%   - 'polynomial': polynomial of the fundamental matrix of the graph
-%   - 'chebpoly': Chebyshev polynomial of the second kind of the
-%                 fundamental matrix of the  graph
-%   - 'kernel': function of the fundamental matrix of the graph, or
-%               equivalently, function of the graph frequencies in the
-%               spectral domain.
-%   - 'convolution': graph signal to convolve a signal with
-%   - 'matrix': for an arbitrary linear operator on graph signals
-% - data: actual implementation of the filter, depending on the type:
-%   - polynomial: Matlab polynomial data structure
-%   - chebpoly: structure with two fields:
-%     - coeffs: vector of coefficients (first is lowest order)
-%     - interval: interval on which the Chebyshev polynomial is defined
-%     - cheb_kind: first (1) or second (2) kind of Chebyshev polynomial
-%   - kernel: matlab function (see documentation of the operator @)
-%   - convolution: graph signal
-%   - matrix: NxN matrix (N being the graph size)
+%   filter = GRASP_FILTER_CHEB(fun, order) computes the hebyshev polynomial
+%       approximation of fun of the first kind of degree order on the
+%       interval [0 2].
 %
-%   filter = GRASP_FILTER_STRUCT() all_pass graph filter.
+%   GRASP_FILTER_CHEB(..., options) optional parameters:
+%
+%   options.interval: interval on which to compute the polynomial (default:
+%       [0 2]).
+%
+%   options.cheb_kind: first (1, default), or second (2) of Chebyshev
+%       polynomial.
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@usc.edu>
 
 % Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2018)
+% Angeles, California, USA (2019)
 % 
 % benjamin.girault@usc.edu
 % 
@@ -61,7 +50,25 @@
 % The fact that you are presently reading this means that you have had
 % knowledge of the CeCILL license and that you accept its terms.
 
-function filter = grasp_filter_struct
-    filter.type = 'polynomial';
-    filter.data = 1;
+function filter = grasp_filter_cheb(fun, order, varargin)
+    %% Parameters
+    default_param = struct(...
+        'interval', [0 2],...
+        'cheb_kind', 1);
+    if nargin == 2
+        options = struct;
+    elseif nargin > 3
+        options = cell2struct(varargin(2:2:end), varargin(1:2:end), 2);
+    else
+        options = varargin{1};
+    end
+    options = grasp_merge_structs(default_param, options);
+    
+    %% Filter
+    grasp_start_opt_3rd_party('chebfun')
+    
+    filter.type = 'chebpoly';
+    filter.data.coeffs = chebcoeffs(chebfun(fun, options.interval), order, 'kind', options.cheb_kind);
+    filter.data.interval = options.interval;
+    filter.data.cheb_kind = options.cheb_kind;
 end

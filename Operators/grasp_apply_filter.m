@@ -48,6 +48,24 @@ function out = grasp_apply_filter(graph, filter, signal)
         switch filter.type
             case 'polynomial'
                 out = polyvalm(filter.data, graph.Z);
+            case 'chebpoly'
+                map_shift = (filter.data.interval(2) + filter.data.interval(1)) / 2;
+                map_scale = 2 / (filter.data.interval(2) - filter.data.interval(1));
+                
+                U0 = speye(grasp_nb_nodes(graph));
+                tmp = map_scale * (graph.Z - map_shift * U0);
+                U1 = (filter.data.cheb_kind) * tmp;
+                out = filter.data.coeffs(1) * U0;
+                
+                if numel(filter.data.coeffs) > 1
+                    out = out + filter.data.coeffs(2) * U1;
+                    for m = 3:numel(filter.data.coeffs)
+                        new_U = 2 * tmp * U1 - U0;
+                        U0 = U1;
+                        U1 = new_U;
+                        out = out + filter.data.coeffs(m) * U1;
+                    end
+                end
             case 'kernel'
                 out = grasp_fourier_inverse(graph, diag(filter.data(graph.eigvals)));
             case 'convolution'
@@ -66,6 +84,23 @@ function out = grasp_apply_filter(graph, filter, signal)
                     out = out + filter.data(i) * tmp;
                     if i ~= 1
                         tmp = graph.Z * tmp;
+                    end
+                end
+            case 'chebpoly'
+                map_shift = (filter.data.interval(2) + filter.data.interval(1)) / 2;
+                map_scale = 2 / (filter.data.interval(2) - filter.data.interval(1));
+                
+                U0 = signal;
+                U1 = (filter.data.cheb_kind) * map_scale * (graph.Z * signal - map_shift * signal);
+                out = filter.data.coeffs(1) * U0;
+                
+                if numel(filter.data.coeffs) > 1
+                    out = out + filter.data.coeffs(2) * U1;
+                    for m = 3:numel(filter.data.coeffs)
+                        new_U = 2 * map_scale * (graph.Z * U1 - map_shift * U1) - U0;
+                        U0 = U1;
+                        U1 = new_U;
+                        out = out + filter.data.coeffs(m) * U1;
                     end
                 end
             case 'kernel'
