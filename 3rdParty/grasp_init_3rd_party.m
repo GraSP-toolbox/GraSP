@@ -72,10 +72,14 @@ function grasp_init_3rd_party(varargin)
 
     %% List
     softwares = grasp_dependencies_list;
-    
+
+    mfile_dir = [fileparts(mfilename('fullpath')), filesep];
+    local_dep_file = [mfile_dir '/local_dependencies.mat'];
+    if ~exist(local_dep_file, 'file')
+        local_dependencies = [];
+        save(local_dep_file, 'local_dependencies');
+    end
     if options.with_local_deps
-        mfile_dir = [fileparts(mfilename('fullpath')), filesep];
-        local_dep_file = [mfile_dir '/local_dependencies.mat'];
         load(local_dep_file, 'local_dependencies');
         for cur_dep = 1:numel(local_dependencies)                 %#ok
             cur_soft_id = numel(softwares) + 1;
