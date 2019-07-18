@@ -56,8 +56,14 @@
 % knowledge of the CeCILL license and that you accept its terms.
 
 function grasp_install(varargin)
+    %% Checking we are in the right folder
+    mfile_dir = [fileparts(mfilename('fullpath')), filesep];
+    if ~exist([mfile_dir '/3rdParty'], 'dir')
+        error('The current folder needs to be the root folder grasp of the GraSP toolbox!');
+    end
+
     %% Adding path to Util folder (for grasp_merge_struct)
-    addpath('Util');
+    addpath([mfile_dir '/Util']);
 
     %% Parameters
     default_param = struct(...
@@ -74,12 +80,7 @@ function grasp_install(varargin)
     options = grasp_merge_structs(default_param, options);
     
     %% Start install
-    mfile_dir = [fileparts(mfilename('fullpath')), filesep];
-    if exist([mfile_dir '/3rdParty'], 'dir')
-        prev = cd([mfile_dir '/3rdParty']);
-        grasp_init_3rd_party(options);
-        cd(prev);
-    else
-        error('The current folder needs to be the root folder grasp of the GraSP toolbox!');
-    end
+    prev = cd([mfile_dir '/3rdParty']);
+    grasp_init_3rd_party(options);
+    cd(prev);
 end
