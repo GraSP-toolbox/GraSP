@@ -95,6 +95,9 @@
 %
 %   options.highlight_nodes_width: width of the circle line (default: 0.5).
 %
+%   options.highlight_nodes_color: color for the circle line (default:
+%       red).
+%
 %               ***Edges***
 %
 %   options.show_edges: whether or not to show edges of the graph
@@ -188,6 +191,7 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
         'highlight_nodes', [],...
         'highlight_nodes_size', -1,...
         'highlight_nodes_width', 0.5,...
+        'highlight_nodes_color', 'r',...
         'color_map', 'default',...
         'show_colorbar', false,...
         'node_display_size', 200,...
@@ -248,6 +252,15 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
     prev_hold = get(axis_handle, 'NextPlot');
     if strcmp(prev_hold, 'replace')
         cla(axis_handle);
+        % Remove any remaining edge colorbar
+        for ch = findall(axis_handle.Parent.Children, 'type', 'Axes')'
+            if ch == axis_handle
+                continue;
+            end
+            if sum(abs(ch.Position - axis_handle.Position)) == 0 && strcmp(ch.Title.String, 'edge_colorbar')
+                delete(ch);
+            end
+        end
     end
     hold(axis_handle, 'on');
     axis(options.axis_style);
@@ -512,7 +525,7 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
     if numel(options.highlight_nodes) > 0
         scatter(axis_handle,...
                 input_graph.layout(options.highlight_nodes, 1), input_graph.layout(options.highlight_nodes, 2),...
-                options.highlight_nodes_size, 'r', 'o',...
+                options.highlight_nodes_size, options.highlight_nodes_color, 'o',...
                 'LineWidth', options.highlight_nodes_width);
     end
     
@@ -562,17 +575,8 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
     % Show the colorbar for the edge weights => need for a new set of
     % axes
     if options.edge_colorbar && ~isempty(options.edge_colormap)
-        % First, remove any remaining
-        for ch = findall(axis_handle.Parent.Children, 'type', 'Axes')'
-            if ch == axis_handle
-                continue;
-            end
-            if sum(abs(ch.Position - axis_handle.Position)) == 0
-                delete(ch);
-            end
-        end
-        
         axis_edge_cm_handle = axes;
+        axis_edge_cm_handle.Title.String = 'edge_colorbar';
         linkprop([axis_handle, axis_edge_cm_handle], {'DataAspectRatio', 'PlotBoxAspectRatio', 'Position', 'XLim', 'YLim', 'ZLim', 'OuterPosition'});
 
         axis_edge_cm_handle.Visible = 'off';
