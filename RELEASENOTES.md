@@ -28,6 +28,7 @@ Just run `grasp_install` to install the missing 3rd party dependencies (see belo
  * `grasp_bibliography`: possibility for multiple references for a given 3rd party toolbox
  * `grasp_show_graph`: colorbar for edge weight
  * `grasp_show_graph`: better backgrounds handling & documentation
+ * `grasp_show_graph`: uses a blue/red colormap if color scale is symmetric
 
 ### Bugfixes
 

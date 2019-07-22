@@ -74,7 +74,10 @@
 %   options.value_scale: use the color scale provided (default: [min max]
 %       of node_values).
 %
-%   options.color_map: use the provide color map (default: 'default').
+%   options.color_map: use the provided named color map as defined in 
+%       matlab COLORMAP function, or 'blue_red' for the one set by 
+%       GRASP_SET_BLUE_RED_COLORMAP (default: 'default' or 'blue_red' if 
+%       value_scale is [-x x] for some value x).
 %
 %   options.show_colorbar: show the color bar on the right (default:
 %       false).
@@ -284,7 +287,14 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
                 full(max(A_layout(A_layout ~= 0)))];
         end
     end
-    colormap(axis_handle, options.color_map);
+    
+    if strcmp(options.color_map, 'default') && numel(options.value_scale) == 2 && options.value_scale(1) + options.value_scale(2) == 0
+        grasp_set_blue_red_colormap(axis_handle);
+    elseif strcmp(options.color_map, 'blue_red')
+        grasp_set_blue_red_colormap(axis_handle);
+    else
+        colormap(axis_handle, options.color_map);
+    end
     
     %% Background
     if ~isempty(options.background)
