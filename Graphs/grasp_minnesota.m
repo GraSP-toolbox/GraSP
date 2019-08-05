@@ -16,8 +16,12 @@
 %       of the shortest path (road) distance, 'road_dist' for each edge
 %       corresponding to a road and weighted by its length, 'road' for 0/1
 %       edges corresponding to roads.
+%
 %   options.sigma: sigma^2 in the Gaussian kernel (see
 %       GRASP_ADJACENCY_GAUSSIAN) (default: 30).
+%
+%   options.map: 'coarse' map background (default), 'fine', or 'none' to 
+%       disable the background map.
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
@@ -64,7 +68,8 @@ function graph = grasp_minnesota(varargin)
     %% Parameters
     default_param = struct(...
         'type', 'gauss_road',...
-        'sigma', 30);
+        'sigma', 30,...
+        'map', 'coarse');
     if nargin == 0
         options = struct;
     elseif nargin > 1
@@ -89,12 +94,37 @@ function graph = grasp_minnesota(varargin)
     graph.A = data.A(mask, mask);
     graph.node_names = data.labels(mask);
     graph.layout = data.xy(mask, :);
-
-    %% Automatic layout boundaries computation for grasp_show_graph
-    graph.show_graph_options.layout_boundaries = 0;
     
     %% Geo distance matrix from the layout (between any two nodes)
     graph.distances = grasp_distances_geo_layout(graph);
+    
+    %% Background & Layout projection (Mercator)
+    mercator = @(layout) [deg2rad(layout(:, 1)) log(tan(abs(deg2rad(layout(:, 2))) / 2 + pi / 4))] * 6378137;
+    graph.geo_layout = graph.layout;
+    graph.layout = mercator(graph.geo_layout);
+    
+    switch options.map
+        case 'fine'
+            graph.background_topleft = [-97.7345 49.38];
+            graph.background_bottomright = [-88.9452 43.0688];
+            graph.show_graph_options.background = 'minnesota_fine.png';
+        case 'coarse'
+            graph.background_topleft = [-97.5497 49.13267];
+            graph.background_bottomright = [-89.32772 43.40449];
+            graph.show_graph_options.background = 'minnesota_coarse.png';
+        case 'none'
+            graph.background_topleft = [];
+            graph.background_bottomright = [];
+        otherwise
+            error('No such map! (choose ''fine'' or ''coarse'')');
+    end
+    if numel(graph.background_topleft) > 0
+        graph.show_graph_options.background_boundaries = [mercator(graph.background_topleft)' mercator(graph.background_bottomright)'];
+        graph.show_graph_options.background_boundaries(2, :) = fliplr(graph.show_graph_options.background_boundaries(2, :));
+        graph.show_graph_options.layout_boundaries = graph.show_graph_options.background_boundaries;
+    else
+        graph.show_graph_options.layout_boundaries = 0.05;
+    end
     
     %% Adjacency matrix
     graph.A_layout = graph.A;
