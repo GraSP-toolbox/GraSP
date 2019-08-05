@@ -38,8 +38,9 @@
 %
 %   options.layout_boundaries: 2 rows "x", "y" (or 3 for 3D layout, "x", 
 %       "y", "z") of with boundaries to plot the graph [min max] (default: 
-%       [0 10] for each dimension). Set to 0 for a automatic computation of
-%       the boundaries with a 5% margin.
+%       [0 10] for each dimension). Set to a negative value for a automatic
+%       computation of the boundaries with a 5% margin, or any positive
+%       value in the interval [0,1) to set the margin size (0.05 = 5%).
 %
 %   options.axis_style: see AXIS style input property (default: equal).
 %
@@ -243,9 +244,25 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
     if isempty(options.layout_boundaries)
         options.layout_boundaries = kron([0 10], ones(size(input_graph.layout, 2), 1));
     elseif numel(options.layout_boundaries) == 1
+        if options.layout_boundaries < 0
+            margin = 0.05; % 5% margin
+        else
+            margin = options.layout_boundaries;
+        end
         options.layout_boundaries = [min(input_graph.layout)' max(input_graph.layout)'];
         boundaries_size = options.layout_boundaries(:, 2) - options.layout_boundaries(:, 1);
-        margin_size = 0.05 * boundaries_size; % 5% margin
+        margin_size = margin * boundaries_size;
+        if margin_size(1) == 0
+            if margin_size(2) == 0
+                margin_size = [1 ; 1];
+            else
+                margin_size(1) = margin_size(2);
+            end
+        end
+        if margin_size(2) == 0
+            margin_size(2) = margin_size(1);
+        end
+        
         options.layout_boundaries(:, 1) = options.layout_boundaries(:, 1) - margin_size;
         options.layout_boundaries(:, 2) = options.layout_boundaries(:, 2) + margin_size;
     elseif size(options.layout_boundaries, 2) ~= 2 || size(options.layout_boundaries, 1) < 2 || size(options.layout_boundaries, 1) > 3
@@ -297,17 +314,19 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
     end
     
     %% Background
+    % Getting rid of any remaining background image
+    for ch = findall(axis_handle, 'Type', 'Image')'
+        delete(ch);
+    end
+    % Then adding the new (if required)
     if ~isempty(options.background)
         % Background file or image?
         if ischar(options.background)
             [img, map, alpha] = imread(options.background);
-            info = imfinfo(options.background);
         else
             img = options.background;
             map = [];
             alpha = [];
-            info.Height = size(options.background, 1);
-            info.Width  = size(options.background, 2);
         end
         % Converting RGB to data used by imagesc, possibly in grayscale
         if ~isempty(map)
@@ -346,7 +365,8 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
 
     %% Layout
     if ~isfield(input_graph, 'layout') || size(input_graph.layout, 1) ~= N
-        input_graph.layout = grasp_layout(input_graph);
+        warning('GraSP:MissingLayout', 'Computing a spectral layout. Consider defining it manually beforehand for efficiency.');
+        input_graph.layout = grasp_layout_spectral(input_graph);
     end
     
     %% Color scale
