@@ -89,9 +89,9 @@ function ah = grasp_subaxis(varargin)
         cur_cell = varargin{4};
         if nargin >= 5
             if nargin == 5
-                param = grasp_merge_structs(param, varargin{5});
+                param = grasp_merge_structs(param, varargin{5}, false);
             else
-                param = grasp_merge_structs(param, cell2struct(varargin(6:2:end), varargin(5:2:end), 2));
+                param = grasp_merge_structs(param, cell2struct(varargin(6:2:end), varargin(5:2:end), 2), false);
             end
         end
     else
@@ -101,9 +101,9 @@ function ah = grasp_subaxis(varargin)
         cur_cell = varargin{3};
         if nargin >= 4
             if nargin == 4
-                param = grasp_merge_structs(param, varargin{4});
+                param = grasp_merge_structs(param, varargin{4}, false);
             else
-                param = grasp_merge_structs(param, cell2struct(varargin(5:2:end), varargin(4:2:end), 2));
+                param = grasp_merge_structs(param, cell2struct(varargin(5:2:end), varargin(4:2:end), 2), false);
             end
         end
     end
