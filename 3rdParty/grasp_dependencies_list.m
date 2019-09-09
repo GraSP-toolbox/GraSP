@@ -53,6 +53,7 @@ function list = grasp_dependencies_list
     list(cur_dep).url = 'https://github.com/bgirault-usc/MyPatcher/archive/v1.1.1.zip';
     list(cur_dep).name = 'MyPatcher/';
     list(cur_dep).root_dir = 'MyPatcher-1.1.1/';
+    list(cur_dep).path_list = {'.'};
     list(cur_dep).debug = 0;
     list(cur_dep).mex_flag = [];
     
@@ -112,13 +113,12 @@ function list = grasp_dependencies_list
     
     cur_dep = cur_dep + 1;
     
-    list(cur_dep).url = 'https://github.com/STAC-USC/Graph_Learning/archive/master.zip';
+    list(cur_dep).url = 'https://github.com/STAC-USC/Graph_Learning/archive/GLL-v2.1.zip';
     list(cur_dep).name = 'usc_graph_learning/';
-    list(cur_dep).root_dir = 'Graph_Learning-master/';
-    list(cur_dep).path_list = {'.'};
-    list(cur_dep).optional = 1;
-    list(cur_dep).ref_bib = 'https://doi.org/10.1109/JSTSP.2017.2726975';
+    list(cur_dep).root_dir = 'Graph_Learning-GLL-v2.1/';
     list(cur_dep).path_list = {'.', 'functions', 'misc'};
+    list(cur_dep).optional = 1;
+    list(cur_dep).ref_bib = {'https://doi.org/10.1109/JSTSP.2017.2726975', 'https://doi.org/10.1109/TSIPN.2018.2872157'};
     
     cur_dep = cur_dep + 1;
     
@@ -153,7 +153,7 @@ function list = grasp_dependencies_list
     list(cur_dep).root_dir = 'FastGSSS-master/';
     list(cur_dep).path_list = {'.'};
     list(cur_dep).optional = 1;
-    list(cur_dep).ref_bib = 'To appear in IEEE TSP';
+    list(cur_dep).ref_bib = 'https://doi.org/10.1109/TSP.2019.2908129';
     list(cur_dep).dependencies = {'sgwt'};
     
     cur_dep = cur_dep + 1;
