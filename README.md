@@ -16,7 +16,8 @@ DOI: [10.1109/ICASSP.2017.8005300](https://doi.org/10.1109/ICASSP.2017.8005300)
 ### References for Additional Toolboxes
 
 A list of references for the active toolboxes (those activated by `grasp_start_opt_3rd_party`) are 
-given by the function `grasp_bibliography`.
+given by the function `grasp_bibliography`. For a detailed description of those, please refer to
+[the list of third party toolboxes](ThirdPartyToolboxes.md)
 
 ## Sources
 
