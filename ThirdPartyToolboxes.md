@@ -39,7 +39,7 @@ Toolbox to perform active sampling (sampled vertex set selection) and signal rec
 
 Name | Optional | Paper(s)
 ---|:---:|---
-`usc_graph_learning` | Yes | [https://doi.org/10.1109/JSTSP.2017.2726975](), [https://doi.org/10.1109/TSIPN.2018.2872157]()
+`usc_graph_learning` | Yes | [https://doi.org/10.1109/JSTSP.2017.2726975]() <br /> [https://doi.org/10.1109/TSIPN.2018.2872157]()
 
 Graph Learning using Gaussian Markov Random Fields models.
 
@@ -71,7 +71,7 @@ Matlab toolbox for eigendecomposition-free sampling set selection.
 
 Name | Optional | Paper(s)
 ---|:---:|---
-`usc_graph_learning_properties` | Yes | [https://doi.org/10.1109/JSTSP.2017.2726975](), [https://doi.org/10.1109/TSP.2018.2813337]()
+`usc_graph_learning_properties` | Yes | [https://doi.org/10.1109/JSTSP.2017.2726975]() <br /> [https://doi.org/10.1109/TSP.2018.2813337]()
 
 Implementation of a graph Learning approach based on the `usc_graph_learning` toolbox above.
 
