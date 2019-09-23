@@ -53,7 +53,7 @@ function out = grasp_apply_filter(graph, filter, signal)
                 if isstruct(graph)
                     out = polyvalm(filter.data, graph.Z);
                 else
-                    out = polyvalm(filter.data, graph);
+                    out = polyval(filter.data, graph);
                 end
             case 'chebpoly'
                 map_shift = (filter.data.interval(2) + filter.data.interval(1)) / 2;
