@@ -1,7 +1,7 @@
 %Remove a local dependency previously added by GRASP_ADD_DEPENDENCY.
 %
 %   GRASP_REMOVE_DEPENDENCY(dep) remove dep from the list of local
-%       dependencies, either using its name as given by
+%       dependencies using its name as given by
 %       GRASP_START_OPT_3RD_PARTY.
 %
 % Authors:
