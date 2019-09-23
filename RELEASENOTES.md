@@ -32,6 +32,7 @@ Just run `grasp_install` to install the missing 3rd party dependencies (see belo
  * `grasp_show_graph`: uses a blue/red colormap if color scale is symmetric
  * `grasp_show_transform`: new `support_scatter_mode` for various representation of the support / values / magnituded of each mode/atom of the transform
  * `grasp_show_transform`: black right axis (instead of gray) for added visibility
+ * `grasp_show_fouriermodes`: better control over titles and their margin
 
 ### Bugfixes
 
