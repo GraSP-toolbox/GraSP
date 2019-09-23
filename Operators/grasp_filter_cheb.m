@@ -54,7 +54,8 @@ function filter = grasp_filter_cheb(fun, order, varargin)
     %% Parameters
     default_param = struct(...
         'interval', [0 2],...
-        'cheb_kind', 1);
+        'cheb_kind', 1,...
+        'chebfun_splitting', 0);
     if nargin == 2
         options = struct;
     elseif nargin > 3
@@ -68,7 +69,7 @@ function filter = grasp_filter_cheb(fun, order, varargin)
     grasp_start_opt_3rd_party('chebfun')
     
     filter.type = 'chebpoly';
-    filter.data.coeffs = chebcoeffs(chebfun(fun, options.interval), order + 1, 'kind', options.cheb_kind);
+    filter.data.coeffs = chebcoeffs(chebfun(fun, options.interval, 'splitting', options.chebfun_splitting), order + 1, 'kind', options.cheb_kind);
     filter.data.interval = options.interval;
     filter.data.cheb_kind = options.cheb_kind;
 end
