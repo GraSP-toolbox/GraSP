@@ -2,14 +2,19 @@
 %distance matrix.
 %
 %   A = GRASP_ADJACENCY_GAUSSIAN(graph, sigma) construct the adjacency
-%   matrix A such that a_ij = exp(-d_ij² / (2 * sigma²)).
+%       matrix A such that a_ij = exp(-d_ij² / (2 * sigma²)). Set sigma to
+%       'auto' to use 1/3 of the average distance accross edges of the
+%       graph (heuristic [2]).
 %
 %   GRASP_ADJACENCY_GAUSSIAN(..., lambda) normalize weights with the power
-%   lambda of each degree prior to computing the Gaussian kernel, i.e.
-%   compute A=D^-lambda * A * D^-lambda [1].
+%       lambda of each degree prior to computing the Gaussian kernel, i.e.
+%       compute A=D^-lambda * A * D^-lambda [1].
 %
 %   [1] Graph Laplacians and their Convergence on Random Neighborhood 
 %   Graphs. M. Hein, J.-Y. Audibert, and U. von Luxburg, 2007.
+%
+%   [2] Semi-Supervised Learning. O. Chapelle, B. Schölkopf, and A. Zien,
+%   MIT Press, 2006.
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
@@ -18,7 +23,7 @@
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015-11-01)
 % Copyright Benjamin Girault, University of Sourthern California, Los
-% Angeles, California, USA (2017-2018)
+% Angeles, California, USA (2017-2019)
 % 
 % benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
@@ -56,6 +61,19 @@ function A = grasp_adjacency_gaussian(graph, sigma, lambda)
     if nargin == 2
         lambda = 0;
     end
+    
+    if ischar(sigma)
+        if strcmp(sigma, 'auto')
+            tmp = graph.distances(graph.A ~= 0);
+            sigma = mean(tmp) / 3;
+        else
+            error('Unrecogized paramater ''sigma'': it should be either a postive value or ''auto''.');
+        end
+    end
+    if sigma <= 0
+        error('Unrecogized paramater ''sigma'': it should be either a postive value or ''auto''.');
+    end
+    
     N = size(graph.distances, 1);
     graph.A = exp(-graph.distances .^ 2 / (2 * sigma ^ 2)) - eye(N);
     if lambda ~= 0
