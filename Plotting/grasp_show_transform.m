@@ -46,7 +46,19 @@
 %       amplitude_normalization.
 %
 %   options.support_scatter_size: size of the dots for vertices in the 
-%       support of the mode (default: 36).
+%       support of the mode (default: 36). If dots are of variable width
+%       (see options.support_scatter_mode), then this size corresponds to
+%       an amplitude of 1.
+%
+%   options.support_scatter_mode: controls how the scatter plot of the
+%       support is showing with respect to the amplitude and sign of the
+%       mode. Default is constant size and black (default: 'constant').
+%       Other possible values are 'var_size' for a variable width of the
+%       dots, 'var_gray' for variable shades of gray, 'var_color' for 
+%       variable color intensity (blue for negative, red for positive, 
+%       white for zero), and 'var_width_color' for a combination of
+%       'var_color' and 'var_width', or 'var_width_gray' for a combination 
+%       of 'var_gray' and 'var_width'.
 %
 %   options.graph_signal_y_scheme: either place regularly space all the
 %       graph signals of the transform ('regular', default), or use the
@@ -111,6 +123,7 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
         'amplitude_normalization', 'max_abs',...
         'epsilon_support', 0.05,...
         'support_scatter_size', 36,...
+        'support_scatter_mode', 'constant',...
         'graph_signal_y_scheme', 'regular',...
         'bands', [],...
         'bands_colors', [],...
@@ -139,6 +152,7 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
         error('Please compute the GFT prior to using this function (using grasp_eigendecomposition) or provide a transform using options.transform_matrix!');
     end
     
+    transform_is_gft = false;
     if numel(options.transform_matrix) > 0
         % Provided matrix
         if size(options.transform_matrix, 2) ~= N
@@ -165,6 +179,7 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
         end
     else
         % GFT
+        transform_is_gft = true;
         options.transform_matrix = graph.F;
         options.graph_frequencies = graph.eigvals;
         modes = graph.Finv;
@@ -318,7 +333,8 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
     end
     
     %% Bands Colors
-    if numel(options.bands) > 0 && sum(size(options.bands_colors) == [numel(options.bands) 2]) < 2
+    if numel(options.bands) > 0 && sum(size(options.bands_colors) == [size(options.bands, 1) 3]) < 2
+        warning('options.bands_colors is of an incorrect size!');
         options.bands_colors = [];
         while size(options.bands, 1) > size(options.bands_colors, 1)
             options.bands_colors = [options.bands_colors ; get(gca,'colororder')];
@@ -377,7 +393,64 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
     plot(repmat(options.embedding(options.ordering)', 2, 1), repmat(yleftlimits', 1, numel(options.embedding(options.ordering)), 1), 'Color', (1 - min_gray) * [1 1 1]);
     
     % Dots where vertices are in the support
-    scatter(all_x(abs(all_ordered_modes(:)) > options.epsilon_support), all_series(abs(all_ordered_modes(:)) > options.epsilon_support), options.support_scatter_size, '.k');
+    support_mask = abs(all_ordered_modes(:)) > options.epsilon_support;
+    support_x = all_x(support_mask);
+    support_y = all_series(support_mask);
+    support_size = options.support_scatter_size;
+    support_color = 'k';
+    
+    var_width = 0;
+    var_color = 0;
+    var_gray = 0;
+    switch options.support_scatter_mode
+        case 'constant'
+        support_x = all_x(abs(all_ordered_modes(:)) > options.epsilon_support);
+        support_y = all_series(abs(all_ordered_modes(:)) > options.epsilon_support);
+        case 'var_width'
+            var_width = 1;
+        case 'var_gray'
+            var_gray = 1;
+        case 'var_color'
+            var_color = 1;
+        case 'var_width_gray'
+            var_width = 1;
+            var_gray = 1;
+        case 'var_width_color'
+            var_width = 1;
+            var_color = 1;
+        otherwise
+            error('Unknown, or not implemented ''options.support_scatter_mode''');
+    end
+    if var_width
+        support_size = options.support_scatter_size * abs(all_ordered_modes(support_mask));
+    end
+    if var_gray
+        support_color = 1 - repmat(abs(all_ordered_modes(support_mask)), 1, 3);
+    end
+    if var_color
+        mode_amplitude = abs(all_ordered_modes(support_mask));
+        mode_sign = sign(all_ordered_modes(support_mask));
+        support_color = ones(numel(mode_sign), 3);
+        support_color(mode_sign > 0, 2) = 1 - mode_amplitude(mode_sign > 0);
+        support_color(mode_sign > 0, 3) = support_color(mode_sign > 0, 2);
+        support_color(mode_sign < 0, 1) = 1 - mode_amplitude(mode_sign < 0);
+        support_color(mode_sign < 0, 2) = support_color(mode_sign < 0, 1);
+    end
+    if var_color || var_gray || var_width
+        scatter(support_x,...
+                support_y,...
+                support_size,...
+                support_color,...
+                'filled',...
+                'MarkerFaceColor', 'flat',...
+                'MarkerEdgeColor', 'k');
+    else
+        scatter(support_x,...
+                support_y,...
+                support_size,...
+                support_color,...
+                '.');
+    end
     
     % Highlighting nodes
     ordered_highlight = options.highlight_entries(:, options.ordering)';
@@ -422,7 +495,11 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
     hold('off');
 
     % Left label 
-    ylabel('Graph Frequency index $l$', 'Interpreter', 'Latex');
+    if transform_is_gft
+        ylabel('Graph Frequency index $l$', 'Interpreter', 'Latex');
+    else
+        ylabel('Transform mode index $l$', 'Interpreter', 'Latex');
+    end
     xlim(cur_xlim);
     final_xticks = get(gca, 'XTick');
   
@@ -467,14 +544,14 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
     hold('off');
     
     % Cleanup
-    set(gca, 'YColor', [0.7 0.7 0.7]);
+    set(gca, 'YColor', zeros(1, 3));
     
 %     freq_range = (options.graph_frequencies(M) - options.graph_frequencies(1));
 %     vertical_clearance = options.amplitude_scale / (M - 1 + 2 * options.amplitude_scale);
 %     vertical_clearance = vertical_clearance / (1 - 2 * vertical_clearance);
 %     ylim(freq_range * [-vertical_clearance 1 + vertical_clearance])
     right_amplitude_scale = options.amplitude_scale * (options.graph_frequencies(M) - options.graph_frequencies(1)) / M;
-    ylim([options.graph_frequencies(1) options.graph_frequencies(M)] + right_amplitude_scale * [-1 1]);
+    ylim(sort([options.graph_frequencies(1) options.graph_frequencies(M)]) + right_amplitude_scale * [-1 1]);
     
     ylabel('Graph Frequency $\lambda_l$', 'Interpreter', 'Latex');
     

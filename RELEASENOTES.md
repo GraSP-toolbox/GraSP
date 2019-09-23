@@ -30,6 +30,8 @@ Just run `grasp_install` to install the missing 3rd party dependencies (see belo
  * `grasp_show_graph`: colorbar for edge weight
  * `grasp_show_graph`: better backgrounds handling & documentation
  * `grasp_show_graph`: uses a blue/red colormap if color scale is symmetric
+ * `grasp_show_transform`: new `support_scatter_mode` for various representation of the support / values / magnituded of each mode/atom of the transform
+ * `grasp_show_transform`: black right axis (instead of gray) for added visibility
 
 ### Bugfixes
 
@@ -39,6 +41,7 @@ Just run `grasp_install` to install the missing 3rd party dependencies (see belo
  * `grasp_minnesota`: fixed distances computation
  * `grasp_importcsv`: fixed undirected edge import
  * `grasp_apply_filter`: fixed polynomial computation with graph frequencies
+ * `grasp_show_transform`: bands colors bugfix
 
 ## Version 1.2
 
