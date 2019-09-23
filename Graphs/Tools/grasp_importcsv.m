@@ -54,5 +54,8 @@ function graph = grasp_importcsv(nodes_file, edges_file)
     edges = csvread(edges_file, 1);
     for i = 1:size(edges, 1)
         graph.A(edges(i, 1), edges(i, 2)) = edges(i, 3);
+        if ~edges(i, 4)
+            graph.A(edges(i, 2), edges(i, 1)) = edges(i, 3);
+        end
     end
 end

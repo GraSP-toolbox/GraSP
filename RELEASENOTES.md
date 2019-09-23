@@ -37,6 +37,7 @@ Just run `grasp_install` to install the missing 3rd party dependencies (see belo
  * Bugfixes in `grasp_translation_page`
  * Bugfix in `grasp_minnesota`
  * `grasp_minnesota`: fixed distances computation
+ * `grasp_importcsv`: fixed undirected edge import
 
 ## Version 1.2
 
