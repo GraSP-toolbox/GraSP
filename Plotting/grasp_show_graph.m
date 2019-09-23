@@ -315,8 +315,10 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
     
     %% Background
     % Getting rid of any remaining background image
-    for ch = findall(axis_handle, 'Type', 'Image')'
-        delete(ch);
+    if strcmp(prev_hold, 'replace')
+        for ch = findall(axis_handle, 'Type', 'Image')'
+            delete(ch);
+        end
     end
     % Then adding the new (if required)
     if ~isempty(options.background)
