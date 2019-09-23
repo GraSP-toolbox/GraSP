@@ -22,6 +22,7 @@ Just run `grasp_install` to install the missing 3rd party dependencies (see belo
  * `grasp_maximally_connected_subgraphs`: computes the maximally connected subgraphs
  * `grasp_filter_cheb`: creates a Chebyshev polynomial graph filter
  * `grasp_plane_rnd_pseudo_regular`: builds a sensor network graph with approximately regular spacing of vertices in the plane
+ * `grasp_filter_kernel_to_poly`: for polynomial approximation of kernelized graph filters
 
 ### Minor Features
 
