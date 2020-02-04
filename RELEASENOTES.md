@@ -38,13 +38,18 @@ Just run `grasp_install` to install the missing 3rd party dependencies (see belo
 
 ### Bugfixes
 
- * Bugfix in `grasp_install` (missing path)
- * Bugfixes in `grasp_translation_page`
- * Bugfix in `grasp_minnesota`
  * `grasp_minnesota`: fixed distances computation
  * `grasp_importcsv`: fixed undirected edge import
  * `grasp_apply_filter`: fixed polynomial computation with graph frequencies
  * `grasp_show_transform`: bands colors bugfix
+
+## Version 1.2.1
+
+### Bugfixes
+
+ * Bugfix in `grasp_install` (missing path)
+ * Bugfixes in `grasp_translation_page`
+ * Bugfix in `grasp_minnesota`
 
 ## Version 1.2
 
