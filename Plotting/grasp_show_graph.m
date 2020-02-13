@@ -238,6 +238,12 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
     if options.highlight_nodes_size == -1
         options.highlight_nodes_size = 2 * options.node_display_size;
     end
+
+    %% Layout
+    if ~isfield(input_graph, 'layout') || size(input_graph.layout, 1) ~= N
+        warning('GraSP:MissingLayout', 'Computing a spectral layout. Consider defining it manually beforehand for efficiency.');
+        input_graph.layout = grasp_layout_spectral(input_graph);
+    end
     
     %% Setting the axes
     
@@ -363,12 +369,6 @@ function [nodes_handle, edges_handle] = grasp_show_graph(axis_handle, input_grap
         if numel(alpha) > 0
             set(imh, 'AlphaData', flipud(alpha));
         end
-    end
-
-    %% Layout
-    if ~isfield(input_graph, 'layout') || size(input_graph.layout, 1) ~= N
-        warning('GraSP:MissingLayout', 'Computing a spectral layout. Consider defining it manually beforehand for efficiency.');
-        input_graph.layout = grasp_layout_spectral(input_graph);
     end
     
     %% Color scale
