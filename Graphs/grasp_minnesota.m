@@ -10,12 +10,12 @@
 %   GRASP_MINNESOTA(options) optional parameters:
 %
 %   options.type: specify how to construct the edges, 'gauss_road' for
-%       roads weighted by a Gaussian kernel of the distance (defaul),
-%       'gauss_dist' for a Gaussian kernel of the distance (default), 
-%       'shortest_path' for an adjacency matrix based on a Gaussian kernel
-%       of the shortest path (road) distance, 'road_dist' for each edge
-%       corresponding to a road and weighted by its length, 'road' for 0/1
-%       edges corresponding to roads.
+%       roads weighted by a Gaussian kernel of the distance (default),
+%       'gauss_dist' for a Gaussian kernel of the distance, 'shortest_path'
+%       for an adjacency matrix based on a Gaussian kernel of the shortest 
+%       path (road) distance, 'road_dist' for each edge corresponding to a 
+%       road and weighted by its length, 'road' for 0/1 edges corresponding
+%       to roads.
 %
 %   options.sigma: sigma^2 in the Gaussian kernel (see
 %       GRASP_ADJACENCY_GAUSSIAN) (default: 30).

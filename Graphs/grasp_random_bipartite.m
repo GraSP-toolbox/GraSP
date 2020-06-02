@@ -87,7 +87,7 @@ function graph = grasp_random_bipartite(varargin)
         options.N = varargin{1};
         options.M = varargin{2};
     elseif nargin > 3
-        options = grasp_merge_structs(options, cell2struct(varargin(2:2:end), varargin(1:2:end), 2));
+        options = grasp_merge_structs(options, cell2struct(varargin(4:2:end), varargin(3:2:end), 2));
         options.N = varargin{1};
         options.M = varargin{2};
     end
