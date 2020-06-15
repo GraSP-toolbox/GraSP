@@ -21,8 +21,14 @@ given by the function `grasp_bibliography`. For a detailed description of those,
 
 ## Sources
 
-The main repository is located on [Inria's gForge](https://gforge.inria.fr/projects/grasp),
-while the repository on [GitHub.com](https://github.com/STAC-USC/GraSP) is only a mirror.
+Official sources are specified in the [toolbox's website](https://www.grasp-toolbox.org/).
+
+The main repository is located in [Inria's Gitlab](https://gitlab.inria.fr/bgirault/grasp/),
+while the repository in [GitHub.com](https://github.com/GraSP-toolbox/GraSP) is a mirror.
+
+Bugreports will be addressed in both repositories.
+
+Note: This repository was originally hosted in [Inria's gForge](https://gforge.inria.fr/projects/grasp).
 
 ## Additional Toolboxes / Third Party Tools
 
@@ -38,7 +44,7 @@ Workon GraSP is continuing with funding from *University of Southern
 California*, Los Angeles, California, USA during his postdoctorate with
 Antonio Ortega and Shri Narayanan.
 
-To contact the author, please use the GitHub interface or
+To contact the author, please use Inria's Gitlab or GitHub interface or
 &lt;firstname&gt;.&lt;lastname&gt;&lt;a&gt;usc&lt;dot&gt;edu. The ens-lyon.fr email referenced in
 the code is not active anymore.
 
