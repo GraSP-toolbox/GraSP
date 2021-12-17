@@ -43,6 +43,7 @@ Just run `grasp_install` to install the missing 3rd party dependencies (see belo
  * `grasp_adjacency_gaussian`: updating only previously defined edges (if there are any, otherwise, full graph)
  * `grasp_distances_layout`: optimization
  * `grasp_filter_kernel_to_poly`: Fixed Lagrange interpolation and new least squares interpolation
+ * `grasp_merge_structs`: warning with an identifier to allow selectively disabling it
 
 ### Bugfixes
 
