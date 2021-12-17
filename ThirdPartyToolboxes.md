@@ -1,7 +1,7 @@
 # GraSP: Available third party toolboxes
 
 This page describes the available toolboxes from GraSP.
-These are intalled in the subfolder [3rdParty/]() when [`grasp_install()`](grasp_install.m) is executed.
+These are intalled in the subfolder [3rdParty/](3rdParty/) when [`grasp_install()`](grasp_install.m) is executed.
 
 For the optional toolboxes, these can be started using [`grasp_start_opt_3rd_party('name')`](grasp_start_opt_3rd_party.m) where `name` is the name of the toolbox.
 
@@ -17,7 +17,7 @@ Name | Optional | Paper(s)
 
 Unmaintained Matlab toolbox for graph signal processing.
 Some third party toolboxes, or codes from the community, may need access to its functions.
-Note that Matlab structures can be converted between GSPbox and GraSP using [Util/grasp_to_gspbox.m]() and [Util/grasp_from_gspbox.m]().
+Note that Matlab structures can be converted between GSPbox and GraSP using [Util/grasp_to_gspbox](Util/grasp_to_gspbox.m) and [Util/grasp_from_gspbox](Util/grasp_from_gspbox.m).
 
 ### [Spectral Graph Wavelet Transform](https://wiki.epfl.ch/sgwt/)
 
