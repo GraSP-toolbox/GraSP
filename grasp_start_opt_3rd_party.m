@@ -13,11 +13,15 @@
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@usc.edu>
+%  - Benjamin Girault <benjamin.girault@ensai.fr>
 
 % Copyright Benjamin Girault, University of Sourthern California, Los
 % Angeles, California, USA (2016-2018)
+% Copyright Benjamin Girault, École Nationale de la Statistique et de
+% l'Analyse de l'Information, Bruz, FRANCE (2020-2021)
 % 
 % benjamin.girault@usc.edu
+% benjamin.girault@ensai.fr
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -60,12 +64,14 @@ function opt_tools_ret = grasp_start_opt_3rd_party(toolbox_id)
     % Local dependencies
     mfile_dir = [fileparts(mfilename('fullpath')), filesep];
     local_dep_file = [mfile_dir '/3rdParty/local_dependencies.mat'];
-    load(local_dep_file, 'local_dependencies');
-    for cur_dep = 1:numel(local_dependencies)                 %#ok
-        cur_soft_id = numel(dep_list) + 1;
-        cur_dep_fields = fields(local_dependencies{cur_dep}); %#ok
-        for f_id = 1:numel(cur_dep_fields)
-            dep_list(cur_soft_id).(cur_dep_fields{f_id}) = local_dependencies{cur_dep}.(cur_dep_fields{f_id});
+    if exist(local_dep_file, 'file')
+        load(local_dep_file, 'local_dependencies');
+        for cur_dep = 1:numel(local_dependencies)
+            cur_soft_id = numel(dep_list) + 1;
+            cur_dep_fields = fieldnames(local_dependencies{cur_dep});
+            for f_id = 1:numel(cur_dep_fields)
+                dep_list(cur_soft_id).(cur_dep_fields{f_id}) = local_dependencies{cur_dep}.(cur_dep_fields{f_id});
+            end
         end
     end
     
