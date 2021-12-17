@@ -1,7 +1,7 @@
 %Shows the complete GFT using pseudo-time series.
 %
 %   GRASP_SHOW_TRANSFORM(ax_handle, graph) shows the GFT using the random
-%       walk Laplacian 2nd eigenvector to order the vertices and embedded
+%       walk Laplacian 2nd eigenvector to order the nodes and embedded
 %       them in 1D.
 %
 %   [embedding, clusters] = GRASP_SHOW_TRANSFORM(...) returns the 1D
@@ -11,7 +11,7 @@
 %
 %   options.transform_matrix: use the provided transform matrix instead of 
 %       the GFT (default: [], for the GFT matrix). The transform matrix 
-%       should be of size MxN, with N the number of vertices.
+%       should be of size MxN, with N the number of nodes.
 %
 %   options.highlight_entries: 0/1 matrix of the same size than
 %       options.transform_matrix indicating which entries to highlight in
@@ -23,9 +23,9 @@
 %   options.clusters: either an integer for the number of clusters to
 %       compute using spectral clustering based on the Random Walk 
 %       Laplacian, or a vector such that clusters(i) is the cluster index 
-%       of vertex i (default: 1).
+%       of node i (default: 1).
 %
-%   options.embedding: embedding of vertices in 1D (default: 0). Set to 0 
+%   options.embedding: embedding of nodes in 1D (default: 0). Set to 0 
 %       to use the random walk Laplacian embedding (default) or 1 for an
 %       even embedding ordered according to the random walk Laplacian
 %       embedding.
@@ -41,11 +41,11 @@
 %       'overall_max_abs' to have the transform matrix maximum amplitude
 %       equal to 1 (default: 'max_abs').
 %
-%   options.epsilon_support: threshold to consider a vertex in the support
+%   options.epsilon_support: threshold to consider a node in the support
 %       of a mode or not (default: 0.05). Computed after scaling using
 %       amplitude_normalization.
 %
-%   options.support_scatter_size: size of the dots for vertices in the 
+%   options.support_scatter_size: size of the dots for nodes in the 
 %       support of the mode (default: 36). If dots are of variable width
 %       (see options.support_scatter_mode), then this size corresponds to
 %       an amplitude of 1.
@@ -64,6 +64,9 @@
 %       graph signals of the transform ('regular', default), or use the
 %       provided graph frequencies ('freq').
 %
+%   options.right_scale_size: how large is the right scale compared to the
+%       left. 1 is equal size (default: 0.075).
+%
 %   options.bands: set of spectral bands to plot as subsets of graph 
 %       frequencies: bands(i, 1) is the first graph frequency, and 
 %       bands(i, 2) is the last for band i (default: [], i.e. no band).
@@ -76,11 +79,15 @@
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@usc.edu>
+%  - Benjamin Girault <benjamin.girault@ensai.fr>
 
 % Copyright Benjamin Girault, University of Sourthern California, Los
 % Angeles, California, USA (2018-2019)
+% Copyright Benjamin Girault, École Nationale de la Statistique et de
+% l'Analyse de l'Information, Bruz, FRANCE (2020-2021)
 % 
 % benjamin.girault@usc.edu
+% benjamin.girault@ensai.fr
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -125,6 +132,7 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
         'support_scatter_size', 36,...
         'support_scatter_mode', 'constant',...
         'graph_signal_y_scheme', 'regular',...
+        'right_scale_size', 0.075,...
         'bands', [],...
         'bands_colors', [],...
         'verbose', true);
@@ -156,7 +164,7 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
     if numel(options.transform_matrix) > 0
         % Provided matrix
         if size(options.transform_matrix, 2) ~= N
-            error('options.transform_matrix should be of size MxN where N is the number of vertices!');
+            error('options.transform_matrix should be of size MxN where N is the number of nodes!');
         end
         if size(options.transform_matrix, 1) ~= N
             if numel(options.graph_frequencies) ~= size(options.transform_matrix, 1)
@@ -199,7 +207,7 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
     %% Clusters
     if numel(options.clusters) ~= N
         if numel(options.clusters) ~= 1
-            error('''clusters'' options should be either the number of clusters to compute or a vector giving the cluster id of each vertex!');
+            error('''clusters'' options should be either the number of clusters to compute or a vector giving the cluster id of each node!');
         end
         if options.clusters == 1
             options.clusters = ones(N, 1);
@@ -223,7 +231,7 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
     
     %% Vertex embedding
     if numel(options.embedding) == 1
-        disp('Computing vertex embedding using the second eigenvector of the Random Walk Laplacian...');
+        disp('Computing node embedding using the second eigenvector of the Random Walk Laplacian...');
         warning('off', 'MATLAB:eigs:IllConditionedA');
         [V, ~] = eigs(grasp_laplacian_standard(graph), grasp_degrees(graph), 2, 0);
         warning('on', 'MATLAB:eigs:IllConditionedA');
@@ -238,17 +246,17 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
                 error('Vertex embedding and clusters are inconsistent (split cluster(s) in the embedding).');
             end
         elseif options.embedding == 1
-            disp('Computing regular vertex embedding...');
+            disp('Computing regular node embedding...');
             data_points = ((1:N)' - 1) / (N - 1);
             if num_clusters == 1
                 options.embedding(options.ordering) = data_points;
             else
                 % In that case, we:
                 % - Order according to clusters, and then the already computed ordering
-                vertex_ordering_wrt_clusters = zeros(N, 1);
+                node_ordering_wrt_clusters = zeros(N, 1);
                 % - Compute the induced regular embedding
 
-                prev_vertex = 0;
+                prev_node = 0;
                 orig_ordering_inv(options.ordering) = (1:N)';
                 for c = 1:num_clusters
                     cluster_mask = options.clusters == c;
@@ -258,13 +266,13 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
                     % New ordering
                     remap = zeros(N, 1);
                     remap(sort(orig_ordering)) = (1:numel(orig_ordering))';
-                    vertex_ordering_wrt_clusters(cluster_mask) = prev_vertex + remap(orig_ordering);
+                    node_ordering_wrt_clusters(cluster_mask) = prev_node + remap(orig_ordering);
 
-                    prev_vertex = prev_vertex + numel(orig_ordering);
+                    prev_node = prev_node + numel(orig_ordering);
                 end
 
                 % Ordering as required (instead of permutation)
-                tmp(vertex_ordering_wrt_clusters) = (1:N)'; % inverse permutation
+                tmp(node_ordering_wrt_clusters) = (1:N)'; % inverse permutation
                 options.embedding(tmp) = data_points;
                 options.ordering = tmp;
             end
@@ -333,7 +341,7 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
     end
     
     %% Bands Colors
-    if numel(options.bands) > 0 && sum(size(options.bands_colors) == [size(options.bands, 1) 3]) < 2
+    if numel(options.bands) > 0 && (size(options.bands_colors, 1) ~= size(options.bands, 1) || size(options.bands_colors, 2) < 3 || size(options.bands_colors, 2) > 4)
         warning('options.bands_colors is of an incorrect size!');
         options.bands_colors = [];
         while size(options.bands, 1) > size(options.bands_colors, 1)
@@ -388,11 +396,11 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
         set(ph.Edge, 'ColorType', 'truecoloralpha', 'ColorBinding', 'interpolated', 'ColorData', cdata);
     end
     
-    % Vertical bars to identify vertices
+    % Vertical bars to identify nodes
     yleftlimits = [min(spectral_spacing) max(spectral_spacing)] + cur_amplitude_scale * [-1 1];
     plot(repmat(options.embedding(options.ordering)', 2, 1), repmat(yleftlimits', 1, numel(options.embedding(options.ordering)), 1), 'Color', (1 - min_gray) * [1 1 1]);
     
-    % Dots where vertices are in the support
+    % Dots where nodes are in the support
     support_mask = abs(all_ordered_modes(:)) > options.epsilon_support;
     support_x = all_x(support_mask);
     support_y = all_series(support_mask);
@@ -490,13 +498,17 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
         else
             cur_band(2) = cur_band(2) + delta_left_band;
         end
-        patch([cur_xlim(1) cur_xlim cur_xlim(2)], [cur_band fliplr(cur_band)], options.bands_colors(l, :), 'FaceAlpha', 0.1, 'LineStyle', 'none');
+        alpha = 0.1;
+        if size(options.bands_colors, 2) == 4
+            alpha = options.bands_colors(l, 4);
+        end
+        patch([cur_xlim(1) cur_xlim cur_xlim(2)], [cur_band fliplr(cur_band)], options.bands_colors(l, 1:3), 'FaceAlpha', alpha, 'LineStyle', 'none');
     end
     hold('off');
 
     % Left label 
     if transform_is_gft
-        ylabel('Graph Frequency index $l$', 'Interpreter', 'Latex');
+        ylabel('Graph frequency index $l$', 'Interpreter', 'Latex');
     else
         ylabel('Transform mode index $l$', 'Interpreter', 'Latex');
     end
@@ -506,11 +518,11 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
     % Right plot
     delta_cur_lim = cur_xlim(2) - cur_xlim(1);
     new_xlim = cur_xlim;
-    new_xlim(2) = cur_xlim(2) + .1 * delta_cur_lim;
+    new_xlim(2) = cur_xlim(2) + options.right_scale_size * delta_cur_lim;
 
     % Frequencies
     yyaxis right
-    freq_xs = [cur_xlim(2) cur_xlim(2) + .075 * delta_cur_lim new_xlim(2)];
+    freq_xs = [cur_xlim(2) cur_xlim(2) + .75 * options.right_scale_size * delta_cur_lim new_xlim(2)];
     freq_ys = [options.graph_frequencies(1) + (options.graph_frequencies(M) - options.graph_frequencies(1)) / (max(spectral_spacing) - min(spectral_spacing)) * spectral_spacing'...
                options.graph_frequencies...
                options.graph_frequencies];
@@ -539,7 +551,11 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
             high_freq = (freq_ys(cur_band(2), 1) + freq_ys(2, 1) / 2) * ones(1, 3);
         end
         
-        patch([freq_xs fliplr(freq_xs)], [low_freq fliplr(high_freq)], options.bands_colors(l, :), 'FaceAlpha', 0.1, 'LineStyle', 'none');
+        alpha = 0.1;
+        if size(options.bands_colors, 2) == 4
+            alpha = options.bands_colors(l, 4);
+        end
+        patch([freq_xs fliplr(freq_xs)], [low_freq fliplr(high_freq)], options.bands_colors(l, 1:3), 'FaceAlpha', alpha, 'LineStyle', 'none');
     end
     hold('off');
     
@@ -553,9 +569,9 @@ function [embedding, clusters] = grasp_show_transform(fig_handle, graph, varargi
     right_amplitude_scale = options.amplitude_scale * (options.graph_frequencies(M) - options.graph_frequencies(1)) / M;
     ylim(sort([options.graph_frequencies(1) options.graph_frequencies(M)]) + right_amplitude_scale * [-1 1]);
     
-    ylabel('Graph Frequency $\lambda_l$', 'Interpreter', 'Latex');
+    ylabel('Graph frequency $\lambda_l$', 'Interpreter', 'Latex');
     
     xlim(new_xlim);
     set(gca, 'XTick', final_xticks);
-    xlabel('Vertex embedding', 'Interpreter', 'Latex');
+    xlabel('Node embedding', 'Interpreter', 'Latex');
 end
