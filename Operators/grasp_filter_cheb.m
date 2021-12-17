@@ -66,7 +66,7 @@ function filter = grasp_filter_cheb(fun, order, varargin)
     options = grasp_merge_structs(default_param, options);
     
     %% Filter
-    grasp_start_opt_3rd_party('chebfun')
+    grasp_start_opt_3rd_party('chebfun');
     
     filter.type = 'chebpoly';
     filter.data.coeffs = chebcoeffs(chebfun(fun, options.interval, 'splitting', options.chebfun_splitting), order + 1, 'kind', options.cheb_kind);
