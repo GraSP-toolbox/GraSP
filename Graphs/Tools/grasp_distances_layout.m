@@ -5,11 +5,15 @@
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@ensai.fr>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015-11-01)
+% Copyright Benjamin Girault, École Nationale de la Statistique et de
+% l'Analyse de l'Information, Bruz, FRANCE (2020-2021)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@ensai.fr
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -41,7 +45,7 @@
 % knowledge of the CeCILL license and that you accept its terms.
 
 function distances = grasp_distances_layout(graph)
-    [dx1, dx2] = meshgrid(graph.layout(:, 1), graph.layout(:, 1));
-    [dy1, dy2] = meshgrid(graph.layout(:, 2), graph.layout(:, 2));
-    distances = sqrt((dx2 - dx1) .^ 2 + (dy2 - dy1) .^ 2);
+    N = size(graph.distances, 1);
+    squared_norms = sum(graph.layout .^ 2, 2);
+    distances = sqrt(abs(squared_norms + squared_norms' - 2 * (graph.layout * graph.layout')));
 end

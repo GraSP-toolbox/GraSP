@@ -37,6 +37,7 @@ Just run `grasp_install` to install the missing 3rd party dependencies (see belo
  * `grasp_show_fouriermodes`: better control over titles and their margin
  * `grasp_adjacency_gaussian`: sigma = 'auto' to use heuristically choose sigma based on the distance matrix
  * `grasp_adjacency_gaussian`: updating only previously defined edges (if there are any, otherwise, full graph)
+ * `grasp_distances_layout.m`: optimization
 
 ### Bugfixes
 
