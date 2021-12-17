@@ -23,11 +23,15 @@
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@usc.edu>
+%  - Benjamin Girault <benjamin.girault@ensai.fr>
 
 % Copyright Benjamin Girault, University of Sourthern California, Los
 % Angeles, California, USA (2018)
+% Copyright Benjamin Girault, École Nationale de la Statistique et de
+% l'Analyse de l'Information, Bruz, FRANCE (2020-2021)
 % 
 % benjamin.girault@usc.edu
+% benjamin.girault@ensai.fr
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -105,7 +109,7 @@ function [freq_resp_handle, legend_handle, varargout] = grasp_show_spectral_resp
         yyaxis(axis_handle, 'right')
         input_handle  = stem(graph.eigvals, input, ':');
         output_handle = stem(graph.eigvals, output, 'x');
-        legend_handle = legend([freq_resp_handle, input_handle, output_handle], {'Frequency Response', 'Input', 'Output'});
+        legend_handle = legend([freq_resp_handle, input_handle, output_handle], {'Frequency response', 'Input', 'Output'});
 
         tmp = ylim;
         tmp = abs(tmp(1) / (tmp(2) - tmp(1)));
@@ -116,7 +120,7 @@ function [freq_resp_handle, legend_handle, varargout] = grasp_show_spectral_resp
         varargout{1} = input_handle;
         varargout{2} = output_handle;
     else
-        legend_handle = legend(freq_resp_handle, {'Frequency Response'});
+        legend_handle = legend(freq_resp_handle, {'Frequency response'});
     end
     
     %% Stop holding plots if necessary
