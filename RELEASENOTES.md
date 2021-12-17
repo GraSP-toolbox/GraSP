@@ -51,6 +51,7 @@ Just run `grasp_install` to install the missing 3rd party dependencies (see belo
  * `grasp_apply_filter`: fixed polynomial computation with graph frequencies
  * `grasp_show_transform`: bands colors bugfix
  * `grasp_show_graph`: compute a layout early enough if it is missing
+ * `grasp_subaxis`: fixed numel test
 
 ## Version 1.2.1
 

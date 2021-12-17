@@ -29,15 +29,19 @@
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
 %  - Benjamin Girault <benjamin.girault@usc.edu>
+%  - Benjamin Girault <benjamin.girault@ensai.fr>
 %  - Based on SubAxis (Similar API, re-implemented) (http://www.mathworks.com/matlabcentral/fileexchange/3696-subaxis-subplot)
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015)
 % Copyright Benjamin Girault, University of Sourthern California, Los
 % Angeles, California, USA (2016)
+% Copyright Benjamin Girault, École Nationale de la Statistique et de
+% l'Analyse de l'Information, Bruz, FRANCE (2020-2021)
 % 
 % benjamin.girault@ens-lyon.fr
 % benjamin.girault@usc.edu
+% benjamin.girault@ensai.fr
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -112,7 +116,7 @@ function ah = grasp_subaxis(varargin)
         param.S = param.Spacing;
     end
     if isfield(param, 'S')
-        if numel(param.S == 1)
+        if numel(param.S) == 1
             param.SpacingHorizontal = param.S;
             param.SpacingVertical = param.S;
         else
