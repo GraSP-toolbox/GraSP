@@ -5,11 +5,19 @@
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@ens-lyon.fr>
+%  - Benjamin Girault <benjamin.girault@usc.edu>
+%  - Benjamin Girault <benjamin.girault@ensai.fr>
 
 % Copyright Benjamin Girault, École Normale Supérieure de Lyon, FRANCE /
 % Inria, FRANCE (2015-11-01)
+% Copyright Benjamin Girault, University of Sourthern California, Los
+% Angeles, California, USA (2020)
+% Copyright Benjamin Girault, École Nationale de la Statistique et de
+% l'Analyse de l'Information, Bruz, FRANCE (2020-2021)
 % 
 % benjamin.girault@ens-lyon.fr
+% benjamin.girault@usc.edu
+% benjamin.girault@ensai.fr
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -41,7 +49,8 @@
 % knowledge of the CeCILL license and that you accept its terms.
 
 function grasp_set_blue_red_colormap(hax)
-    tmp = load('grasp_blueredcolormap');
+    pwd = [fileparts(mfilename('fullpath')), filesep];
+    tmp = load([pwd filesep 'grasp_blueredcolormap.mat']);
     bluered = tmp.bluered / 255;
     colormap(hax, bluered);
 end

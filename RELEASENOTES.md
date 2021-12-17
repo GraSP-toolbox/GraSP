@@ -53,6 +53,7 @@ Just run `grasp_install` to install the missing 3rd party dependencies (see belo
  * `grasp_show_transform`: bands colors bugfix
  * `grasp_show_graph`: compute a layout early enough if it is missing
  * `grasp_subaxis`: fixed numel test
+ * `grasp_set_blue_red_colormap`: fixed colormap loading
 
 ## Version 1.2.1
 
