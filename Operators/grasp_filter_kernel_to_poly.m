@@ -11,8 +11,10 @@
 %       polynomial:
 %       - 'regular_interpolation' (default): polynomial interpolation with
 %       equidistributed samples in options.freqs_bounds.
-%       - 'graph_interpolation': use the graph frequencies instead of
-%       equidistributed samples
+%       - 'graph_fit_lsqr': use the graph frequencies instead of
+%       equidistributed samples and perform a least squares approximation
+%       - 'graph_interpolation': Lagrange polynomial based on the graph
+%       frequencies
 %       - 'taylor': use a Taylor expansion around options.lambda0.
 %       - 'puiseux': use a Puiseux expansion around options.lambda0.
 %   
@@ -30,11 +32,15 @@
 %
 % Authors:
 %  - Benjamin Girault <benjamin.girault@usc.edu>
+%  - Benjamin Girault <benjamin.girault@ensai.fr>
 
 % Copyright Benjamin Girault, University of Sourthern California, Los
 % Angeles, California, USA (2019)
+% Copyright Benjamin Girault, École Nationale de la Statistique et de
+% l'Analyse de l'Information, Bruz, FRANCE (2020-2021)
 % 
 % benjamin.girault@usc.edu
+% benjamin.girault@ensai.fr
 % 
 % This software is a computer program whose purpose is to provide a Matlab
 % / Octave toolbox for handling and displaying graph signals.
@@ -101,6 +107,24 @@ function filter = grasp_filter_kernel_to_poly(filter, varargin)
             freqs = (0:options.poly_degree) / options.poly_degree * (options.freqs_bounds(2) - options.freqs_bounds(1)) + options.freqs_bounds(1);
             filter.data = polyfit(freqs, filter.data(freqs), options.poly_degree);
         case 'graph_interpolation'
+            if isempty(options.graph)
+                error('Missing ''graph'' parameter!');
+            end
+            if ~isfield(options.graph, 'eigvals') || numel(options.graph.eigvals) ~= grasp_nb_nodes(options.graph)
+                error('Missing graph frequencies! Use grasp_eigendecomposition first!');
+            end
+            if options.poly_degree == -1
+                options.poly_degree =  grasp_nb_nodes(options.graph);
+            end
+            N = grasp_nb_nodes(options.graph);
+            x = options.graph.eigvals;
+            y = filter.data(options.graph.eigvals);
+            filter.data = zeros(1, N);
+            for l = 1:N
+                cur_x = x([1:(l - 1) (l + 1):N]);
+                filter.data = filter.data + y(l) * prod(x(l) - cur_x) * poly(cur_x);
+            end
+        case 'graph_fit_lsqr'
             if isempty(options.graph)
                 error('Missing ''graph'' parameter!');
             end
